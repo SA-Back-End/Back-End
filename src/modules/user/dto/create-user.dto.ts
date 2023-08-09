@@ -9,7 +9,11 @@ export class Photo {
 }
 
 export class CreateUserDto {
-    @ApiProperty({ type: String, description: 'Nome do usuário' })
+    @IsOptional()
+    @IsNumber()
+    id: number;
+
+    @ApiProperty({ type: String, description: 'Nome do usuário', required: false  })
     @IsString()
     @IsNotEmpty()
     firstName: string;
