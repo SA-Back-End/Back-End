@@ -27,7 +27,7 @@ export class UserController {
   @ApiCreatedResponse({ description: 'Usuário criado com sucesso', type: CreateUserDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiNotAcceptableResponse({ description: 'Usuário ou senha muito pequenos', status: 406 })
-  @ApiConflictResponse({ description: 'Usuário já existente', status: 409 })
+  @ApiConflictResponse({ description: 'Usuário já existente!', status: 409 })
   async create(@Body() createUserDto: CreateUserDto) {
     this.userService.create(createUserDto);
     const { username, email } = createUserDto
