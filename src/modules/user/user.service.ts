@@ -55,10 +55,25 @@ export class UserService {
   }
 
   async findOne(username: string) {
-    const userExists = await this.prisma.user.findFirst({
+    const userExists = await this.prisma.user.findUnique({
       where: {
         username
       }
+    })
+
+    if (!userExists) {
+      throw new NotFoundException('Usuário não existe')
+    }
+
+    return userExists;
+  }
+
+  async findUserLogin(username: string) {
+    const userExists = await this.prisma.user.findUnique({
+      where: {
+        username
+      },
+      select: { id:true, username:true, password: true }
     })
 
     if (!userExists) {
