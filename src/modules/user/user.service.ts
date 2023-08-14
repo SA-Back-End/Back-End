@@ -58,7 +58,8 @@ export class UserService {
     const userExists = await this.prisma.user.findUnique({
       where: {
         username
-      }
+      },
+      select: prismaExclude('User', ['password'])
     })
 
     if (!userExists) {
