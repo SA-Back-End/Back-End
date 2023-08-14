@@ -38,8 +38,7 @@ export class UserService {
   async findAll(page: number) {
     if (page == 0) {
       return this.prisma.user.findMany({
-        select: prismaExclude('User', ['password'
-      ])
+        select: prismaExclude('User', ['password'])
       });
     } else if (page == 1) {
       return this.prisma.user.findMany({
@@ -58,7 +57,7 @@ export class UserService {
   async findOne(username: string) {
     const userExists = await this.prisma.user.findFirst({
       where: {
-        username: username
+        username
       }
     })
 
@@ -97,7 +96,7 @@ export class UserService {
   async remove(username: string) {
     const userExists = await this.prisma.user.findFirst({
       where: {
-        username: username
+        username
       }
     })
 
@@ -107,7 +106,7 @@ export class UserService {
 
     return await this.prisma.user.delete({
       where: {
-        username: username
+        username
       }
     })
   }

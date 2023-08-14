@@ -29,12 +29,7 @@ export class UserController {
   @ApiNotAcceptableResponse({ description: 'Usuário ou senha muito pequenos', status: 406 })
   @ApiConflictResponse({ description: 'Usuário já existente!', status: 409 })
   async create(@Body() createUserDto: CreateUserDto) {
-    this.userService.create(createUserDto);
-    const { username, email } = createUserDto
-    return {
-      username,
-      email
-    }
+    return await this.userService.create(createUserDto);
   }
 
   @Public()
