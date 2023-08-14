@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
+import { prismaExclude } from './helper/prismaExclude';
 
 @Injectable()
 export class UserService {
@@ -37,18 +38,19 @@ export class UserService {
   async findAll(page: number) {
     if (page == 0) {
       return this.prisma.user.findMany({
-        select: { password: false }
+        select: prismaExclude('User', ['password'
+      ])
       });
     } else if (page == 1) {
       return this.prisma.user.findMany({
         take: 20,
-        select: { password: false }
+        select: prismaExclude('User', ['password'])
       });
     } else {
       return this.prisma.user.findMany({
         take: 20,
         skip: (page - 1) * 20,
-        select: { password: false }
+        select: prismaExclude('User', ['password'])
       });
     }
   }
