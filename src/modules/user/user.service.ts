@@ -37,20 +37,27 @@ export class UserService {
 
   async findAll(page: number) {
     if (page == 0) {
-      return this.prisma.user.findMany({
-        select: prismaExclude('User', ['password'])
+      const res = await this.prisma.user.findMany({
+        include: {posts: true, userProjects: true}
       });
+      res.forEach( e=> delete e.password)
+      return res
+
     } else if (page == 1) {
-      return this.prisma.user.findMany({
+      const res = await this.prisma.user.findMany({
+        include: {posts: true, userProjects: true},
         take: 20,
-        select: prismaExclude('User', ['password'])
       });
+      res.forEach( e=> delete e.password)
+      return res
     } else {
-      return this.prisma.user.findMany({
+      const res = await this.prisma.user.findMany({
+        include: {posts: true, userProjects: true},
         take: 20,
         skip: (page - 1) * 20,
-        select: prismaExclude('User', ['password'])
       });
+      res.forEach( e=> delete e.password)
+      return res
     }
   }
 
