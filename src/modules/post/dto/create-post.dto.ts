@@ -1,13 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { HardSkills } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
+import { Skills } from '../entities/post.entity';
 
 export class CreatePostDto {
-    @ApiProperty({ type: Number, description: 'ID da postagem', required: false })
-    @IsOptional()
-    @IsNumber()
-    id: number;
-
     @ApiProperty({ type: String, description: 'ID da postagem' })
     @IsString()
     @IsNotEmpty()
@@ -19,9 +17,9 @@ export class CreatePostDto {
     description: string;
 
     @ApiProperty({ type: [String], description: 'Tags da postagem' })
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    tag: [string];
+    tag: [HardSkills];
 
     @IsNumber()
     @IsNotEmpty()
