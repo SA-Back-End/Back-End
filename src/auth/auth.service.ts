@@ -12,7 +12,7 @@ export class AuthService {
   ) { }
 
   async signIn(username: string, pass: string) {
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findUserLogin(username);
 
     const isMatch = await bcrypt.compare(pass, user.password);
 

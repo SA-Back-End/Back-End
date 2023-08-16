@@ -62,10 +62,26 @@ export class UserService {
   }
 
   async findOne(username: string) {
-    const userExists = await this.prisma.user.findFirst({
+    const userExists = await this.prisma.user.findUnique({
       where: {
         username
-      }
+      },
+      select: prismaExclude('User', ['password'])
+    })
+
+    if (!userExists) {
+      throw new NotFoundException('Usuário não existe')
+    }
+
+    return userExists;
+  }
+
+  async findUserLogin(username: string) {
+    const userExists = await this.prisma.user.findUnique({
+      where: {
+        username
+      },
+      select: { id: true, username: true, password: true }
     })
 
     if (!userExists) {
@@ -76,14 +92,40 @@ export class UserService {
   }
 
   async update(username: string, updateUserDto: UpdateUserDto) {
-    const usernameInUse = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
-        username: username
+        username
       }
     })
+    
+    if (!user) {
+      throw new ConflictException('Usuário do parâmetro não existe!')
+    }
+    
+    // CRIAR FUNÇÃO QUE RECEBE POR PARAMETRO TODOS OS ITENS DO UPDATE, E FAZ BONITINHO MENOS CÓDIGO
+    if (updateUserDto.username) {
+      const usernameInUse = await this.prisma.user.findUnique({
+        where: {
+          username: updateUserDto.username
+        }
+      })
+      
+      if (usernameInUse) {
+        throw new ConflictException('Nome de usuário indisponível!')
+      }
+    }
+    
+    // CRIAR FUNÇÃO QUE RECEBE POR PARAMETRO TODOS OS ITENS DO UPDATE, E FAZ BONITINHO MENOS CÓDIGO
+    if (updateUserDto.email) {
+      const emailInUse = await this.prisma.user.findUnique({
+        where: {
+          email: updateUserDto.email
+        }
+      })
 
-    if (usernameInUse) {
-      throw new ConflictException('Username indisponível')
+      if (emailInUse) {
+        throw new ConflictException('Email indisponível!')
+      }
     }
 
     const dataJson = updateUserDto.profilePicture as unknown as Prisma.JsonObject;
@@ -93,10 +135,12 @@ export class UserService {
         ...updateUserDto,
         profilePicture: dataJson,
       },
-      
+
       where: {
         username
-      }
+      },
+      select: prismaExclude('User', ['password'])
+
     })
   }
 
