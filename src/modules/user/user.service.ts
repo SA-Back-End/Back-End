@@ -4,7 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
-import { prismaExclude } from './helper/prismaExclude';
 
 @Injectable()
 export class UserService {
@@ -24,12 +23,10 @@ export class UserService {
 
     const salt = await bcrypt.genSalt();
     const hash: string = await bcrypt.hash(createUserDto.password, salt);
-    const dataJson = createUserDto.profilePicture as unknown as Prisma.JsonObject;
 
     return this.prisma.user.create({
       data: {
         ...createUserDto,
-        profilePicture: dataJson,
         password: hash
       },
     })
@@ -66,8 +63,9 @@ export class UserService {
       where: {
         username
       },
-      select: prismaExclude('User', ['password'])
-    })
+      include: {posts: true, userProjects: true}
+    });
+    delete userExists.password
 
     if (!userExists) {
       throw new NotFoundException('Usuário não existe')
@@ -128,18 +126,15 @@ export class UserService {
       }
     }
 
-    const dataJson = updateUserDto.profilePicture as unknown as Prisma.JsonObject;
     return await this.prisma.user.update({
 
       data: {
         ...updateUserDto,
-        profilePicture: dataJson,
       },
 
       where: {
         username
       },
-      select: prismaExclude('User', ['password'])
 
     })
   }
