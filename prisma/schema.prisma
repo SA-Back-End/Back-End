@@ -8,29 +8,32 @@ datasource db {
 }
 
 model User {
-  id_user        Int             @id @default(autoincrement())
-  firstName      String
-  lastName       String
-  username       String          @unique
-  email          String          @unique
-  description    String
-  password       String
-  isAdmin        Boolean         @default(false)
-  birthDate      DateTime        @default(now())
-  status         StatusUser
-  studyarea      Json?
-  profilePicture Json?
-  posts          Post[] @relation("author")
-  project        Project[]
-  sticky         Screen_Stick[]
-  formation      Formation[]
-  certificate    Certificates[]
+  id_user              Int              @id @default(autoincrement())
+  firstName            String
+  lastName             String
+  username             String           @unique
+  email                String           @unique
+  description          String
+  password             String
+  isAdmin              Boolean          @default(false)
+  birthDate            DateTime         @default(now())
+  status               StatusUser
+  studyarea            Json?
+  profilePicture       Json?
+  posts                Post[]           @relation("author")
+  project              Project[]
+  sticky               Screen_Stick[]
+  formation            Formation[]
+  certificate          Certificates[]
   //userProjects UserProject[]
-  participation  Participation[]
-  experience     Experience[]
-  followers      Follows[] @relation("follower")
-  following      Follows[] @relation("following")
-  likes          Post[]
+  participation        Participation[]
+  experience           Experience[]
+  followers            Follows[]        @relation("follower")
+  following            Follows[]        @relation("following")
+  likes                Post[]
+  User_Status          User_Status?     @relation(fields: [user_StatusId_status], references: [id_status])
+  user_StatusId_status Int?
+  User_StudyArea       User_StudyArea[]
 }
 
 model Follows {
@@ -94,7 +97,7 @@ model Certificates {
 model Post {
   id       Int    @id @default(autoincrement())
   userId   Int
-  user     User   @relation("author",fields: [userId], references: [id_user])
+  user     User   @relation("author", fields: [userId], references: [id_user])
   text     String
   post_img Bytes  @db.ByteA
   likedBy  User[]
@@ -141,6 +144,19 @@ model Screen_Stick {
   userId         User     @relation(fields: [id_user], references: [id_user])
   id_project     Int
   project        Project  @relation(fields: [id_project], references: [id])
+}
+
+model User_Status {
+  id_status   Int    @id @default(autoincrement())
+  status_name String
+  User        User[]
+}
+
+model User_StudyArea {
+  id_User_StudyArea Int         @id @default(autoincrement())
+  studyArea         StudyArea[]
+  user_id           Int
+  user              User        @relation(fields: [user_id], references: [id_user])
 }
 
 enum HardSkills {
