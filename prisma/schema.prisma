@@ -8,32 +8,28 @@ datasource db {
 }
 
 model User {
-  id_user              Int              @id @default(autoincrement())
-  firstName            String
-  lastName             String
-  username             String           @unique
-  email                String           @unique
-  description          String
-  password             String
-  isAdmin              Boolean          @default(false)
-  birthDate            DateTime         @default(now())
-  status               StatusUser
-  studyarea            Json?
-  profilePicture       Json?
-  posts                Post[]           @relation("author")
-  project              Project[]
-  sticky               Screen_Stick[]
-  formation            Formation[]
-  certificate          Certificates[]
-  //userProjects UserProject[]
-  participation        Participation[]
-  experience           Experience[]
-  followers            Follows[]        @relation("follower")
-  following            Follows[]        @relation("following")
-  likes                Post[]
-  User_Status          User_Status?     @relation(fields: [user_StatusId_status], references: [id_status])
-  user_StatusId_status Int?
-  User_StudyArea       User_StudyArea[]
+  id_user        Int             @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  username       String          @unique
+  email          String          @unique
+  description    String
+  password       String
+  isAdmin        Boolean         @default(false)
+  birthDate      DateTime        @default(now())
+  status         StatusUser
+  studyarea      Json?
+  profilePicture Json?
+  posts          Post[]          @relation("author")
+  project        Project[]
+  sticky         Screen_Stick[]
+  formation      Formation[]
+  certificate    Certificates[]
+  participation  Participation[]
+  experience     Experience[]
+  followers      Follows[]       @relation("follower")
+  following      Follows[]       @relation("following")
+  likes          Post[]
 }
 
 model Follows {
@@ -46,52 +42,42 @@ model Follows {
 }
 
 model Formation {
-  id_formation   Int         @id @default(autoincrement())
-  degree         String
-  studyArea      StudyArea[]
-  beginDate      DateTime
-  endDate        DateTime
-  description    String
-  institution_id Int
-  institution    Institution @relation(fields: [institution_id], references: [id_institution])
-  userId         Int
-  id_user        User        @relation(fields: [userId], references: [id_user])
+  id_formation Int         @id @default(autoincrement())
+  degree       String
+  studyArea    StudyArea[]
+  beginDate    DateTime    @default(now())
+  endDate      DateTime
+  description  String
+  userId       Int
+  id_user      User        @relation(fields: [userId], references: [id_user])
 }
 
 model Institution {
-  id_institution    Int            @id @default(autoincrement())
+  id_institution    Int    @id @default(autoincrement())
   institution_name  String
   institutions_type String
   description       String
-  formations        Formation[]
-  certificates      Certificates[]
-  experiences       Experience[]
 }
 
 model Experience {
-  id_experience  Int         @id @default(autoincrement())
-  office         String
-  studyArea      StudyArea[]
-  beginDate      DateTime
-  endDate        DateTime
-  institution_id Int
-  institution    Institution @relation(fields: [institution_id], references: [id_institution])
-  userId         Int
-  user           User        @relation(fields: [userId], references: [id_user])
-  role           String? // Ver oq é ROLE
+  id_experience Int         @id @default(autoincrement())
+  office        String
+  studyArea     StudyArea[]
+  beginDate     DateTime    @default(now())
+  endDate       DateTime
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id_user])
+  role          String? // Ver oq é ROLE
 }
 
 model Certificates {
-  id_certificate   Int         @id @default(autoincrement())
+  id_certificate   Int      @id @default(autoincrement())
   certificate_name String
-  beginDate        DateTime
+  beginDate        DateTime @default(now())
   endDate          DateTime
-  id_institution   Int
   id_user          Int
-  institutions     Institution @relation(fields: [id_institution], references: [id_institution])
-  userId           User        @relation(fields: [id_user], references: [id_user])
+  userId           User     @relation(fields: [id_user], references: [id_user])
   url              String
-  // adiconar id studyArea
 }
 
 model Post {
@@ -115,18 +101,7 @@ model Project {
   userAdmin     User            @relation(fields: [id_userAdmin], references: [id_user])
   participation Participation[]
   sticky        Screen_Stick[]
-  //projectUsers UserProject[]
 }
-
-// model UserProject {
-//   id        Int     @id @default(autoincrement())
-//   userId    Int
-//   projectId Int
-//   user      User    @relation(fields: [userId], references: [id_user])
-//   project   Project @relation(fields: [projectId], references: [id])
-
-//   @@unique([userId, projectId])
-// }
 
 model Participation {
   id_user_participating Int
@@ -146,43 +121,336 @@ model Screen_Stick {
   project        Project  @relation(fields: [id_project], references: [id])
 }
 
-model User_Status {
-  id_status   Int    @id @default(autoincrement())
-  status_name String
-  User        User[]
-}
-
-model User_StudyArea {
-  id_User_StudyArea Int         @id @default(autoincrement())
-  studyArea         StudyArea[]
-  user_id           Int
-  user              User        @relation(fields: [user_id], references: [id_user])
-}
-
 enum HardSkills {
-  JS
-  TS
-  Java
+  Programacao_de_computadores
+  Design_grafico
+  Desenvolvimento_web
+  Analise_de_dados
+  Marketing_digital
+  Contabilidade
+  Engenharia_mecanica
+  Gerenciamento_de_projetos
+  Redes_de_computadores
+  Desenvolvimento_de_aplicativos_moveis
+  Modelagem_3D
+  Mecanica_automotiva
+  Gerenciamento_de_estoque
+  Producao_de_videos
+  Design_de_circuitos_eletronicos
+  Redacao_tecnica
+  Traducao
+  Design_de_interface_de_usuario
+  Design_de_experiencia_do_usuario
+  Analise_financeira
+  Programacao_em_Python
+  Programacao_em_Java
+  Programacao_em_CPP
+  Programacao_em_JavaScript
+  Programacao_em_Ruby
+  Programacao_em_PHP
+  Programacao_em_Swift
+  Programacao_em_Kotlin
+  Programacao_em_CSHARP
+  Programacao_em_SQL
+  Programacao_em_R
+  Programacao_em_MATLAB
+  Programacao_em_HTML_CSS
+  Programacao_em_TypeScript
+  Programacao_em_Go
+  Programacao_em_Rust
+  Programacao_em_Scala
+  Programacao_em_Perl
+  Analise_de_dados_com_Excel
+  Analise_de_dados_com_R
+  Analise_de_dados_com_Python
+  Analise_de_dados_com_SQL
+  Aprendizado_de_Maquina
+  Aprendizado_Profundo
+  Redes_Neurais
+  Visao_Computacional
+  Processamento_de_Linguagem_Natural
+  Blockchain
+  Ciberseguranca
+  Administracao_de_Bancos_de_Dados
+  Computacao_em_Nuvem
+  Administracao_de_Sistemas_Linux
+  Administracao_de_Sistemas_Windows
+  Reparacao_de_Computadores
+  Midias_Sociais
+  Publicidade_Online
+  SEO
+  SEA
+  Contabilidade_Financeira
+  Contabilidade_de_Gestao
+  Auditoria
+  Impostos
+  Direito_Empresarial
+  Desenho_Tecnico
+  CAD
+  CAE
+  Robotica
+  Automacao_Industrial
+  Eletronica_de_Potencia
+  Gerenciamento_da_Cadeia_de_Suprimentos
+  Logistica
+  Gerenciamento_do_Tempo
+  Gerenciamento_do_Estresse
+  Lideranca
+  Negociacao
+  Resolucao_de_Conflitos
+  Tomada_de_Decisao
+  Comunicacao_Interpessoal
+  Criatividade
+  Pensamento_Critico
+  Analise_SWOT
+  Metodologias_Ageis
+  Gerenciamento_de_Riscos
+  Analise_de_Mercado
+  Design_de_Produtos
+  Gestao_da_Qualidade
+  Eletricidade
+  Soldagem
+  Marcenaria
+  Encanamento
+  Alvenaria
+  Mecanica_de_Precisao
+  Edicao_de_Video
+  Edicao_de_Audio
+  Fotografia
+  Analise_Quimica
+  Biologia_Molecular
+  Microscopia_Eletronica
+  Energias_Renovaveis
+  Agricultura_Sustentavel
 }
 
 enum SoftSkills {
-  comunicacao
-  foco
+  Comunicacao_eficaz
+  Trabalho_em_equipe
+  Resolucao_de_problemas
+  Adaptabilidade
+  Criatividade
+  Pensamento_critico
+  Empatia
+  Inteligencia_emocional
+  Habilidades_de_negociacao
+  Habilidades_de_lideranca
+  Gestao_de_tempo
+  Resiliencia
+  Capacidade_de_ouvir
+  Tomada_de_decisao
+  Colaboracao
+  Comunicacao_interpessoal
+  Autoconsciencia
+  Foco_no_cliente
+  Orientacao_para_resultados
+  Habilidades_de_apresentacao
+  Adaptacao_a_mudancas
+  Pensamento_analitico
+  Inovacao
+  Paciencia
+  Pensamento_aberto
+  Relacionamento_interpessoal
+  Autoconfianca
+  Habilidade_de_feedback
+  Autocontrole
+  Respeito
+  Persuasao
+  Habilidade_de_motivacao
+  Gerenciamento_de_conflitos
+  Organizacao
+  Habilidade_de_delegacao
+  Habilidade_de_ensino
+  Tolerancia
+  Comunicacao_clara
+  Etica_profissional
+  Atitude_positiva
+  Habilidade_de_mentoria
+  Iniciativa
+  Gerenciamento_de_stress
+  Adaptacao_a_culturas_diversas
+  Habilidade_de_gerenciamento_de_projeto
+  Colaboracao_global
+  Habilidade_de_feedback_positivo
+  Pensamento_estrategico
+  Sensibilidade_cultural
+  Trabalho_independente
+  Pensamento_sistematico
+  Habilidade_de_gerenciamento_de_equipe
+  Solucao_de_conflitos
+  Persistencia
+  Habilidade_de_coaching
+  Habilidade_de_gerenciamento_de_conflitos
+  Empatia_emocional
+  Habilidade_de_escuta_ativa
+  Habilidade_de_comunicacao_em_grupo
+  Gerenciamento_de_expectativas
+  Comunicacao_visual
+  Habilidade_de_construcao_de_relacionamento
+  Habilidade_de_colaboracao
+  Orientacao_para_detalhes
+  Habilidade_de_construcao_de_equipe
+  Adaptacao_a_ambientes_multiculturais
+  Comunicacao_escrita
+  Habilidade_de_resolucao_de_conflitos
+  Autoavaliacao
+  Habilidade_de_resolucao_de_problemas_complexos
+  Comunicacao_verbal
+  Gerenciamento_de_recursos
+  Habilidade_de_pensamento_criativo
+  Habilidade_de_organizacao
+  Habilidade_de_lideranca_servidora
+  Habilidade_de_definicao_de_metas
+  Habilidade_de_comunicacao_interna
+  Habilidade_de_aprendizado_rapido
+  Foco_na_qualidade
+  Habilidade_de_comunicacao_escrita
+  Habilidade_de_relacionamento_interdepartamental
+  Adaptacao_a_ambientes_de_alto_estresse
+  Habilidade_de_gerenciamento_de_tempo
+  Gerenciamento_de_relacionamento
+  Habilidade_de_gerenciamento_de_recursos_humanos
+  Adaptacao_a_mudancas_rapidas
+  Habilidade_de_tomada_de_decisao_ponderada
+  Habilidade_de_concentracao
+  Foco_na_resolucao_de_problemas
+  Habilidade_de_persuasao
+  Habilidade_de_gerenciamento_de_processos
+  Habilidade_de_cooperacao
+  Habilidade_de_trabalho_em_grupo
+  Adaptacao_a_culturas_corporativas
+  Habilidade_de_comunicacao_diplomatica
+  Habilidade_de_gerenciamento_de_prazos
+  Habilidade_de_administracao_de_conflitos
+  Gerenciamento_de_inovacao
+  Habilidade_de_lidar_com_a_ambiguidade
+  Habilidade_de_gerenciamento_de_desempenho
 }
 
 enum StatusUser {
-  available
-  unavailable
+  Disponivel
+  Sketch
+  Ausente
+  Offline
+  Disponibilidade_Limitada
+  Em_Reuniao
+  Indisponivel
+  Em_Pausa
 }
 
 enum StatusProject {
-  terminado
-  nao_iniciado
-  avancado
+  Sketch
+  Em_Andamento
+  Concluido
+  Atrasado
+  Em_Espera
+  Cancelado
+  Em_Analise
+  Planejado
+  Em_Desenvolvimento
+  Em_Testes
+  Pendente
 }
 
 enum StudyArea {
-  programacao
-  biologia
-  quimica
+  Ciencia_da_Computacao
+  Engenharia_Mecanica
+  Psicologia
+  Medicina
+  Ciencias_Politicas
+  Matematica
+  Biologia
+  Fisica
+  Quimica
+  Historia
+  Economia
+  Administracao_de_Empresas
+  Direito
+  Sociologia
+  Arquitetura
+  Ciencias_da_Terra
+  Educacao
+  Arte_e_Design
+  Linguistica
+  Filosofia
+  Contabilidade
+  Antropologia
+  Saude_Publica
+  Engenharia_Eletrica
+  Enfermagem
+  Ciencias_da_Informacao
+  Relacoes_Internacionais
+  Ciencias_Sociais
+  Ciencias_Ambientais
+  Engenharia_Civil
+  Geografia
+  Biomedicina
+  Artes_Cenicas
+  Engenharia_Quimica
+  Comunicacao
+  Engenharia_de_Software
+  Marketing
+  Design_de_Interiores
+  Oceanografia
+  Ciencias_da_Alimentacao
+  Astronomia
+  Tecnologia_da_Informacao
+  Engenharia_Aeroespacial
+  Musicologia
+  Estudos_de_Genero
+  Literatura
+  Ciencias_do_Esporte
+  Ciencias_da_Educacao
+  Design_Grafico
+  Ciencias_da_Linguagem
+  Bioquimica
+  Engenharia_Metalurgica
+  Terapia_Ocupacional
+  Engenharia_de_Producao
+  Psicologia_Clinica
+  Estudos_de_Cinema
+  Engenharia_de_Bioprocessos
+  Economia_Aplicada
+  Ciencias_da_Religiao
+  Engenharia_de_Sistemas
+  Terapia_Fisica
+  Engenharia_Ambiental
+  Sociologia_Rural
+  Ciencias_da_Familia
+  Filosofia_da_Ciencia
+  Artes_Plasticas
+  Engenharia_de_Materiais
+  Gerontologia
+  Engenharia_de_Petroleo
+  Design_de_Modas
+  Ciencias_da_Nutricao
+  Linguistica_Aplicada
+  Teologia
+  Engenharia_de_Redes
+  Psicologia_Cognitiva
+  Estudos_de_Midia
+  Engenharia_de_Robotica
+  Ciencias_Policiais
+  Sociologia_Urbana
+  Engenharia_Agricola
+  Design_de_Produto
+  Ciencias_do_Meio_Ambiente
+  Neurociencia
+  Engenharia_de_Sistemas_Eletronicos
+  Engenharia_de_Biotecnologia
+  Ciencias_Psicologicas
+  Estudos_Africanos
+  Artes_Visuais
+  Engenharia_de_Minas
+  Design_de_Jogos
+  Ciencias_da_Comunicacao
+  Psicologia_Social
+  Estudos_Arabes
+  Engenharia_de_Automacao
+  Estudos_Judaicos
+  Ciencias_da_Reabilitacao
+  Engenharia_de_Manufatura
+  Design_Industrial
+  Ciencias_Cognitivas
+  Estudos_Indigenas
 }
