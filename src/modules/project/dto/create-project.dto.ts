@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { HardSkills } from '@prisma/client';
+//import { HardSkills } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
@@ -22,7 +22,7 @@ export class CreateProjectDto {
     @ApiProperty({ type: [String], description: 'Tags do projeto' })
     @IsArray()
     @IsNotEmpty()
-    tags: HardSkills[];
+    tags: String[];
 
     // @IsString()
     // projectUsers: string[]; //?
