@@ -31,10 +31,10 @@ export class PostService {
     }
   }
 
-  async findOne(title: string) {
+  async findOne(id: number) {
     const postExists = await this.prisma.post.findFirst({
       where: {
-        title: title
+        id : id
       }
     })
 

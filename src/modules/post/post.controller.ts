@@ -48,8 +48,8 @@ export class PostController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @Get('/findOne/:title')
-  async findOne(@Param('title') title: string) {
-    return this.postService.findOne(title);
+  async findOne(@Param('id') id: number) {
+    return this.postService.findOne(id);
   }
 
   @Public()

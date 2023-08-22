@@ -31,10 +31,10 @@ export class ProjectService {
     }
   }
 
-  async findOne(title: string) {
+  async findOne(project_name: string) {
     const projectExists = await this.prisma.project.findFirst({
       where: {
-        title: title
+        project_name: project_name
       }
     })
 
