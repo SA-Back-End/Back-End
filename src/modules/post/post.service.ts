@@ -10,7 +10,9 @@ export class PostService {
   async create(createPostDto: CreatePostDto) {
     return this.prisma.post.create({
       data: {
-        ...createPostDto,
+        userId: createPostDto.userId,
+        text: createPostDto.text,
+        post_img: createPostDto.post_img
       },
     })
   }
@@ -58,7 +60,9 @@ export class PostService {
 
     return await this.prisma.post.update({
       data: {
-        ...updatePostDto,
+        userId: updatePostDto.userId,
+        text: updatePostDto.text,
+        post_img: updatePostDto.post_img,
       },
       where: {
         id
