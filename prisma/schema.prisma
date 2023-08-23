@@ -93,7 +93,7 @@ model Experience {
   role          String
   beginDate     DateTime    @default(now())
   endDate       DateTime
-  description   String
+  description   String?
   //-------------
 
   //Config Prisma
