@@ -18,7 +18,7 @@ export class CreatePostDto {
     @ApiProperty({ type: [String], description: 'Tags da postagem' })
     @IsArray()
     @IsNotEmpty()
-    tag: String[];
+    tag: string[];
 
     @IsNumber()
     @IsNotEmpty()
