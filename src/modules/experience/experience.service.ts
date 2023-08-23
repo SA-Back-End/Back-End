@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/database/PrismaService';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 
 @Injectable()
 export class ExperienceService {
+
+  constructor(private prisma: PrismaService) { }
+
   create(createExperienceDto: CreateExperienceDto) {
-    return 'This action adds a new experience';
+    return this.prisma.experience.create({
+      data: {
+        ...createExperienceDto
+      }
+    })
   }
 
   findAll() {
