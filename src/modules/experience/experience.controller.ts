@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ExperienceService } from './experience.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { ApiNotFoundResponse } from '@nestjs/swagger';
 
 @Controller('experience')
 export class ExperienceController {
@@ -17,17 +18,13 @@ export class ExperienceController {
     return this.experienceService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.experienceService.findOne(+id);
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateExperienceDto: UpdateExperienceDto) {
     return this.experienceService.update(+id, updateExperienceDto);
   }
 
   @Delete(':id')
+  @ApiNotFoundResponse({ description: 'Usuário não existente', status: 404 })
   remove(@Param('id') id: string) {
     return this.experienceService.remove(+id);
   }
