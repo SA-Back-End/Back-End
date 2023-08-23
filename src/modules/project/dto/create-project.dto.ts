@@ -7,6 +7,7 @@ import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-valid
 export class CreateProjectDto {
     @ApiProperty({type: Number, description: 'ID do usuário dono do projeto', required: true})
     @IsNumber()
+    @IsNotEmpty()
     id_projectManager: number;
 
     @ApiProperty({ type: String, description: 'Status do projeto' })

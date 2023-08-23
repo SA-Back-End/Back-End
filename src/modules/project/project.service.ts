@@ -66,7 +66,7 @@ export class ProjectService {
         ...updateProjectDto,
       },
       where: {
-        id_project:id
+        id_project: id
       }
     })
   }
