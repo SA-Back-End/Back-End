@@ -90,40 +90,40 @@ model Post {
 }
 
 model Project {
-  id            Int             @id @default(autoincrement())
-  project_name  String          @unique
-  description   String
-  donate        String
-  studyArea     StudyArea[]
-  tags          HardSkills[]
-  status        StatusProject
-  id_userAdmin  Int
-  userAdmin     User            @relation(fields: [id_userAdmin], references: [id_user])
+  id           Int            @id @default(autoincrement())
+  project_name String         @unique
+  description  String
+  donate       String
+  studyArea    StudyArea[]
+  tags         HardSkills[]
+  status       StatusProject
+  id_userAdmin Int
+  userAdmin    User           @relation(fields: [id_userAdmin], references: [id_user])
   //arrumar relacionamento
   // participation Participation[] @relation("participation", fields: [])
-  sticky        Screen_Stick[]
-  Project_Role  Project_role[]
+  sticky       Screen_Stick[]
+  Project_Role Project_role[]
 }
 
 model Participation {
   id_user_participating Int
-  id_role            Int
-  id_project Int
-  user                  User    @relation(fields: [id_user_participating], references: [id_user])
+  id_role               Int
+  id_project            Int
+  user                  User         @relation(fields: [id_user_participating], references: [id_user])
   //arrumar relacionamento
   //project Project[] @relation(fields: [id_project], references: [id])
-  role               Project_role @relation(fields: [id_role], references: [id_role])
+  role                  Project_role @relation(fields: [id_role], references: [id_role])
 
   @@id([id_role, id_user_participating, id_project])
 }
 
 model Project_role {
-  id_role Int @id @default(autoincrement())
-  user_role String
-  id_project            Int
-  id_user Int
-  user Participation[]
-  project               Project @relation(fields: [id_project], references: [id])
+  id_role    Int             @id @default(autoincrement())
+  user_role  String
+  id_project Int
+  id_user    Int
+  user       Participation[]
+  project    Project         @relation(fields: [id_project], references: [id])
 }
 
 model Screen_Stick {
