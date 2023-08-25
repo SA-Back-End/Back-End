@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import { CreateScreenStickDto } from './dto/create-screen_stick.dto';
 import { UpdateScreenStickDto } from './dto/update-screen_stick.dto';
@@ -7,12 +7,10 @@ import { UpdateScreenStickDto } from './dto/update-screen_stick.dto';
 export class ScreenStickService {
   constructor(private prisma: PrismaService) { }
 
-  async create(createProjectDto: CreateScreenStickDto) {
-    return this.prisma.project.create({
+  async create(createScreenStickDto: CreateScreenStickDto) {
+    return this.prisma.screen_Curtidas.create({
       data: {
-        id_user: createProjectDto.id_user,
-        id_role: createProjectDto.id_role,
-        match_dateTime: createProjectDto.match_dateTime,
+        ...createScreenStickDto
       }
     })
   }
@@ -35,7 +33,7 @@ export class ScreenStickService {
 
   //TUDO ERRADO
   async findOne(id_stick: number) {
-    const stickExists = await this.prisma.project.findFirst({
+    const stickExists = await this.prisma.screen_Curtidas.findFirst({
       where: {
         id_stick: id_stick
       }
@@ -48,20 +46,42 @@ export class ScreenStickService {
     return stickExists;
   }
 
-  async update(id_stick: number, pdateScreenStickDto: UpdateScreenStickDto) {
-    const idInUse = await this.prisma.project.findUnique({
+  async update(id_stick: number, updateScreenStickDto: UpdateScreenStickDto) {
+    const idInUse = await this.prisma.screen_Curtidas.findUnique({
+      where: {
+        id_stick: id_stick,
+      }
+    })
+
+    if (idInUse) {
+      throw new ConflictException('This screen_curtida already exists')
+    }
+
+    return await this.prisma.screen_Curtidas.update({
+      data: {
+        ...updateScreenStickDto,
+      },
       where: {
         id_stick: id_stick,
       }
     })
   }
 
-/*
-=====COISAS A ADICIONAR======
-$ resto do update
-$ remove
-$ arrumar create
-$ arrumar findOne
+  async remove(id_stick: number) {
+    const screenCurtidaExists = await this.prisma.screen_Curtidas.delete({
+      where: {
+        id_stick: id_stick,
+      }
+    })
 
-*/
+    if (!screenCurtidaExists) {
+      throw new NotFoundException('Curtida não existe')
+    }
+
+    return await this.prisma.screen_Curtidas.delete({
+      where: {
+        id_stick: id_stick,
+      }
+    })
+  }
 }

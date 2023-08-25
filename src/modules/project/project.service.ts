@@ -10,12 +10,7 @@ export class ProjectService {
   async create(createProjectDto: CreateProjectDto) {
     return this.prisma.project.create({
       data: {
-        id_projectManager: createProjectDto.id_projectManager,
-        status: createProjectDto.status,
-        studyArea: createProjectDto.studyArea,
-        project_name: createProjectDto.project_name,
-        description: createProjectDto.description,
-        donate: createProjectDto.donate,
+        ...createProjectDto
       },
     })
   }

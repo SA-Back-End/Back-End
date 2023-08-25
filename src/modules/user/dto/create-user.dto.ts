@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusUser } from '@prisma/client';
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsStrongPassword, IsEmail, IsJSON, ValidateNested, IsDate } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsStrongPassword, IsEmail, IsJSON, ValidateNested, IsDate, IsDateString } from 'class-validator';
 
 export class CreateUserDto {
     @ApiProperty({ type: String, description: 'Nome do usuário'})
@@ -15,7 +15,7 @@ export class CreateUserDto {
 
     @ApiProperty({ type: Date, description: 'Data de Aniversário do usuário'})
     @IsNotEmpty()
-    @IsDate()
+    @IsDateString()
     birthDate: Date
 
     @ApiProperty({ type: String, description: 'Sobrenome do usuário' })

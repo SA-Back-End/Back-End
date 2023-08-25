@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { StatusProject, StudyArea } from '@prisma/client';
 //import { HardSkills } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsDate, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateScreenStickDto {
     @ApiProperty({type: Number, description: 'ID do usuário que curtiu', required: true})
@@ -16,7 +16,7 @@ export class CreateScreenStickDto {
     id_role: number;
 
     @ApiProperty({type: Date, description: 'Data da curtida'})
-    @IsDate()
+    @IsDateString()
     @IsNotEmpty()
     match_dateTime: Date;
 }
