@@ -9,13 +9,12 @@ import { InstitutionModule } from './modules/institution/institution.module';
 import { ExperienceModule } from './modules/experience/experience.module';
 import { CertificatesModule } from './modules/certificates/certificates.module';
 import { ScreenStickModule } from './modules/screen_stick/screen_stick.module';
-import { ProjectRoleModule } from './project_role/project_role.module';
-import { ParticipationModule } from './participation/participation.module';
-import { ProjectRoleModule } from './project_role/project_role.module';
-import { ParticipationModule } from './participation/participation.module';
+import { ProjectRoleModule } from './modules/project_role/project_role.module';
+
+
 
 @Module({
-  imports: [UserModule, PostModule, ProjectModule, AuthModule, FormationModule, InstitutionModule, ExperienceModule, CertificatesModule, ScreenStickModule, ProjectRoleModule, ParticipationModule],
+  imports: [UserModule, PostModule, ProjectModule, AuthModule, FormationModule, InstitutionModule, ExperienceModule, CertificatesModule, ScreenStickModule, ProjectRoleModule],
   controllers: [],
   providers: [PrismaService],
 })

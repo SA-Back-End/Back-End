@@ -15,6 +15,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Project')
@@ -22,6 +23,7 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) { }
 
+  @Public()
   @Post('create')
   @ApiCreatedResponse({ description: 'Postagem criada com sucesso', type: CreateProjectDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })

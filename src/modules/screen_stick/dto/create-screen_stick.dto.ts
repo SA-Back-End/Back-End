@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 import { IsArray, IsDate, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateScreenStickDto {
-    @ApiProperty({type: Number, description: 'ID do usuário que curtiu', required: true})
+    @ApiProperty({type: Number, description: 'ID do usuário que curtiu'})
     @IsNumber()
     @IsNotEmpty()
     id_user: number;

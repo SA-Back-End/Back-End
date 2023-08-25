@@ -5,13 +5,12 @@ import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateProjectDto {
-    @ApiProperty({type: Number, description: 'ID do usuário dono do projeto', required: true})
+    @ApiProperty({type: Number, description: 'ID do usuário dono do projeto'})
     @IsNumber()
     @IsNotEmpty()
     id_projectManager: number;
 
     @ApiProperty({ type: String, description: 'Status do projeto' })
-    @IsArray()
     @IsNotEmpty()
     status: StatusProject;
 
