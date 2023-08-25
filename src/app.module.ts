@@ -11,6 +11,8 @@ import { CertificatesModule } from './modules/certificates/certificates.module';
 import { ScreenStickModule } from './modules/screen_stick/screen_stick.module';
 import { ProjectRoleModule } from './project_role/project_role.module';
 import { ParticipationModule } from './participation/participation.module';
+import { ProjectRoleModule } from './project_role/project_role.module';
+import { ParticipationModule } from './participation/participation.module';
 
 @Module({
   imports: [UserModule, PostModule, ProjectModule, AuthModule, FormationModule, InstitutionModule, ExperienceModule, CertificatesModule, ScreenStickModule, ProjectRoleModule, ParticipationModule],
