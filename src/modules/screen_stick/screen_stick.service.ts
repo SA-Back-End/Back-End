@@ -68,7 +68,7 @@ export class ScreenStickService {
   }
 
   async remove(id_stick: number) {
-    const screenCurtidaExists = await this.prisma.screen_Curtidas.delete({
+    const screenCurtidaExists = await this.prisma.screen_Curtidas.findUnique({
       where: {
         id_stick: id_stick,
       }

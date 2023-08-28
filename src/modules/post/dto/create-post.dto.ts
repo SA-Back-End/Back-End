@@ -16,13 +16,13 @@ export class CreatePostDto {
     @IsNotEmpty()
     text: string;
 
-    @ApiProperty({ type: String, description: 'Imagem da postagem' })
+    @ApiProperty({ type: String,format:'byte', description: 'Imagem da postagem' })
     @IsString()
     @IsNotEmpty()
     post_img: Buffer;
 
     @ApiProperty({ type: String, description: 'Likes da postagem' })
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     likedBy: User['id_user']
 }
