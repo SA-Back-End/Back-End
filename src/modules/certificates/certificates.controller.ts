@@ -33,9 +33,9 @@ export class CertificatesController {
   @ApiOkResponse({ description: 'Informações encontradas', type: CreateCertificateDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
-  @Get('/findOne/:certificate_name')
-  async findOne(@Param('certificate_name') certificate_name: string) {
-    return this.certificatesService.findOne(certificate_name);
+  @Get('/findOne/:id_certificate')
+  async findOne(@Param('id_certificate') id_certificate: string) {
+    return this.certificatesService.findOne(id_certificate);
   }
 
   @Public()
@@ -43,18 +43,18 @@ export class CertificatesController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Certificado não existente', status: 404 })
-  @Patch('/update/:certificate_name')
-  async update(@Param('certificate_name') certificate_name: string, @Body() updateUserDto: UpdateCertificateDto) {
-    return this.certificatesService.update(certificate_name, updateCertificateDto);
+  @Patch('/update/:id_certificate')
+  async update(@Param('id_certificate') id_certificate: string, @Body() updateUserDto: UpdateCertificateDto) {
+    return this.certificatesService.update(id_certificate, updateCertificateDto);
   }
 
   @Public()
-  @Delete('/delete/:certificate_name')
+  @Delete('/delete/:id_certificate')
   @ApiOkResponse({ description: 'Certificado deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Certificado não existente', status: 404 })
-  async remove(@Param('certificate_name') certificate_name: string) {
-    return this.certificatesService.remove(certificate_name);
+  async remove(@Param('id_certificate') id_certificate: string) {
+    return this.certificatesService.remove(id_certificate);
   }
 }

@@ -34,8 +34,8 @@ export class InstitutionController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @Get('/findOne/:institution_name')
-  async findOne(@Param('institution_name') id_institutions: string) {
-    return this.institutionService.findOne(id_institutions);
+  async findOne(@Param('institution_name') id_institution: string) {
+    return this.institutionService.findOne(id_institution);
   }
 
   @Public()
@@ -44,8 +44,8 @@ export class InstitutionController {
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Instituição não existente', status: 404 })
   @Patch('/update/:institution_name')
-  async update(@Param('institution_name') institution_name: string, @Body() updateInstitutionDto: UpdateInstitutionDto) {
-    return this.institutionService.update(institution_name, updateInstitutionDto);
+  async update(@Param('institution_name') id_institution: string, @Body() updateInstitutionDto: UpdateInstitutionDto) {
+    return this.institutionService.update(id_institution, updateInstitutionDto);
   }
 
   @Public()
@@ -54,8 +54,8 @@ export class InstitutionController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Instituição não existente', status: 404 })
-  async remove(@Param('institution_name') institution_name: string) {
-    return this.institutionService.remove(institution_name);
+  async remove(@Param('institution_name') id_institution: string) {
+    return this.institutionService.remove(id_institution);
   }
 }
 
