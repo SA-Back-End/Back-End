@@ -44,7 +44,7 @@ export class ProjectRoleController {
   @ApiOkResponse({ description: 'Informações encontradas', type: CreateProjectRoleDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
-  @Get('/findOne/:role')
+  @Get('/findOne/:id_role')
   async findOne(@Param('id_role') id_role: number) {
     return this.projectRoleService.findOne(id_role);
   }
