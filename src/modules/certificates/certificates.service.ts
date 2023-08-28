@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
 import { PrismaService } from 'src/database/PrismaService';
@@ -45,24 +45,41 @@ export class CertificatesService {
     return certificatesExists;
   }
 
-  update(id: number, updateCertificateDto: UpdateCertificateDto) {
-    return `This action updates a #${id} certificate`;
-  }
-
-  async remove(certificate_name: string) {
-    const certificateExists = await this.prisma.certificates.findFirst({
+  async update(id_certificate: number, UpdateCertificateDto: UpdateCertificateDto) {
+    const idInUse = await this.prisma.certificates.findUnique({
       where: {
-        certificate_name
+        id_certificate: id_certificate,
       }
     })
 
-    if (!certificateExists) {
+    if (idInUse) {
+      throw new ConflictException('This certificate already exists')
+    }
+
+    return await this.prisma.certificates.update({
+      data: {
+        ...UpdateCertificateDto,
+      },
+      where: {
+        id_certificate: id_certificate,
+      }
+    })
+  }
+
+  async remove(id_certificate: number) {
+    const certificatesExists = await this.prisma.certificates.findFirst({
+      where: {
+        id_certificate : id_certificate
+      }
+    })
+
+    if (!certificatesExists) {
       throw new NotFoundException('Certificado não existe')
     }
 
     return await this.prisma.certificates.delete({
       where: {
-        certificate_name
+        id_certificate : id_certificate
       }
     })
   }
