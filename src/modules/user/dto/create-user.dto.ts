@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusUser } from '@prisma/client';
+import { State } from '@prisma/client';
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsStrongPassword, IsEmail, IsJSON, ValidateNested, IsDate, IsDateString } from 'class-validator';
 
 export class CreateUserDto {
@@ -47,6 +48,11 @@ export class CreateUserDto {
     @IsBoolean()
     @IsOptional()
     isAdmin: boolean;
+
+    @ApiProperty({ type: String, description: 'Estado do usuário' })
+    @IsString()
+    @IsOptional()
+    state: State;
 
     @ApiProperty({ type: String ,format:'byte', description: 'Foto de perfil do usuário' })
     @IsOptional()

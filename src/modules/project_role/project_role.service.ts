@@ -9,11 +9,22 @@ export class ProjectRoleService {
   constructor(private prisma: PrismaService) {}
 
   async create(createProjectRoleDto: CreateProjectRoleDto) {
+    const roleExists = await this.prisma.project_role.findFirst({
+      where: {
+        id_project: createProjectRoleDto.id_project,
+        user_role:  createProjectRoleDto.user_role,
+      }
+    })
+    if(roleExists) {
+      throw new ConflictException('Cargo já existente')
+    }
+
     return this.prisma.project_role.create({
       data: {
         ...createProjectRoleDto
       }
     })
+
   }
 
   async findAll(page: number) {
@@ -29,12 +40,15 @@ export class ProjectRoleService {
   async findOne(id_role: number) {
     const roleExists = await this.prisma.project_role.findFirst({
       where: {
-        id_role: id_role
+        id_role: id_role,
       }
     })
+    
     if(!roleExists) {
       throw new NotFoundException('Cargo não existe')
-    } return roleExists
+    }
+    
+    return roleExists;
   }
 
   async update(id_role: number, updateProjectRoleDto: UpdateProjectRoleDto) {
