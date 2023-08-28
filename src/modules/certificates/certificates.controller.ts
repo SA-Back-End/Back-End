@@ -34,7 +34,7 @@ export class CertificatesController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @Get('/findOne/:id_certificate')
-  async findOne(@Param('id_certificate') id_certificate: string) {
+  async findOne(@Param('id_certificate') id_certificate: number) {
     return this.certificatesService.findOne(id_certificate);
   }
 
@@ -44,7 +44,7 @@ export class CertificatesController {
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Certificado não existente', status: 404 })
   @Patch('/update/:id_certificate')
-  async update(@Param('id_certificate') id_certificate: string, @Body() updateUserDto: UpdateCertificateDto) {
+  async update(@Param('id_certificate') id_certificate: number, @Body() updateCertificateDto: UpdateCertificateDto) {
     return this.certificatesService.update(id_certificate, updateCertificateDto);
   }
 
@@ -54,7 +54,7 @@ export class CertificatesController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Certificado não existente', status: 404 })
-  async remove(@Param('id_certificate') id_certificate: string) {
+  async remove(@Param('id_certificate') id_certificate: number) {
     return this.certificatesService.remove(id_certificate);
   }
 }
