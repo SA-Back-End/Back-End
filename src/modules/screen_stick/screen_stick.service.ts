@@ -17,14 +17,14 @@ export class ScreenStickService {
 
   async findAll(page: number) {
     if (page == 0) {
-      return this.prisma.project.findMany({
+      return this.prisma.screen_Curtidas.findMany({
       });
     } else if (page == 1) {
-      return this.prisma.project.findMany({
+      return this.prisma.screen_Curtidas.findMany({
         take: 20,
       });
     } else {
-      return this.prisma.project.findMany({
+      return this.prisma.screen_Curtidas.findMany({
         take: 20,
         skip: (page - 1) * 20,
       });

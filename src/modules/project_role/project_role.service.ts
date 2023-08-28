@@ -57,7 +57,7 @@ export class ProjectRoleService {
   }
 
   async remove(id_role: number) {
-    const roleExists = await this.prisma.project_role.delete({
+    const roleExists = await this.prisma.project_role.findUnique({
       where: {
         id_role: id_role
       }
