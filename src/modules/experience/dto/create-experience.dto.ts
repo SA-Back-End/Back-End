@@ -6,37 +6,37 @@ export class CreateExperienceDto {
 
 	@IsNumber()
 	@IsNotEmpty()
-	@ApiProperty({ type: Number, description: 'Id usuário', required: true  })
+	@ApiProperty({ type: Number, description: 'Id usuário', required: true, example: 1215  })
   userId: number;
 	
 	@IsNumber()
 	@IsNotEmpty()
-	@ApiProperty({ type: Number, description: 'Id instituição', required: true  })
+	@ApiProperty({ type: Number, description: 'Id instituição', required: true, example: 60065  })
   institutionId: number 
 
 	@IsNotEmpty()
 	@IsString()
-	@ApiProperty({ type: String, description: 'A área de estudo da experiência', required: true  })
+	@ApiProperty({ type: String, description: 'A área de estudo da experiência', required: true, example: ["Estudos_Indigenas"] })
   studyArea: StudyArea[]
 
 	@IsNotEmpty()
 	@IsString()
-	@ApiProperty({ type: String, description: 'O cargo exercido da experiência', required: true  })
+	@ApiProperty({ type: String, description: 'O cargo exercido da experiência', required: true, example: 'Chupador de mandioca' })
   role: string;          
 	
 	@IsNotEmpty()
 	@IsDate()
-	@ApiProperty({ type: Date, description: 'Data de começo na experiência', required: true  })
+	@ApiProperty({ type: Date, description: 'Data de começo na experiência', required: true, example: '1500-04-24T08:20:59.235Z' })
   beginDate: Date;
   
 	@IsNotEmpty()
 	@IsDate()
-	@ApiProperty({ type: Date, description: 'Data de fim na experiência', required: true  })
+	@ApiProperty({ type: Date, description: 'Data de fim na experiência', required: true, example: '1500-05-02T12:30:20.545Z'})
   endDate: Date;       
 	
 	@IsOptional()
 	@IsDate()
-	@ApiProperty({ type: String, description: 'Descreva o que você executou em sua experiência', required: false  })
+	@ApiProperty({ type: String, description: 'Descreva o que você executou em sua experiência', required: false, example: 'Lorem ipsu no kua dorle' , })
   description: string;   
   
 }

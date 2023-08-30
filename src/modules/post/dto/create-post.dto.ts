@@ -6,24 +6,18 @@ import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-valid
 
 
 export class CreatePostDto {
-    @ApiProperty({ type: Number, description: 'Id do autor da postagem' })
+    @ApiProperty({ type: Number, description: 'Id do autor da postagem', example: 34 })
     @IsNumber()
     @IsNotEmpty()
     userId: number;
 
-    @ApiProperty({ type: String, description: 'Texto da postagem' })
+    @ApiProperty({ type: String, description: 'Texto da postagem', example: 'Lorem ipsun loremm' })
     @IsString()
     @IsNotEmpty()
     text: string;
 
-    @ApiProperty({ type: String,format:'byte', description: 'Imagem da postagem' })
+    @ApiProperty({ type: String,format:'byte', description: 'Imagem da postagem', example:'fdrdrd'  })
     @IsString()
     @IsNotEmpty()
     post_img: Buffer;
-
-
-    @ApiProperty({ type: String, description: 'Likes da postagem' })
-    @IsString()
-    @IsOptional()
-    likedBy: User['id_user']
 }
