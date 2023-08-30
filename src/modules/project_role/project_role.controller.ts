@@ -54,7 +54,7 @@ export class ProjectRoleController {
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Cargo não existente', status: 404 })
   @Patch('/update/:id_role')
-  async update(@Param('id') id_role: number, @Body() updateProjectRoleDto: UpdateProjectRoleDto) {
+  async update(@Param('id_role') id_role: number, @Body() updateProjectRoleDto: UpdateProjectRoleDto) {
     return this.projectRoleService.update(id_role, updateProjectRoleDto);
   }
 

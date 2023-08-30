@@ -49,8 +49,8 @@ export class InstitutionService {
         id_institution: id_institution,
       }
     })
-    if (idInUse) {
-      throw new ConflictException('This institution already exists')
+    if (!idInUse) {
+      throw new ConflictException('This institution does not exist')
     }
     
     return await this.prisma.institution.update({

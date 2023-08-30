@@ -31,7 +31,6 @@ export class ScreenStickService {
     }
   }
 
-  //TUDO ERRADO
   async findOne(id_stick: number) {
     const stickExists = await this.prisma.screen_Curtidas.findFirst({
       where: {
@@ -53,8 +52,8 @@ export class ScreenStickService {
       }
     })
 
-    if (idInUse) {
-      throw new ConflictException('This screen_curtida already exists')
+    if (!idInUse) {
+      throw new ConflictException('This screen_curtida does not exist')
     }
 
     return await this.prisma.screen_Curtidas.update({

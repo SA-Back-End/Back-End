@@ -3,6 +3,7 @@ import { StudyArea, User } from '@prisma/client';
 import {
   IsArray,
   IsDate,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -21,12 +22,12 @@ export class CreateFormationDto {
   studyArea: StudyArea[];
 
   @ApiProperty({ type: Date, description: 'Data de início' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   beginDate: Date;
 
   @ApiProperty({ type: Date, description: 'Data de término' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   endDate: Date;
 

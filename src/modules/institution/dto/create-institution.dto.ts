@@ -2,14 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateInstitutionDto {
-  @ApiProperty({
-    type: Number,
-    description: 'ID da Instituição',
-    required: false,
-  })
-  @IsOptional()
-  @IsNumber()
-  id_institution: number;
 
   @ApiProperty({ type: String, description: 'Nome da Instituição' })
   @IsString()
@@ -20,9 +12,4 @@ export class CreateInstitutionDto {
   @IsString()
   @IsNotEmpty()
   institutions_type: string;
-
-  @ApiProperty({ type: String, description: 'Descrição da Instituição' })
-  @IsString()
-  @IsNotEmpty()
-  description: string;
 }

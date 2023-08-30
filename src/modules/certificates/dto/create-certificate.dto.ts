@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@prisma/client';
 import {
   IsDateString,
   IsNotEmpty,
@@ -10,14 +9,6 @@ import {
 } from 'class-validator';
 
 export class CreateCertificateDto {
-  @ApiProperty({
-    type: Number,
-    description: 'Id do certificado',
-    required: false,
-  })
-  @IsOptional()
-  @IsNumber()
-  id_certificate: number;
 
   @ApiProperty({ type: String, description: 'Nome do certificado' })
   @IsString()

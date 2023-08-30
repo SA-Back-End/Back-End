@@ -3,9 +3,10 @@ import { CertificatesService } from './certificates.service';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse , ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse , ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 @Controller('certificates')
+@ApiTags('Certificates')
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
 
