@@ -1,26 +1,55 @@
 import { Injectable } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common/exceptions';
+import { PrismaService } from 'src/database/PrismaService';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 
 @Injectable()
 export class ExperienceService {
-  create(createExperienceDto: CreateExperienceDto) {
-    return 'This action adds a new experience';
+
+  constructor(private prisma: PrismaService) { }
+
+  async create(createExperienceDto: CreateExperienceDto) {
+    return await this.prisma.experience.create({
+      data: {
+        ...createExperienceDto
+      }
+    })
   }
 
-  findAll() {
-    return `This action returns all experience`;
+  async findAll() {
+    return await this.prisma.experience.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} experience`;
+  async update(id_experience: number, updateExperienceDto: UpdateExperienceDto) {
+    return await this.prisma.experience.update({
+      data: {
+        ...updateExperienceDto
+      },
+
+      where: {
+        id_experience
+      }
+    })
   }
 
-  update(id: number, updateExperienceDto: UpdateExperienceDto) {
-    return `This action updates a #${id} experience`;
-  }
+  async remove(id_experience: number) {
 
-  remove(id: number) {
-    return `This action removes a #${id} experience`;
+    const experienceExists = await this.prisma.experience.findFirst({
+      where: {
+        id_experience
+      }
+    })
+
+    if (!experienceExists) {
+      throw new NotFoundException('Experiência não existe')
+    }
+
+    return await this.prisma.experience.delete({
+      where: {
+        id_experience
+      }
+    })
   }
 }
+

@@ -1,22 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsStrongPassword, IsEmail, IsJSON, ValidateNested } from 'class-validator';
-
-export class Photo {
-    height: number
-    width: number
-    url: string
-}
+import { StatusUser } from '@prisma/client';
+import { State } from '@prisma/client';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsStrongPassword, IsEmail, IsJSON, ValidateNested, IsDate, IsDateString } from 'class-validator';
 
 export class CreateUserDto {
-    @IsOptional()
-    @IsNumber()
-    id: number;
-
-    @ApiProperty({ type: String, description: 'Nome do usuário', required: false  })
+    @ApiProperty({ type: String, description: 'Nome do usuário'})
     @IsString()
     @IsNotEmpty()
     firstName: string;
+
+    @ApiProperty({ type: String, description: 'Status do usuário'})
+    @IsString()
+    @IsNotEmpty()
+    status: StatusUser
+
+    @ApiProperty({ type: Date, description: 'Data de Aniversário do usuário'})
+    @IsNotEmpty()
+    @IsDateString()
+    birthDate: Date
 
     @ApiProperty({ type: String, description: 'Sobrenome do usuário' })
     @IsString()
@@ -48,10 +49,13 @@ export class CreateUserDto {
     @IsOptional()
     isAdmin: boolean;
 
-    @ApiProperty({ type: JSON, description: 'Foto de perfil do usuário' })
+    @ApiProperty({ type: String, description: 'Estado do usuário' })
+    @IsString()
     @IsOptional()
-    @IsJSON()
-    @ValidateNested()
-    @Type(() => Photo)
-    profilePicture: Photo
+    state: State;
+
+    @ApiProperty({ type: String ,format:'byte', description: 'Foto de perfil do usuário' })
+    @IsOptional()
+    @IsString()
+    profilePicture: Buffer
 }

@@ -3,7 +3,6 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -36,21 +35,22 @@ export class UserService {
   async findAll(page: number) {
     if (page == 0) {
       const res = await this.prisma.user.findMany({
-        include: {posts: true, userProjects: true}
+        include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
       });
       res.forEach( e=> delete e.password)
       return res
 
     } else if (page == 1) {
       const res = await this.prisma.user.findMany({
-        include: {posts: true, userProjects: true},
-        take: 20,
+      include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
+        ,take: 20,
       });
       res.forEach( e=> delete e.password)
       return res
     } else {
       const res = await this.prisma.user.findMany({
-        include: {posts: true, userProjects: true},
+        include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
+        ,
         take: 20,
         skip: (page - 1) * 20,
       });
@@ -64,7 +64,7 @@ export class UserService {
       where: {
         username
       },
-      include: {posts: true, userProjects: true}
+      include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
     });
     delete userExists.password
 
@@ -80,7 +80,7 @@ export class UserService {
       where: {
         username
       },
-      select: { id: true, username: true, password: true }
+      select: { id_user: true, username: true, password: true }
     })
 
     if (!userExists) {

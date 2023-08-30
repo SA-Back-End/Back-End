@@ -10,7 +10,7 @@ export class ProjectService {
   async create(createProjectDto: CreateProjectDto) {
     return this.prisma.project.create({
       data: {
-        ...createProjectDto,
+        ...createProjectDto
       },
     })
   }
@@ -48,7 +48,7 @@ export class ProjectService {
   async update(id: number, updateProjectDto: UpdateProjectDto) {
     const idInUse = await this.prisma.project.findUnique({
       where: {
-        id: id,
+        id_project: id,
       }
     })
 
@@ -61,7 +61,7 @@ export class ProjectService {
         ...updateProjectDto,
       },
       where: {
-        id
+        id_project: id
       }
     })
   }
@@ -69,7 +69,7 @@ export class ProjectService {
   async remove(id: number) {
     const projectExists = await this.prisma.project.delete({
       where: {
-        id: id
+        id_project: id
       }
     })
 
@@ -79,7 +79,7 @@ export class ProjectService {
 
     return await this.prisma.project.delete({
       where: {
-        id,
+        id_project: id,
       }
     })
   }
