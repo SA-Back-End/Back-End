@@ -18,13 +18,17 @@ export class CertificatesService {
   findAll(page: number) {
     if (page == 0) {
       return this.prisma.certificates.findMany({
+        include: {id_institution: true, userId: true}
       });
     } else if (page == 1) {
       return this.prisma.certificates.findMany({
-        take: 20,
+        include: {id_institution: true, userId: true}
+        ,take: 20,
       });
     } else {
       return this.prisma.certificates.findMany({
+        include: {id_institution: true, userId: true}
+        ,
         take: 20,
         skip: (page - 1) * 20,
       });

@@ -18,13 +18,18 @@ export class FormationService {
 
   async findAll(page: number) {
     if (page == 0) {
-      return this.prisma.formation.findMany({});
+      return this.prisma.formation.findMany({
+        include: {id_institution: true, id_user: true}
+      });
     } else if (page == 1) {
       return this.prisma.formation.findMany({
-        take: 20,
+        include: {id_institution: true, id_user: true}
+        ,take: 20,
       });
     } else {
       return this.prisma.formation.findMany({
+        include: {id_institution: true, id_user: true}
+        ,
         take: 20,
         skip: (page - 1) * 20,
       });

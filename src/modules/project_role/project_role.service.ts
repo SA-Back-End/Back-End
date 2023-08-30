@@ -29,11 +29,17 @@ export class ProjectRoleService {
 
   async findAll(page: number) {
     if(page == 0) {
-      return this.prisma.project_role.findMany({})
+      return this.prisma.project_role.findMany({
+        include: {participation: true, project: true, screen_Curtidas: true}
+      })
     } else if (page == 1) {
-      return this.prisma. project_role.findMany({take: 20})
+      return this.prisma. project_role.findMany({
+        include: {participation: true, project: true, screen_Curtidas: true}
+        ,take: 20})
     } else {
-      return this.prisma.project_role.findMany({take: 20, skip: (page-1)*20})
+      return this.prisma.project_role.findMany({
+        include: {participation: true, project: true, screen_Curtidas: true}
+        ,take: 20, skip: (page-1)*20})
     }
   }
 
