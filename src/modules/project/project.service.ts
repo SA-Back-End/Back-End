@@ -52,7 +52,7 @@ export class ProjectService {
       }
     })
 
-    if (idInUse) {
+    if (!idInUse) {
       throw new ConflictException('projectname indisponível')
     }
 
@@ -67,7 +67,7 @@ export class ProjectService {
   }
 
   async remove(id: number) {
-    const projectExists = await this.prisma.project.delete({
+    const projectExists = await this.prisma.project.findUnique({
       where: {
         id_project: id
       }
