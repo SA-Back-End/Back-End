@@ -6,50 +6,54 @@ import { UpdateExperienceDto } from './dto/update-experience.dto';
 
 @Injectable()
 export class ExperienceService {
-
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(createExperienceDto: CreateExperienceDto) {
     return await this.prisma.experience.create({
       data: {
-        ...createExperienceDto
-      }
-    })
+        ...createExperienceDto,
+      },
+    });
   }
 
-  async findAll() {
-    return await this.prisma.experience.findMany()
+  async findAll(page: number) {
+    return await this.prisma.experience.findMany();
   }
 
-  async update(id_experience: number, updateExperienceDto: UpdateExperienceDto) {
+  async findOne(id_experience: number) {
+    return await this.prisma.experience.findMany();
+  }
+
+  async update(
+    id_experience: number,
+    updateExperienceDto: UpdateExperienceDto
+  ) {
     return await this.prisma.experience.update({
       data: {
-        ...updateExperienceDto
+        ...updateExperienceDto,
       },
 
       where: {
-        id_experience
-      }
-    })
+        id_experience,
+      },
+    });
   }
 
   async remove(id_experience: number) {
-
     const experienceExists = await this.prisma.experience.findFirst({
       where: {
-        id_experience
-      }
-    })
+        id_experience,
+      },
+    });
 
     if (!experienceExists) {
-      throw new NotFoundException('Experiência não existe')
+      throw new NotFoundException('Experiência não existe');
     }
 
     return await this.prisma.experience.delete({
       where: {
-        id_experience
-      }
-    })
+        id_experience,
+      },
+    });
   }
 }
-
