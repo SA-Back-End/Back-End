@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { StudyArea } from '@prisma/client';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsDate } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsDateString, IsArray } from 'class-validator';
 
 export class CreateExperienceDto {
 
@@ -15,7 +15,7 @@ export class CreateExperienceDto {
   institutionId: number 
 
 	@IsNotEmpty()
-	@IsString()
+	@IsArray()
 	@ApiProperty({ type: String, description: 'A área de estudo da experiência', required: true  })
   studyArea: StudyArea[]
 
@@ -24,18 +24,18 @@ export class CreateExperienceDto {
 	@ApiProperty({ type: String, description: 'O cargo exercido da experiência', required: true  })
   role: string;          
 	
-	@IsNotEmpty()
-	@IsDate()
-	@ApiProperty({ type: Date, description: 'Data de começo na experiência', required: true  })
-  beginDate: Date;
+  	@IsDateString()
+	@IsOptional()
+	@ApiProperty({ type: Date, description: 'Data de começo na experiência', required: false  })
+  beginDate?: Date;
   
 	@IsNotEmpty()
-	@IsDate()
+	@IsDateString()
 	@ApiProperty({ type: Date, description: 'Data de fim na experiência', required: true  })
   endDate: Date;       
 	
 	@IsOptional()
-	@IsDate()
+	@IsString()
 	@ApiProperty({ type: String, description: 'Descreva o que você executou em sua experiência', required: false  })
   description: string;   
   
