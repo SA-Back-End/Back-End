@@ -52,8 +52,8 @@ export class FormationService {
       },
     });
 
-    if (idInUse) {
-      throw new ConflictException('formation indisponível');
+    if (!idInUse) {
+      throw new ConflictException('formation não existe');
     }
 
     return await this.prisma.formation.update({
@@ -67,7 +67,7 @@ export class FormationService {
   }
 
   async remove(id: number) {
-    const formationExists = await this.prisma.formation.delete({
+    const formationExists = await this.prisma.formation.findUnique({
       where: {
         id_formation: id,
       },
