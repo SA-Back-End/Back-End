@@ -2,10 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { InstitutionService } from './institution.service';
 import { CreateInstitutionDto } from './dto/create-institution.dto';
 import { UpdateInstitutionDto } from './dto/update-institution.dto';
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('institution')
+@ApiTags('Institution')
 export class InstitutionController {
   constructor(private readonly institutionService: InstitutionService) {}
 
@@ -33,8 +34,8 @@ export class InstitutionController {
   @ApiOkResponse({ description: 'Informações encontradas', type: CreateInstitutionDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
-  @Get('/findOne/:institution_name')
-  async findOne(@Param('institution_name') id_institution: number) {
+  @Get('/findOne/:id_institution')
+  async findOne(@Param('id_institution') id_institution: number) {
     return this.institutionService.findOne(id_institution);
   }
 
@@ -43,18 +44,18 @@ export class InstitutionController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Instituição não existente', status: 404 })
-  @Patch('/update/:institution_name')
-  async update(@Param('institution_name') id_institution: number, @Body() updateInstitutionDto: UpdateInstitutionDto) {
+  @Patch('/update/:id_institution')
+  async update(@Param('id_institution') id_institution: number, @Body() updateInstitutionDto: UpdateInstitutionDto) {
     return this.institutionService.update(id_institution, updateInstitutionDto);
   }
 
   @Public()
-  @Delete('/delete/:institution_name')
+  @Delete('/delete/:id_institution')
   @ApiOkResponse({ description: 'Instituição deletada com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Instituição não existente', status: 404 })
-  async remove(@Param('institution_name') id_institution: number) {
+  async remove(@Param('id_institution') id_institution: number) {
     return this.institutionService.remove(id_institution);
   }
 }
