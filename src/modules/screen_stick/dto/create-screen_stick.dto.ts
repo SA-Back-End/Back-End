@@ -1,7 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { StatusProject, StudyArea } from '@prisma/client';
-//import { HardSkills } from '@prisma/client';
-import { Type } from 'class-transformer';
 import { IsArray, IsDate, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateScreenStickDto {

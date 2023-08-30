@@ -43,27 +43,27 @@ export class ScreenStickController {
   @ApiBadRequestResponse({description: 'Requisição Inválida', status: 400})
   @ApiUnauthorizedResponse({description: 'Acesso não autorizado', status: 401})
   @ApiNotFoundResponse({ description: 'Curtida não existente', status: 404 })
-  @Get('/findOne/:screenId')
-  async findOne(@Param('screenId') screenId: number) {
-    return this.screenStickService.findOne(screenId);
+  @Get('/findOne/:id_stick')
+  async findOne(@Param('id_stick') id_stick: number) {
+    return this.screenStickService.findOne(id_stick);
   }
 
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: UpdateScreenStickDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Curtida não existente', status: 404 })
-  @Patch('/update/:screenId')
-  async update(@Param('screenid') screenId: number, @Body() updateScreenStickDto: UpdateScreenStickDto) {
-    return this.screenStickService.update(screenId, updateScreenStickDto);
+  @Patch('/update/:id_stick')
+  async update(@Param('id_stick') id_stick: number, @Body() updateScreenStickDto: UpdateScreenStickDto) {
+    return this.screenStickService.update(id_stick, updateScreenStickDto);
   }
 
   @Public()
-  @Delete('/delete/:screenId')
+  @Delete('/delete/:id_stick')
   @ApiOkResponse({description: 'Curtida deletada com sucesso', status: 200})
   @ApiBadRequestResponse({description: 'Requisição inválida', status: 400})
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Curtida não existente', status: 404 })
-  async remove(@Param('screenId') screenId: number) {
-    return this.screenStickService.remove(screenId);
+  async remove(@Param('id_stick') id_stick: number) {
+    return this.screenStickService.remove(id_stick);
   }
 }
