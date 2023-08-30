@@ -52,8 +52,8 @@ export class CertificatesService {
       }
     })
 
-    if (idInUse) {
-      throw new ConflictException('This certificate already exists')
+    if (!idInUse) {
+      throw new ConflictException('This certificate does not exist')
     }
 
     return await this.prisma.certificates.update({
