@@ -20,13 +20,17 @@ export class PostService {
   async findAll(page: number) {
     if (page == 0) {
       return this.prisma.post.findMany({
+        include: {user:true}
       });
     } else if (page == 1) {
       return this.prisma.post.findMany({
-        take: 20,
+        include: {user:true}
+        ,take: 20,
       });
     } else {
       return this.prisma.post.findMany({
+        include: {user:true}
+        ,
         take: 20,
         skip: (page - 1) * 20,
       });
