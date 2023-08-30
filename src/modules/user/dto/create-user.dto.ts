@@ -52,7 +52,7 @@ export class CreateUserDto {
     @ApiProperty({ type: String, description: 'Estado do usuário' })
     @IsString()
     @IsOptional()
-    state: State;
+    state: State; 
 
     @ApiProperty({ type: String ,format:'byte', description: 'Foto de perfil do usuário' })
     @IsOptional()

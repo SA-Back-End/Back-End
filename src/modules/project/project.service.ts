@@ -18,13 +18,16 @@ export class ProjectService {
   async findAll(page: number) {
     if (page == 0) {
       return this.prisma.project.findMany({
+        include:{userAdmin:true},
       });
     } else if (page == 1) {
       return this.prisma.project.findMany({
+        include:{userAdmin:true},
         take: 20,
       });
     } else {
       return this.prisma.project.findMany({
+        include:{userAdmin:true},
         take: 20,
         skip: (page - 1) * 20,
       });

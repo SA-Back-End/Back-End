@@ -17,11 +17,13 @@ export class ExperienceService {
   }
 
   async findAll(page: number) {
-    return await this.prisma.experience.findMany();
+    return await this.prisma.experience.findMany({
+      include:{id_institution:true, user:true}
+    });
   }
 
   async findOne(id_experience: number) {
-    return await this.prisma.experience.findMany();
+    return await this.prisma.experience.findFirst();
   }
 
   async update(

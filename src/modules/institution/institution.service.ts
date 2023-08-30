@@ -18,13 +18,16 @@ export class InstitutionService {
   async findAll(page: number) {
     if (page == 0) {
       return this.prisma.institution.findMany({
+        include:{id_certificates:true,id_experiences:true,id_formations:true}
       });
     } else if (page == 1) {
       return this.prisma.institution.findMany({
+        include:{id_certificates:true,id_experiences:true,id_formations:true},
         take: 20,
       });
     } else {
       return this.prisma.institution.findMany({
+        include:{id_certificates:true,id_experiences:true,id_formations:true},
         take: 20,
         skip: (page - 1) * 20,
       });
