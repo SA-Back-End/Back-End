@@ -13,6 +13,7 @@ export class UserService {
       where: {
         email: createUserDto.email,
         username: createUserDto.username,
+        
       },
     })
 

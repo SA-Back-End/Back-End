@@ -1,26 +1,89 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/database/PrismaService';
 import { CreateFormationDto } from './dto/create-formation.dto';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { UpdateFormationDto } from './dto/update-formation.dto';
 
 @Injectable()
 export class FormationService {
-  create(createFormationDto: CreateFormationDto) {
-    return 'This action adds a new formation';
+  constructor(private prisma: PrismaService) { }
+
+  async create(createFormationDto: CreateFormationDto) {
+    return await this.prisma.formation.create({
+      data: {
+        ...createFormationDto
+      },
+    })
   }
 
-  findAll() {
-    return `This action returns all formation`;
+  async findAll(page: number) {
+    if (page == 0) {
+      return this.prisma.formation.findMany({
+      });
+    } else if (page == 1) {
+      return this.prisma.formation.findMany({
+        take: 20,
+      });
+    } else {
+      return this.prisma.formation.findMany({
+        take: 20,
+        skip: (page - 1) * 20,
+      });
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} formation`;
+  async findOne(id_formation: number) {
+    const formationExists = await this.prisma.formation.findFirst({
+      where: {
+        id_formation: id_formation
+      }
+    })
+
+    if (!formationExists) {
+      throw new NotFoundException('Formação não existe')
+    }
+
+    return formationExists;
   }
 
-  update(id: number, updateFormationDto: UpdateFormationDto) {
-    return `This action updates a #${id} formation`;
+  async update(id: number, updateFormationDto: UpdateFormationDto) {
+    const idInUse = await this.prisma.formation.findUnique({
+      where: {
+        id_formation: id,
+      }
+    })
+
+    if (idInUse) {
+      throw new ConflictException('formation indisponível')
+    }
+
+    return await this.prisma.formation.update({
+      data: {
+        ...updateFormationDto,
+      },
+      where: {
+        id_formation : id
+      }
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} formation`;
+  async remove(id: number) {
+    const formationExists = await this.prisma.formation.delete({
+      where: {
+        id_formation: id
+      }
+    })
+
+    if (!formationExists) {
+      throw new NotFoundException('Formação não existe')
+    }
+
+    return await this.prisma.formation.delete({
+      where: {
+        id_formation: id,
+      }
+    })
   }
 }
+
+//.
