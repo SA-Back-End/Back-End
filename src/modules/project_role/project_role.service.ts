@@ -57,8 +57,8 @@ export class ProjectRoleService {
         id_role: id_role
       }
     })
-    if(idInUse) {
-      throw new ConflictException('Id do Cargo Indisponível')
+    if(!idInUse) {
+      throw new ConflictException('Cargo não existe')
     }
     return await this.prisma.project_role.update({
       data: {
