@@ -6,20 +6,19 @@ import { UpdateFormationDto } from './dto/update-formation.dto';
 
 @Injectable()
 export class FormationService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(createFormationDto: CreateFormationDto) {
     return await this.prisma.formation.create({
       data: {
-        ...createFormationDto
+        ...createFormationDto,
       },
-    })
+    });
   }
 
   async findAll(page: number) {
     if (page == 0) {
-      return this.prisma.formation.findMany({
-      });
+      return this.prisma.formation.findMany({});
     } else if (page == 1) {
       return this.prisma.formation.findMany({
         take: 20,
@@ -35,12 +34,12 @@ export class FormationService {
   async findOne(id_formation: number) {
     const formationExists = await this.prisma.formation.findFirst({
       where: {
-        id_formation: id_formation
-      }
-    })
+        id_formation: id_formation,
+      },
+    });
 
     if (!formationExists) {
-      throw new NotFoundException('Formação não existe')
+      throw new NotFoundException('Formação não existe');
     }
 
     return formationExists;
@@ -50,11 +49,11 @@ export class FormationService {
     const idInUse = await this.prisma.formation.findUnique({
       where: {
         id_formation: id,
-      }
-    })
+      },
+    });
 
     if (idInUse) {
-      throw new ConflictException('formation indisponível')
+      throw new ConflictException('formation indisponível');
     }
 
     return await this.prisma.formation.update({
@@ -62,27 +61,27 @@ export class FormationService {
         ...updateFormationDto,
       },
       where: {
-        id_formation : id
-      }
-    })
+        id_formation: id,
+      },
+    });
   }
 
   async remove(id: number) {
     const formationExists = await this.prisma.formation.delete({
       where: {
-        id_formation: id
-      }
-    })
+        id_formation: id,
+      },
+    });
 
     if (!formationExists) {
-      throw new NotFoundException('Formação não existe')
+      throw new NotFoundException('Formação não existe');
     }
 
     return await this.prisma.formation.delete({
       where: {
         id_formation: id,
-      }
-    })
+      },
+    });
   }
 }
 
