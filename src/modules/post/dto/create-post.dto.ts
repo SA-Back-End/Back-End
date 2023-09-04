@@ -6,17 +6,17 @@ import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-valid
 
 
 export class CreatePostDto {
-    @ApiProperty({ type: Number, description: 'Id do autor da postagem' })
+    @ApiProperty({ type: Number, description: 'Id do autor da postagem', example: 45 })
     @IsNumber()
     @IsNotEmpty()
     userId: number;
 
-    @ApiProperty({ type: String, description: 'Texto da postagem' })
+    @ApiProperty({ type: String, description: 'Texto da postagem', example: 'lorem ipsun ipsun lorem' })
     @IsString()
     @IsNotEmpty()
     text: string;
 
-    @ApiProperty({ type: String,format:'byte', description: 'Imagem da postagem' })
+    @ApiProperty({ type: String,format:'byte', description: 'Imagem da postagem', example: 'fghfghf' })
     @IsString()
     @IsNotEmpty()
     post_img: Buffer;
