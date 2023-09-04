@@ -30,6 +30,8 @@
 
 ```bash
 $ npm install
+
+$ npx prisma migrate dev --name "init"
 ```
 
 ## Running the app
