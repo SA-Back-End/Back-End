@@ -9,11 +9,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     firstName: string;
 
-    @ApiProperty({ type: String, description: 'Status do usuário'})
-    @IsString()
-    @IsNotEmpty()
-    status: StatusUser
-
     @ApiProperty({ type: Date, description: 'Data de Aniversário do usuário'})
     @IsNotEmpty()
     @IsDateString()
@@ -29,11 +24,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     username: string;
 
-    @ApiProperty({ type: String, description: 'Descrição do usuário' })
-    @IsString()
-    @IsNotEmpty()
-    description: string;
-
     @ApiProperty({ type: String, description: 'E-mail do usuário' })
     @IsEmail()
     @IsNotEmpty()
@@ -44,18 +34,8 @@ export class CreateUserDto {
     @IsNotEmpty()
     password: string;
 
-    @ApiProperty({ type: Boolean, description: 'Nível de acesso do usuário' })
-    @IsBoolean()
-    @IsOptional()
-    isAdmin: boolean;
-
     @ApiProperty({ type: String, description: 'Estado do usuário' })
     @IsString()
     @IsOptional()
     state: State;
-
-    @ApiProperty({ type: String ,format:'byte', description: 'Foto de perfil do usuário' })
-    @IsOptional()
-    @IsString()
-    profilePicture: Buffer
 }

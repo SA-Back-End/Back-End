@@ -10,23 +10,23 @@ datasource db {
 model User {
   // Campos tabela
   id_user        Int        @id @default(autoincrement())
-  status         StatusUser
+  status         StatusUser @default(Disponivel)
   username       String     @unique @db.VarChar(20)
   firstName      String     @db.VarChar(50)
   lastName       String     @db.VarChar(60)
   email          String     @unique @db.VarChar(70)
   password       String
   isAdmin        Boolean    @default(false)
-  description    String
+  description    String?
   birthDate      DateTime
   state          State
-  profilePicture Bytes      @db.ByteA
+  profilePicture Bytes?      @db.ByteA
   //-------------
 
   //Config Relations 
   hardSkills    HardSkills[]
   softSkills    SoftSkills[]
-  studyarea     StudyArea[]
+  studyArea     StudyArea[]
   followers     Follows[]         @relation("follower")
   following     Follows[]         @relation("following")
   posts         Post[]            @relation("author")
