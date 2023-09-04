@@ -16,6 +16,7 @@ import {
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { StatusProject } from '@prisma/client';
 
 @ApiBearerAuth()
 @ApiTags('Project')
@@ -31,6 +32,14 @@ export class ProjectController {
   @ApiConflictResponse({ description: 'Projeto já existente!', status: 409 })
   async create(@Body() createProjectDto: CreateProjectDto) {
     return this.projectService.create(createProjectDto);
+  }
+
+  @Public()
+  @Get('/findStatusToUser/:idProjectManager/:statusProject')
+  @ApiParam({name:'idProjectManager'})
+  @ApiParam({name:'statusProject'})
+  async findStatusToId(@Param('idProjectManager') idProjectManager: number, @Param('statusProject') statusProject: StatusProject){
+    return this.projectService.findStatusToId(idProjectManager, statusProject)
   }
 
   @Get('/findAll/:page')
