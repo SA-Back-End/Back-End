@@ -40,7 +40,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     email: string;
 
-    @ApiProperty({ type: String, description: 'Senha do usuário', example: 'senhadojoao' })
+    @ApiProperty({ type: String, description: 'Senha do usuário', example: 'senhaQ!1dojoao' })
     @IsStrongPassword()
     @IsNotEmpty()
     password: string;
@@ -55,7 +55,7 @@ export class CreateUserDto {
     @IsOptional()
     state: State;
 
-    @ApiProperty({ type: String ,format:'byte', description: 'Foto de perfil do usuário', example: 'fghfgdhfg' })
+    @ApiProperty({ type: String ,format:'byte', description: 'Foto de perfil do usuário', example: 'U3dhZ2dlciByb2Nrcw==' })
     @IsOptional()
     @IsString()
     profilePicture: Buffer
