@@ -48,6 +48,9 @@ export class ProjectService {
     const projectExists = await this.prisma.project.findFirst({
       where: {
         project_name: project_name
+      },
+      include: {
+        project_Role: true
       }
     })
 
