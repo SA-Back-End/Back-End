@@ -35,6 +35,7 @@ export class CreateUserDto {
     description: string;
 
     @ApiProperty({ type: String, description: 'E-mail do usuário', example: 'joaovitor@gmail.com' })
+    @ApiProperty({ type: String, description: 'E-mail do usuário' })
     @IsEmail()
     @IsNotEmpty()
     email: string;
@@ -58,4 +59,9 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     profilePicture: Buffer
+
+    @ApiProperty({ type: String, description: 'Estado do usuário' })
+    @IsString()
+    @IsOptional()
+    state: State;
 }

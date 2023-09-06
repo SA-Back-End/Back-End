@@ -2,6 +2,7 @@ import { PrismaService } from './../../database/PrismaService';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Project, StatusProject } from '@prisma/client';
 
 @Injectable()
 export class ProjectService {
@@ -12,6 +13,15 @@ export class ProjectService {
       data: {
         ...createProjectDto
       },
+    })
+  }
+
+  async findStatusToId(id_projectManager: number, status: StatusProject): Promise<Project[]>{
+    return this.prisma.project.findMany({
+      where: {
+        id_projectManager,
+        status
+      }
     })
   }
 
