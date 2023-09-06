@@ -155,6 +155,7 @@ model Project_role {
   id_role    Int    @id @default(autoincrement())
   id_project Int
   user_role  String
+  isOpen     Boolean @default(true)
   //-------------
 
   //Config Prisma 
