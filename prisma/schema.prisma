@@ -9,18 +9,19 @@ datasource db {
 
 model User {
   // Campos tabela
-  id_user        Int        @id @default(autoincrement())
-  status         StatusUser @default(Disponivel)
-  username       String     @unique @db.VarChar(20)
-  firstName      String     @db.VarChar(50)
-  lastName       String     @db.VarChar(60)
-  email          String     @unique @db.VarChar(70)
-  password       String
-  isAdmin        Boolean    @default(false)
-  description    String?
-  birthDate      DateTime
-  state          State
-  profilePicture Bytes?      @db.ByteA
+  id_user                Int        @id @default(autoincrement())
+  status                 StatusUser @default(Disponivel)
+  username               String     @unique @db.VarChar(20)
+  firstName              String     @db.VarChar(50)
+  lastName               String     @db.VarChar(60)
+  email                  String     @unique @db.VarChar(70)
+  password               String
+  isAdmin                Boolean    @default(false)
+  description            String?
+  birthDate              DateTime
+  state                  State
+  profilePicture         Bytes?     @db.ByteA
+  isSearchingForProjects Boolean    @default(true)
   //-------------
 
   //Config Relations 
@@ -152,7 +153,7 @@ model Project {
 
 model Project_role {
   // Campos tabela
-  id_role    Int    @id @default(autoincrement())
+  id_role    Int     @id @default(autoincrement())
   id_project Int
   user_role  String
   isOpen     Boolean @default(true)
@@ -529,31 +530,31 @@ enum StudyArea {
 }
 
 enum State {
-AC
-AL
-AP
-AM
-BA
-CE
-DF
-ES
-GO
-MA
-MT
-MS
-MG
-PA
-PB
-PR
-PE
-PI
-RJ
-RN
-RS
-RO
-RR
-SC
-SP
-SE
-TO
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
 }
