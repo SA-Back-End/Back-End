@@ -9,16 +9,27 @@ export class UserService {
   constructor(private prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto) {
+
+    const { email, username } = createUserDto;
+
     const userExists = await this.prisma.user.findFirst({
       where: {
-        email: createUserDto.email,
-        username: createUserDto.username,
-        
+        username,        
       },
     })
-
+    
     if (userExists) {
       throw new ConflictException('Usuário já cadastrado');
+    }
+  
+    const emailExists = await this.prisma.user.findFirst({
+      where: {
+        email,        
+      },
+    })
+    
+    if (emailExists) {
+      throw new ConflictException('Email já cadastrado');
     }
 
     const salt = await bcrypt.genSalt();
