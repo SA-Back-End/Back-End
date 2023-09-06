@@ -9,6 +9,7 @@ import {
   ApiNotAcceptableResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -30,6 +31,10 @@ export class ProjectController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiNotAcceptableResponse({ description: 'Nome de projeto muito pequeno', status: 406 })
   @ApiConflictResponse({ description: 'Projeto já existente!', status: 409 })
+  @ApiOperation({
+    summary: 'Cria um projeto',
+    description: 'Cria um projeto na plataforma',
+  })
   async create(@Body() createProjectDto: CreateProjectDto) {
     return this.projectService.create(createProjectDto);
   }
@@ -38,6 +43,10 @@ export class ProjectController {
   @Get('/findStatusToUser/:idProjectManager/:statusProject')
   @ApiParam({name:'idProjectManager'})
   @ApiParam({name:'statusProject'})
+  @ApiOperation({
+    summary: 'Encontra o status do projeto',
+    description: 'Encontra o status do projeto na plataforma com base no id do gerente do projeto e o status do projeto',
+  })
   async findStatusToId(@Param('idProjectManager') idProjectManager: number, @Param('statusProject') statusProject: StatusProject){
     return this.projectService.findStatusToId(idProjectManager, statusProject)
   }
@@ -47,6 +56,10 @@ export class ProjectController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiParam({ name: 'page', schema: { default: 1 } })
+  @ApiOperation({
+    summary: 'Lista todas as experiência',
+    description: 'Lista todas as experiência por páginas',
+  })
   async findAll(@Param('page') page: number) {
     return this.projectService.findAll(page);
   }
@@ -54,6 +67,10 @@ export class ProjectController {
   @ApiOkResponse({ description: 'Informações encontradas', type: CreateProjectDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista um projeto específico',
+    description: 'Lista um projeto específico com base no título',
+  })
   @Get('/findOne/:title')
   async findOne(@Param('title') title: string) {
     return this.projectService.findOne(title);
@@ -63,6 +80,10 @@ export class ProjectController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Atualiza um projeto',
+    description: 'Atualiza um projeto com base no id',
+  })
   @Patch('/update/:id')
   async update(@Param('id') id: number, @Body() updateProjectDto: UpdateProjectDto) {
     return this.projectService.update(id, updateProjectDto);
@@ -73,6 +94,10 @@ export class ProjectController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Usuário não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Deleta um projeto',
+    description: 'Deleta um projeto com base no id',
+  })
   async remove(@Param('id') id: number) {
     return this.projectService.remove(id);
   }
