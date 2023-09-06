@@ -50,7 +50,7 @@ export class CreateUserDto {
     @IsOptional()
     isAdmin: boolean;
 
-    @ApiProperty({ type: String, description: 'Estado do usuário', example: 'Santa Catarina' })
+    @ApiProperty({ type: String, description: 'Estado do usuário', example: 'SC' })
     @IsString()
     @IsOptional()
     state: State;
@@ -59,9 +59,4 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     profilePicture: Buffer
-
-    @ApiProperty({ type: String, description: 'Estado do usuário' })
-    @IsString()
-    @IsOptional()
-    state: State;
 }
