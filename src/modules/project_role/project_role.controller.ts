@@ -78,15 +78,24 @@ export class ProjectRoleController {
     return this.projectRoleService.findOne(id_role);
   }
 
-  @Public()
-  @Patch('/acceptUser/:idRole/:idProject/:idUser')
-  @ApiParam({ name: 'idProject' })
+  @Patch('/acceptUser/:idRole/:idUser')
+  @ApiParam({ name: 'idRole' })
   @ApiParam({ name: 'idUser' })
   async acceptUser(
     @Param('idRole') idRole: number,
     @Param('idUser') idUser: number
   ) {
     return this.projectRoleService.acceptUser(idRole, idUser);
+  }
+
+  @Patch('/fireUser/:idRole/:idUser')
+  @ApiParam({ name: 'idRole' })
+  @ApiParam({ name: 'idUser' })
+  async fireUser(
+    @Param('idRole') idRole: number,
+    @Param('idUser') idUser: number
+  ) {
+    return this.projectRoleService.fireUser(idRole, idUser);
   }
 
   @ApiOkResponse({

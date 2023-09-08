@@ -75,6 +75,19 @@ export class ProjectRoleService {
     });
   }
 
+  async rejectUser() {}
+
+  async fireUser(idRole: number, idUser: number) {
+    return this.prisma.project_role.update({
+      where: {
+        id_role: idRole,
+      },
+      data: {
+        participation: { deleteMany: [{ id_user: idUser }] },
+      },
+    });
+  }
+
   async update(id_role: number, updateProjectRoleDto: UpdateProjectRoleDto) {
     const idInUse = await this.prisma.project_role.findUnique({
       where: {
