@@ -191,6 +191,21 @@ export class UserService {
   }
 
   async follow(followerId: number, followingId: number) {
+    const alreadyFollowing = await this.prisma.user.findFirst({
+      where: {
+        id_user: followerId,
+        followers: { some: { followingId: followingId }}
+      },
+    })
+
+    if(followerId == followingId) {
+      throw new ConflictException('Você não pode seguir você mesmo')
+    }
+
+    if(alreadyFollowing) {
+      throw new ConflictException('Você já segue este usuário')
+    }
+    
     return this.prisma.user.update({
       where: {
         id_user: followerId,
@@ -202,6 +217,17 @@ export class UserService {
   }
 
   async unfollow(followerId: number, followingId: number) {
+    const doesNotFollow = await this.prisma.user.findFirst({
+      where: {
+        id_user: followerId,
+        followers: { some: { followingId: followingId }}
+      },
+    })
+
+    if(!doesNotFollow) {
+      throw new ConflictException('Você não segue este usuário')
+    }
+    
     return this.prisma.user.update({
       where: {
         id_user: followingId,
@@ -219,6 +245,10 @@ export class UserService {
       },
       include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
     })
+
+    if (!isSearching) {
+      throw new NotFoundException('Desculpe, não temos candidatos no momento.')
+    }
 
     return isSearching
   }
