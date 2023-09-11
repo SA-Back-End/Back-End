@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateProjectRoleDto {
     @ApiProperty({type: Number, description: 'ID do projeto relacionado ao cargo', example: 34})
@@ -11,4 +11,9 @@ export class CreateProjectRoleDto {
     @IsString()
     @IsNotEmpty()
     user_role: string;
+    
+    @ApiProperty({type: Boolean, description: 'Disponibilidade do projeto', example: true })
+    @IsBoolean()
+    @IsNotEmpty()
+    isOpen : boolean;
 }
