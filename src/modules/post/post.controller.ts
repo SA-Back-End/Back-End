@@ -23,9 +23,6 @@ import { Public } from 'src/auth/decorators/public.decorator';
 export class PostController {
   constructor(private readonly postService: PostService) { }
 
-  // TO-DO
-  // APLICAR RESPONSE PARA CASO TAG SEJA != DE PRISMA.HardSkills[] === { 'JS', 'TS', 'Java' }
-  // ATUALMENTE ELE RETORNA STATUS 500 INTERNAL SERVER ERROR, ACEITANDO APENAS { 'JS', 'TS', 'Java' }
   @Public()
   @Post('create')
   @ApiCreatedResponse({ description: 'Postagem criada com sucesso', type: CreatePostDto, status: 201 })

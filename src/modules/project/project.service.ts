@@ -16,6 +16,7 @@ export class ProjectService {
       },
     })
   }
+
   async findStatusToId(id_projectManager: number, status: StatusProject): Promise<Project[]>{
     return this.prisma.project.findMany({
       where: {
@@ -28,16 +29,16 @@ export class ProjectService {
   async findAll(page: number) {
     if (page == 0) {
       return this.prisma.project.findMany({
-        include:{userAdmin:true},
+        include: { userAdmin: true, project_Role: { include: { participation: true, screen_Curtidas: true } } }
       });
     } else if (page == 1) {
       return this.prisma.project.findMany({
-        include:{userAdmin:true},
+        include: { userAdmin: true, project_Role: { include: { participation: true, screen_Curtidas: true } } },
         take: 20,
       });
     } else {
       return this.prisma.project.findMany({
-        include:{userAdmin:true},
+        include: { userAdmin: true, project_Role: { include: { participation: true, screen_Curtidas: true } } },
         take: 20,
         skip: (page - 1) * 20,
       });
@@ -49,7 +50,8 @@ export class ProjectService {
       where: {
         project_name: project_name
       },
-      include:{
+      include: {
+        project_Role: { include: { participation: true, screen_Curtidas: true } },
         userAdmin: {
           select: {
             id_user: true,
