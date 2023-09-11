@@ -84,11 +84,29 @@ export class UserController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Usuário não existente', status: 404 })
-  @ApiOperation({
+   @ApiOperation({
     summary: 'Deleta um usuário',
     description: 'Deleta um usuário com base no username',
   })
   async remove(@Param('username') username: string) {
     return this.userService.remove(username);
   }
+
+  @Public()
+  @Patch('/follow/:followerId/:followingId')
+  @ApiParam({ name: 'followerId' })
+  @ApiParam({ name: 'followingId' })
+  async follow(
+    @Param('followerId') followerId: number,
+    @Param('followingId') followingId: number
+  ) { return this.userService.follow(followerId, followingId) }
+
+  @Public()
+  @Patch('/unfollow/:followerId/:followingId')
+  @ApiParam({ name: 'followerId' })
+  @ApiParam({ name: 'followingId' })
+  async unfollow(
+    @Param('followerId') followerId: number,
+    @Param('followingId') followingId: number
+  ) { return this.userService.unfollow(followerId, followingId) }
 }
