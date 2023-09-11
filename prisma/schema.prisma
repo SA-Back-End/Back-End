@@ -128,6 +128,7 @@ model Post {
   text     String
   post_img Bytes  @db.ByteA
   likedBy  User[]
+  post_date DateTime @default(now())
   //-------------
   //Config Prisma 
   user     User   @relation("author", fields: [userId], references: [id_user])
