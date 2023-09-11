@@ -39,4 +39,9 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional()
     @IsString()
     profilePicture: Buffer
+
+    @ApiProperty({ type: Boolean ,description: 'Se o usuário está interessado em participar de um projeto' })
+    @IsOptional()
+    @IsBoolean()
+    isSearchingForProjects: boolean
 }
