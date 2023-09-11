@@ -9,25 +9,41 @@ export class UserService {
   constructor(private prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto) {
+
+    const { email, username } = createUserDto;
+
     const userExists = await this.prisma.user.findFirst({
       where: {
-        email: createUserDto.email,
-        username: createUserDto.username,
-        
+        username,        
       },
     })
-
+    
     if (userExists) {
       throw new ConflictException('Usuário já cadastrado');
+    }
+  
+    const emailExists = await this.prisma.user.findFirst({
+      where: {
+        email,        
+      },
+    })
+    
+    if (emailExists) {
+      throw new ConflictException('Email já cadastrado');
     }
 
     const salt = await bcrypt.genSalt();
     const hash: string = await bcrypt.hash(createUserDto.password, salt);
 
+    const name = `${createUserDto.firstName} ${createUserDto.lastName}`;
+    delete createUserDto.firstName;
+    delete createUserDto.lastName;
+
     return this.prisma.user.create({
       data: {
         ...createUserDto,
-        password: hash
+        password: hash,
+        name,
       },
     })
   }
@@ -35,26 +51,26 @@ export class UserService {
   async findAll(page: number) {
     if (page == 0) {
       const res = await this.prisma.user.findMany({
-        include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
+        include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
       });
-      res.forEach( e=> delete e.password)
+      res.forEach(e => delete e.password)
       return res
 
     } else if (page == 1) {
       const res = await this.prisma.user.findMany({
-      include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
-        ,take: 20,
+        include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
+        , take: 20,
       });
-      res.forEach( e=> delete e.password)
+      res.forEach(e => delete e.password)
       return res
     } else {
       const res = await this.prisma.user.findMany({
-        include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
+        include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
         ,
         take: 20,
         skip: (page - 1) * 20,
       });
-      res.forEach( e=> delete e.password)
+      res.forEach(e => delete e.password)
       return res
     }
   }
@@ -64,13 +80,14 @@ export class UserService {
       where: {
         username
       },
-      include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
+      include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
     });
-    delete userExists.password
-
+    
     if (!userExists) {
       throw new NotFoundException('Usuário não existe')
     }
+    
+    delete userExists.password
 
     return userExists;
   }
@@ -80,7 +97,7 @@ export class UserService {
       where: {
         username
       },
-      select: { id_user: true, username: true, password: true }
+      select: { id_user: true, username: true, password: true, }
     })
 
     if (!userExists) {
@@ -96,11 +113,11 @@ export class UserService {
         username
       }
     })
-    
+
     if (!user) {
       throw new ConflictException('Usuário do parâmetro não existe!')
     }
-    
+
     // CRIAR FUNÇÃO QUE RECEBE POR PARAMETRO TODOS OS ITENS DO UPDATE, E FAZ BONITINHO MENOS CÓDIGO
     if (updateUserDto.username) {
       const usernameInUse = await this.prisma.user.findUnique({
@@ -108,12 +125,12 @@ export class UserService {
           username: updateUserDto.username
         }
       })
-      
+
       if (usernameInUse) {
         throw new ConflictException('Nome de usuário indisponível!')
       }
     }
-    
+
     // CRIAR FUNÇÃO QUE RECEBE POR PARAMETRO TODOS OS ITENS DO UPDATE, E FAZ BONITINHO MENOS CÓDIGO
     if (updateUserDto.email) {
       const emailInUse = await this.prisma.user.findUnique({
@@ -157,4 +174,40 @@ export class UserService {
       }
     })
   }
+
+  async follow(followerId: number, followingId: number) {
+    return this.prisma.user.update({
+      where: {
+        id_user: followerId,
+      },
+      data: {
+        followers: { create: { followingId: followingId } }
+      }
+    })
+  }
+
+  async unfollow(followerId: number, followingId: number) {
+    return this.prisma.user.update({
+      where: {
+        id_user: followingId,
+      },
+      data: {
+        following: { deleteMany: [{ followerId: followerId }] }
+      }
+    })
+  }
+
+  async findInterested() {
+    const isSearching = await this.prisma.user.findMany({
+      where: {
+        isSearchingForProjects: true
+      },
+      include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
+    })
+
+    return isSearching
+  }
+
+
 }
+

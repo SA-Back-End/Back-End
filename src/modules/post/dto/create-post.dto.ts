@@ -16,7 +16,7 @@ export class CreatePostDto {
     @IsNotEmpty()
     text: string;
 
-    @ApiProperty({ type: String,format:'byte', description: 'Imagem da postagem', example: 'fghfghf' })
+    @ApiProperty({ type: String,format:'byte', description: 'Imagem da postagem', example: 'U3dhZ2dlciByb2Nrcw==' })
     @IsString()
     @IsNotEmpty()
     post_img: Buffer;

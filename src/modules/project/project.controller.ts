@@ -17,6 +17,7 @@ import {
   ApiNotAcceptableResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -45,6 +46,10 @@ export class ProjectController {
     status: 406,
   })
   @ApiConflictResponse({ description: 'Projeto já existente!', status: 409 })
+  @ApiOperation({
+    summary: 'Cria um projeto',
+    description: 'Cria um projeto na plataforma',
+  })
   async create(@Body() createProjectDto: CreateProjectDto) {
     return this.projectService.create(createProjectDto);
   }
@@ -53,6 +58,11 @@ export class ProjectController {
   @Get('/findStatusToUser/:idProjectManager/:statusProject')
   @ApiParam({ name: 'idProjectManager' })
   @ApiParam({ name: 'statusProject' })
+  @ApiOperation({
+    summary: 'Encontra o status do projeto',
+    description:
+      'Encontra o status do projeto na plataforma com base no id do gerente do projeto e o status do projeto',
+  })
   async findStatusToId(
     @Param('idProjectManager') idProjectManager: number,
     @Param('statusProject') statusProject: StatusProject
@@ -72,6 +82,10 @@ export class ProjectController {
     status: 401,
   })
   @ApiParam({ name: 'page', schema: { default: 1 } })
+  @ApiOperation({
+    summary: 'Lista todas as experiência',
+    description: 'Lista todas as experiência por páginas',
+  })
   async findAll(@Param('page') page: number) {
     return this.projectService.findAll(page);
   }
@@ -85,6 +99,10 @@ export class ProjectController {
   @ApiUnauthorizedResponse({
     description: 'Acesso não autorizado',
     status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista um projeto específico',
+    description: 'Lista um projeto específico com base no título',
   })
   @Get('/findOne/:title')
   async findOne(@Param('title') title: string) {
@@ -101,7 +119,11 @@ export class ProjectController {
     description: 'Acesso não autorizado',
     status: 401,
   })
-  @ApiNotFoundResponse({ description: 'Projeto não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Atualiza um projeto',
+    description: 'Atualiza um projeto com base no id',
+  })
+  @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
   @Patch('/update/:id')
   async update(
     @Param('id') id: number,
@@ -118,6 +140,10 @@ export class ProjectController {
     status: 401,
   })
   @ApiNotFoundResponse({ description: 'Usuário não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Deleta um projeto',
+    description: 'Deleta um projeto com base no id',
+  })
   async remove(@Param('id') id: number) {
     return this.projectService.remove(id);
   }

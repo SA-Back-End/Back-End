@@ -11,6 +11,7 @@ import {
   ApiNotAcceptableResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -28,6 +29,10 @@ export class UserController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiNotAcceptableResponse({ description: 'Usuário ou senha muito pequenos', status: 406 })
   @ApiConflictResponse({ description: 'Usuário já existente!', status: 409 })
+  @ApiOperation({
+    summary: 'Cria um usuário',
+    description: 'Cria uma usuário na plataforma',
+  })
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
   }
@@ -38,6 +43,10 @@ export class UserController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiParam({ name: 'page', schema: { default: 1 } })
+  @ApiOperation({
+    summary: 'Lista todos os usuários',
+    description: 'Lista todoso os usuários por páginas',
+  })
   async findAll(@Param('page') page: number) {
     return this.userService.findAll(page);
   }
@@ -46,6 +55,10 @@ export class UserController {
   @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista um usuário específico',
+    description: 'Lista um usuário específico com base no username',
+  })
   @Get('/findOne/:username')
   async findOne(@Param('username') username: string) {
     return this.userService.findOne(username);
@@ -56,6 +69,10 @@ export class UserController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Usuário não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Atualiza um usuário',
+    description: 'Atualiza um usuário com base no username',
+  })
   @Patch('/update/:username')
   async update(@Param('username') username: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(username, updateUserDto);
@@ -67,7 +84,39 @@ export class UserController {
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Usuário não existente', status: 404 })
+   @ApiOperation({
+    summary: 'Deleta um usuário',
+    description: 'Deleta um usuário com base no username',
+  })
   async remove(@Param('username') username: string) {
     return this.userService.remove(username);
   }
+
+  @Public()
+  @Patch('/follow/:followerId/:followingId')
+  async follow(
+    @Param('followerId') followerId: number,
+    @Param('followingId') followingId: number
+  ) { return this.userService.follow(followerId, followingId) }
+
+  @Public()
+  @Patch('/unfollow/:followerId/:followingId')
+  async unfollow(
+    @Param('followerId') followerId: number,
+    @Param('followingId') followingId: number
+  ) { return this.userService.unfollow(followerId, followingId) }
+
+  @Public()
+  @Get('/findInterested')
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista usuários interessados em participar de um projeto',
+    description: 'Lista usuários com a opção isSearchingForProjects assinalada como true',
+  })
+  async findInterested() {
+    return this.userService.findInterested();
+  }
+
 }

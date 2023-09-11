@@ -18,6 +18,7 @@ import {
   ApiNotAcceptableResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -43,6 +44,10 @@ export class ProjectRoleController {
     status: 406,
   })
   @ApiConflictResponse({ description: 'Cargo já existente!', status: 409 })
+  @ApiOperation({
+    summary: 'Deleta um cargo do projeto',
+    description: 'Deleta um cargo do projeto com base no id',
+  })
   async create(@Body() createProjectRoleDto: CreateProjectRoleDto) {
     return this.projectRoleService.create(createProjectRoleDto);
   }
@@ -57,6 +62,10 @@ export class ProjectRoleController {
   @ApiUnauthorizedResponse({
     description: 'Acesso não autorizado',
     status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista todos os cargos do projeto',
+    description: 'Lista todos os cargos do projeto por páginas',
   })
   @ApiParam({ name: 'page', schema: { default: 1 } })
   async findAll(@Param('page') page: number) {
@@ -74,6 +83,10 @@ export class ProjectRoleController {
     status: 401,
   })
   @Get('/findOne/:id_role')
+  @ApiOperation({
+    summary: 'Lista um cargo do projeto específico',
+    description: 'Lista um cargo do projeto específico com base no id do cargo',
+  })
   async findOne(@Param('id_role') id_role: number) {
     return this.projectRoleService.findOne(id_role);
   }
@@ -109,6 +122,10 @@ export class ProjectRoleController {
     status: 401,
   })
   @ApiNotFoundResponse({ description: 'Cargo não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Atualiza um cargo do projeto',
+    description: 'Atualiza um cargo do projeto com base no id do cargo',
+  })
   @Patch('/update/:id_role')
   async update(
     @Param('id_role') id_role: number,
@@ -125,6 +142,10 @@ export class ProjectRoleController {
     status: 401,
   })
   @ApiNotFoundResponse({ description: 'Cargo não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Deleta um cargo do projeto',
+    description: 'Deleta um cargo do projeto com base no id do cargo',
+  })
   remove(@Param('id_role') id_role: number) {
     return this.projectRoleService.remove(id_role);
   }
