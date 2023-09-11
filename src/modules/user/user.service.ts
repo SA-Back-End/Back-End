@@ -80,7 +80,7 @@ export class UserService {
       where: {
         username
       },
-      select: { id_user: true, username: true, password: true }
+      select: { id_user: true, username: true, password: true, }
     })
 
     if (!userExists) {
