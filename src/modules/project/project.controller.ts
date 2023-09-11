@@ -76,6 +76,18 @@ export class ProjectController {
     return this.projectService.findOne(title);
   }
 
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateProjectDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista projetos especificamente com a chave inserida',
+    description: 'Lista projetos especificamente com base no título',
+  })
+  @Get('/findManyByTitle/:title')
+  async findManyByTitle(@Param('title') title: string) {
+    return this.projectService.findManyByTitle(title);
+  }
+
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: UpdateProjectDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })

@@ -68,6 +68,15 @@ export class ProjectService {
     return projectExists;
   }
 
+  async findManyByTitle(key: string){
+    
+    const projectsNearestKey = await this.prisma.project.findMany({
+      where: { project_name: { contains: key, mode:'insensitive' } }
+    })
+
+    return projectsNearestKey;
+  }
+
   async update(id: number, updateProjectDto: UpdateProjectDto) {
     const idInUse = await this.prisma.project.findUnique({
       where: {
