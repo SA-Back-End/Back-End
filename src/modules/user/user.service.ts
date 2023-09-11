@@ -197,5 +197,17 @@ export class UserService {
     })
   }
 
+  async findInterested() {
+    const isSearching = await this.prisma.user.findMany({
+      where: {
+        isSearchingForProjects: true
+      },
+      include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
+    })
+
+    return isSearching
+  }
+
+
 }
 

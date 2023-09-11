@@ -94,8 +94,6 @@ export class UserController {
 
   @Public()
   @Patch('/follow/:followerId/:followingId')
-  @ApiParam({ name: 'followerId' })
-  @ApiParam({ name: 'followingId' })
   async follow(
     @Param('followerId') followerId: number,
     @Param('followingId') followingId: number
@@ -103,10 +101,22 @@ export class UserController {
 
   @Public()
   @Patch('/unfollow/:followerId/:followingId')
-  @ApiParam({ name: 'followerId' })
-  @ApiParam({ name: 'followingId' })
   async unfollow(
     @Param('followerId') followerId: number,
     @Param('followingId') followingId: number
   ) { return this.userService.unfollow(followerId, followingId) }
+
+  @Public()
+  @Get('/findInterested')
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista usuários interessados em participar de um projeto',
+    description: 'Lista usuários com a opção isSearchingForProjects assinalada como true',
+  })
+  async findInterested() {
+    return this.userService.findInterested();
+  }
+
 }
