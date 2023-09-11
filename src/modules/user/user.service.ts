@@ -9,25 +9,41 @@ export class UserService {
   constructor(private prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto) {
+
+    const { email, username } = createUserDto;
+
     const userExists = await this.prisma.user.findFirst({
       where: {
-        email: createUserDto.email,
-        username: createUserDto.username,
-
+        username,        
       },
     })
-
+    
     if (userExists) {
       throw new ConflictException('Usuário já cadastrado');
+    }
+  
+    const emailExists = await this.prisma.user.findFirst({
+      where: {
+        email,        
+      },
+    })
+    
+    if (emailExists) {
+      throw new ConflictException('Email já cadastrado');
     }
 
     const salt = await bcrypt.genSalt();
     const hash: string = await bcrypt.hash(createUserDto.password, salt);
 
+    const name = `${createUserDto.firstName} ${createUserDto.lastName}`;
+    delete createUserDto.firstName;
+    delete createUserDto.lastName;
+
     return this.prisma.user.create({
       data: {
         ...createUserDto,
-        password: hash
+        password: hash,
+        name,
       },
     })
   }
@@ -66,11 +82,12 @@ export class UserService {
       },
       include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
     });
-    delete userExists.password
-
+    
     if (!userExists) {
       throw new NotFoundException('Usuário não existe')
     }
+    
+    delete userExists.password
 
     return userExists;
   }
@@ -80,7 +97,7 @@ export class UserService {
       where: {
         username
       },
-      select: { id_user: true, username: true, password: true }
+      select: { id_user: true, username: true, password: true, }
     })
 
     if (!userExists) {
