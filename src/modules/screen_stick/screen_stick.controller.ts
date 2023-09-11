@@ -11,6 +11,7 @@ import {
   ApiNotAcceptableResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -26,6 +27,10 @@ export class ScreenStickController {
   @Post('create')
   @ApiCreatedResponse({description: 'Curtido com Sucesso', type: CreateScreenStickDto, status: 201})
   @ApiBadRequestResponse({description: 'Requisição inválida', status: 400})
+  @ApiOperation({
+    summary: 'Cria uma curtida',
+    description: 'Cria uma curtida na plataforma',
+  })
   async create(@Body() createScreenStickDto: CreateScreenStickDto) {
     return this.screenStickService.create(createScreenStickDto);
   }
@@ -35,6 +40,10 @@ export class ScreenStickController {
   @ApiBadRequestResponse({description: 'Requisição Inválida', status: 400})
   @ApiUnauthorizedResponse({description: 'Acesso não autorizado', status: 401})
   @ApiParam({name: 'page', schema: {default:1}})
+  @ApiOperation({
+    summary: 'Lista todas as curtidas',
+    description: 'Lista todas as curtidas por páginas',
+  })
   async findAll(@Param('page') page: number) {
     return this.screenStickService.findAll(page);
   }
@@ -44,6 +53,10 @@ export class ScreenStickController {
   @ApiUnauthorizedResponse({description: 'Acesso não autorizado', status: 401})
   @ApiNotFoundResponse({ description: 'Curtida não existente', status: 404 })
   @Get('/findOne/:id_stick')
+  @ApiOperation({
+    summary: 'Lista uma curtida específica',
+    description: 'Lista uma curtida específica com base no id',
+  })
   async findOne(@Param('id_stick') id_stick: number) {
     return this.screenStickService.findOne(id_stick);
   }
@@ -53,6 +66,10 @@ export class ScreenStickController {
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Curtida não existente', status: 404 })
   @Patch('/update/:id_stick')
+  @ApiOperation({
+    summary: 'Atualiza uma curtida',
+    description: 'Atualiza uma curtida com base no id',
+  })
   async update(@Param('id_stick') id_stick: number, @Body() updateScreenStickDto: UpdateScreenStickDto) {
     return this.screenStickService.update(id_stick, updateScreenStickDto);
   }
@@ -63,6 +80,10 @@ export class ScreenStickController {
   @ApiBadRequestResponse({description: 'Requisição inválida', status: 400})
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Curtida não existente', status: 404 })
+  @ApiOperation({
+    summary: 'Deleta uma curtida',
+    description: 'Deleta uma curtida com base no id',
+  })
   async remove(@Param('id_stick') id_stick: number) {
     return this.screenStickService.remove(id_stick);
   }

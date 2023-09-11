@@ -14,7 +14,7 @@ export class CreateProjectDto {
     @IsNotEmpty()
     status: StatusProject;
 
-    @ApiProperty({ type: [String], description: 'Areas pesquisadas pelo projeto', example: 'Medicina' })
+    @ApiProperty({ type: [String], description: 'Areas pesquisadas pelo projeto', example: ["Medicina"] })
     @IsArray()
     @IsNotEmpty()
     studyArea: StudyArea[];
