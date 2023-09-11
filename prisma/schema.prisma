@@ -12,8 +12,7 @@ model User {
   id_user                Int        @id @default(autoincrement())
   status                 StatusUser @default(Disponivel)
   username               String     @unique @db.VarChar(20)
-  firstName              String     @db.VarChar(50)
-  lastName               String     @db.VarChar(60)
+  name                   String     @db.VarChar(110)
   email                  String     @unique @db.VarChar(70)
   password               String
   isAdmin                Boolean    @default(false)
@@ -123,15 +122,15 @@ model Certificates {
 
 model Post {
   // Campos tabela
-  id       Int    @id @default(autoincrement())
-  userId   Int
-  text     String
-  post_img Bytes  @db.ByteA
-  likedBy  User[]
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  text      String
+  post_img  Bytes    @db.ByteA
+  likedBy   User[]
   post_date DateTime @default(now())
   //-------------
   //Config Prisma 
-  user     User   @relation("author", fields: [userId], references: [id_user])
+  user      User     @relation("author", fields: [userId], references: [id_user])
   //-------------
 }
 

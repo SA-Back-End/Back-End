@@ -35,10 +35,15 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hash: string = await bcrypt.hash(createUserDto.password, salt);
 
+    const name = `${createUserDto.firstName} ${createUserDto.lastName}`;
+    delete createUserDto.firstName;
+    delete createUserDto.lastName;
+
     return this.prisma.user.create({
       data: {
         ...createUserDto,
-        password: hash
+        password: hash,
+        name,
       },
     })
   }
