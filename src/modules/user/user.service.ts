@@ -82,11 +82,12 @@ export class UserService {
       },
       include: {posts: true, project: true,sticky:true,participation:true, likes:true,formation:true,following:true,followers:true,experience:true,certificate:true}
     });
-    delete userExists.password
-
+    
     if (!userExists) {
       throw new NotFoundException('Usuário não existe')
     }
+    
+    delete userExists.password
 
     return userExists;
   }
