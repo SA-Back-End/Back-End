@@ -3,6 +3,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project, StatusProject } from '@prisma/client';
+import { from } from 'rxjs';
 
 @Injectable()
 export class ProjectService {
@@ -16,7 +17,7 @@ export class ProjectService {
     })
   }
 
-  async findStatusToId(id_projectManager: number, status: StatusProject): Promise<Project[]> {
+  async findStatusToId(id_projectManager: number, status: StatusProject): Promise<Project[]>{
     return this.prisma.project.findMany({
       where: {
         id_projectManager,
@@ -51,8 +52,14 @@ export class ProjectService {
       },
       include: {
         project_Role: { include: { participation: true, screen_Curtidas: true } },
-      }
-    })
+        userAdmin: {
+          select: {
+            id_user: true,
+            username:true
+        },
+      },
+    },
+  });
 
     if (!projectExists) {
       throw new NotFoundException('Projeto não existe')
