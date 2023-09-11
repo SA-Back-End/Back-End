@@ -107,6 +107,13 @@ export class UserController {
 
   @Public()
   @Patch('/follow/:followerId/:followingId')
+  @ApiOkResponse({ description: 'Usuário seguido com sucesso', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Seguir um usuário',
+    description: 'Seguir um usuário baseado em seu id, followingId é quem segue, followerId é quem é seguido',
+  })
   async follow(
     @Param('followerId') followerId: number,
     @Param('followingId') followingId: number
@@ -114,6 +121,13 @@ export class UserController {
 
   @Public()
   @Patch('/unfollow/:followerId/:followingId')
+  @ApiOkResponse({ description: 'Usuário deixado de ser seguido com sucesso', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Deixar de seguir',
+    description: 'Deixar de seguir um usuário baseado em seu id, followingId é quem segue, followerId é quem é seguido',
+  })
   async unfollow(
     @Param('followerId') followerId: number,
     @Param('followingId') followingId: number
