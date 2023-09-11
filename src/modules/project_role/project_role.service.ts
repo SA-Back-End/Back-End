@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProjectRoleDto } from './dto/create-project_role.dto';
 import { UpdateProjectRoleDto } from './dto/update-project_role.dto';
 import { PrismaService } from './../../database/PrismaService';
@@ -12,34 +16,36 @@ export class ProjectRoleService {
     const roleExists = await this.prisma.project_role.findFirst({
       where: {
         id_project: createProjectRoleDto.id_project,
-        user_role:  createProjectRoleDto.user_role,
-      }
-    })
-    if(roleExists) {
-      throw new ConflictException('Cargo já existente')
+        user_role: createProjectRoleDto.user_role,
+      },
+    });
+    if (roleExists) {
+      throw new ConflictException('Cargo já existente');
     }
 
     return this.prisma.project_role.create({
       data: {
-        ...createProjectRoleDto
-      }
-    })
-
+        ...createProjectRoleDto,
+      },
+    });
   }
 
   async findAll(page: number) {
-    if(page == 0) {
+    if (page == 0) {
       return this.prisma.project_role.findMany({
-        include: {participation: true, project: true, screen_Curtidas: true}
-      })
+        include: { participation: true, project: true, screen_Curtidas: true },
+      });
     } else if (page == 1) {
-      return this.prisma. project_role.findMany({
-        include: {participation: true, project: true, screen_Curtidas: true}
-        ,take: 20})
+      return this.prisma.project_role.findMany({
+        include: { participation: true, project: true, screen_Curtidas: true },
+        take: 20,
+      });
     } else {
       return this.prisma.project_role.findMany({
-        include: {participation: true, project: true, screen_Curtidas: true}
-        ,take: 20, skip: (page-1)*20})
+        include: { participation: true, project: true, screen_Curtidas: true },
+        take: 20,
+        skip: (page - 1) * 20,
+      });
     }
   }
 
@@ -47,48 +53,73 @@ export class ProjectRoleService {
     const roleExists = await this.prisma.project_role.findFirst({
       where: {
         id_role: id_role,
-      }
-    })
-    
-    if(!roleExists) {
-      throw new NotFoundException('Cargo não existe')
+      },
+      include: { participation: true },
+    });
+
+    if (!roleExists) {
+      throw new NotFoundException('Cargo não existe');
     }
-    
+
     return roleExists;
+  }
+
+  async acceptUser(idRole: number, idUser: number) {
+    return this.prisma.project_role.update({
+      where: {
+        id_role: idRole,
+      },
+      data: {
+        participation: { create: { id_user: idUser } },
+      },
+    });
+  }
+
+  async rejectUser() {}
+
+  async fireUser(idRole: number, idUser: number) {
+    return this.prisma.project_role.update({
+      where: {
+        id_role: idRole,
+      },
+      data: {
+        participation: { deleteMany: [{ id_user: idUser }] },
+      },
+    });
   }
 
   async update(id_role: number, updateProjectRoleDto: UpdateProjectRoleDto) {
     const idInUse = await this.prisma.project_role.findUnique({
       where: {
-        id_role: id_role
-      }
-    })
-    if(!idInUse) {
-      throw new ConflictException('Cargo não existe')
+        id_role: id_role,
+      },
+    });
+    if (!idInUse) {
+      throw new ConflictException('Cargo não existe');
     }
     return await this.prisma.project_role.update({
       data: {
-        ...updateProjectRoleDto
+        ...updateProjectRoleDto,
       },
       where: {
-        id_role: id_role
-      }
-    })
+        id_role: id_role,
+      },
+    });
   }
 
   async remove(id_role: number) {
     const roleExists = await this.prisma.project_role.findUnique({
       where: {
-        id_role: id_role
-      }
-    })
-    if(!roleExists) {
-      throw new NotFoundException('Cargo não existe')
+        id_role: id_role,
+      },
+    });
+    if (!roleExists) {
+      throw new NotFoundException('Cargo não existe');
     }
     return await this.prisma.project_role.delete({
       where: {
-        id_role: id_role
-      }
-    })
+        id_role: id_role,
+      },
+    });
   }
 }
