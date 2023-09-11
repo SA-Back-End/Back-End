@@ -65,6 +65,19 @@ export class UserController {
   }
 
   @Public()
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista usuários conforme a busca',
+    description: 'Lista usuários com base na key fornecida nos usernames ou nome',
+  })
+  @Get('/findByUserNameAndName/:key')
+  async findByUserNameAndName(@Param('key') key: string) {
+    return this.userService.findByUserNameAndName(key);
+  }
+
+  @Public()
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: UpdateUserDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
