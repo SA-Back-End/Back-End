@@ -212,19 +212,20 @@ export class UserService {
       },
       data: {
         followers: { create: { followingId: followingId } }
-      }
+      },
+      
     })
   }
 
   async unfollow(followerId: number, followingId: number) {
-    const doesNotFollow = await this.prisma.user.findFirst({
+    const doesFollow = await this.prisma.user.findFirst({
       where: {
         id_user: followerId,
         followers: { some: { followingId: followingId }}
       },
     })
 
-    if(!doesNotFollow) {
+    if(!doesFollow) {
       throw new ConflictException('Você não segue este usuário')
     }
     
@@ -249,6 +250,8 @@ export class UserService {
     if (!isSearching) {
       throw new NotFoundException('Desculpe, não temos candidatos no momento.')
     }
+
+    isSearching.forEach(e => delete e.password)
 
     return isSearching
   }
