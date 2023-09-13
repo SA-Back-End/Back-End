@@ -31,7 +31,7 @@ export class CreateExperienceDto {
   
 	@IsNotEmpty()
 	@IsDateString()
-	@ApiProperty({ type: Date, description: 'Data de fim na experiência', required: true, example: '1815-12-16:06:01:12.029Z' })
+	@ApiProperty({ type: Date, description: 'Data de fim na experiência', required: true, example: '1815-12-16T06:01:12.029Z' })
   endDate: Date;       
 	
 	@IsOptional()
