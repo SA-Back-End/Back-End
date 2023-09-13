@@ -92,7 +92,7 @@ export class UserController {
   }
 
   @Public()
-  @Delete('/delete/:username')
+  @Delete('/delete/:usernameAdmin/:usernameToDelete')
   @ApiOkResponse({ description: 'Usuário deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
@@ -101,8 +101,11 @@ export class UserController {
     summary: 'Deleta um usuário',
     description: 'Deleta um usuário com base no username',
   })
-  async remove(@Param('username') username: string) {
-    return this.userService.remove(username);
+  async remove(
+    @Param('usernameAdmin') usernameAdmin: string, 
+    @Param('usernameToDelete') usernameToDelete: string) {
+    console.log(usernameAdmin, usernameToDelete)
+    return this.userService.remove(usernameAdmin, usernameToDelete);
   }
 
   @Public()
