@@ -101,14 +101,15 @@ export class ProjectRoleController {
     return this.projectRoleService.acceptUser(idRole, idUser);
   }
 
-  @Patch('/fireUser/:idRole/:idUser')
+  @Patch('/fireUser/:idProjectManager/:idRole/:idUser')
   @ApiParam({ name: 'idRole' })
   @ApiParam({ name: 'idUser' })
   async fireUser(
+    @Param('idProjectManager') idProjectManager: number,
     @Param('idRole') idRole: number,
     @Param('idUser') idUser: number
   ) {
-    return this.projectRoleService.fireUser(idRole, idUser);
+    return this.projectRoleService.fireUser(idProjectManager, idRole, idUser);
   }
 
   @ApiOkResponse({
