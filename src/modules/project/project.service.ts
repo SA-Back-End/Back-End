@@ -37,7 +37,12 @@ export class ProjectService {
     if (page == 0) {
       return this.prisma.project.findMany({
         include: {
-          userAdmin: true,
+          userAdmin: {
+            select: {
+              id_user: true,
+              username: true,
+            },
+          },
           project_Role: {
             include: { participation: true, screen_Curtidas: true },
           },
@@ -46,7 +51,12 @@ export class ProjectService {
     } else if (page == 1) {
       return this.prisma.project.findMany({
         include: {
-          userAdmin: true,
+          userAdmin: {
+            select: {
+              id_user: true,
+              username: true,
+            },
+          },
           project_Role: {
             include: { participation: true, screen_Curtidas: true },
           },
@@ -56,7 +66,12 @@ export class ProjectService {
     } else {
       return this.prisma.project.findMany({
         include: {
-          userAdmin: true,
+          userAdmin: {
+            select: {
+              id_user: true,
+              username: true,
+            },
+          },
           project_Role: {
             include: { participation: true, screen_Curtidas: true },
           },

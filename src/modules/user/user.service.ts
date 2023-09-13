@@ -1,6 +1,7 @@
 import { PrismaService } from './../../database/PrismaService';
 import {
   ConflictException,
+  Delete,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -215,45 +216,42 @@ export class UserService {
     });
   }
 
-  async remove(username: string) {
+  async remove(usernameAdmin: string, usernameToDelete: string) {
     const userExists = await this.prisma.user.findFirst({
       where: {
-        username,
+        username: usernameAdmin,
       },
     });
 
-    if (!userExists) {
+    const userDeleteExists = await this.prisma.user.findFirst({
+      where: {
+        username: usernameToDelete,
+      },
+    });
+
+    if (!userExists || !userDeleteExists) {
       throw new NotFoundException('Usuário não existe');
     }
+    console.log(usernameAdmin, usernameToDelete);
 
-    return await this.prisma.user.delete({
-      where: {
-        username,
-      },
-    });
+    if (usernameAdmin == usernameToDelete) {
+      return await this.prisma.user.delete({
+        where: {
+          username: usernameToDelete,
+        },
+      });
+    } else if (userExists.isAdmin == true) {
+      return await this.prisma.user.delete({
+        where: {
+          username: usernameToDelete,
+        },
+      });
+    } else {
+      throw new ConflictException('Ação não autorizada');
+    }
   }
 
   async follow(followerId: number, followingId: number) {
-    const follower = await this.prisma.user.findUnique({
-      where: {
-        id_user: followerId,
-      },
-    });
-
-    if (!follower) {
-      throw new NotFoundException('Id do Usuário Seguidor não existe');
-    }
-
-    const following = await this.prisma.user.findUnique({
-      where: {
-        id_user: followingId,
-      },
-    });
-
-    if (!following) {
-      throw new NotFoundException('Id do Usuário Seguindo não existe');
-    }
-
     const alreadyFollowing = await this.prisma.user.findFirst({
       where: {
         id_user: followerId,
@@ -269,7 +267,7 @@ export class UserService {
       throw new ConflictException('Você já segue este usuário');
     }
 
-    await this.prisma.user.update({
+    return this.prisma.user.update({
       where: {
         id_user: followerId,
       },
@@ -277,34 +275,9 @@ export class UserService {
         followers: { create: { followingId: followingId } },
       },
     });
-
-    const res = {
-      response: `Você está seguindo o usuário ${following.username}`,
-    };
-    return res;
   }
 
   async unfollow(followerId: number, followingId: number) {
-    const follower = await this.prisma.user.findUnique({
-      where: {
-        id_user: followerId,
-      },
-    });
-
-    if (!follower) {
-      throw new NotFoundException('Id do Usuário Seguidor não existe');
-    }
-
-    const following = await this.prisma.user.findUnique({
-      where: {
-        id_user: followingId,
-      },
-    });
-
-    if (!following) {
-      throw new NotFoundException('Id do Usuário Seguindo não existe');
-    }
-
     const doesNotFollow = await this.prisma.user.findFirst({
       where: {
         id_user: followerId,
@@ -316,7 +289,7 @@ export class UserService {
       throw new ConflictException('Você não segue este usuário');
     }
 
-    await this.prisma.user.update({
+    return this.prisma.user.update({
       where: {
         id_user: followingId,
       },
@@ -324,11 +297,6 @@ export class UserService {
         following: { deleteMany: [{ followerId: followerId }] },
       },
     });
-
-    const res = {
-      response: `Você está seguindo o usuário ${following.username}`,
-    };
-    return res;
   }
 
   async findInterested() {
