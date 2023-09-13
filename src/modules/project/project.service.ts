@@ -136,10 +136,10 @@ export class ProjectService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id_project: number, idProjectManager: number) {
     const projectExists = await this.prisma.project.findUnique({
       where: {
-        id_project: id,
+        id_project,
       },
     });
 
@@ -149,7 +149,7 @@ export class ProjectService {
 
     return await this.prisma.project.delete({
       where: {
-        id_project: id,
+        id_project,
       },
     });
   }

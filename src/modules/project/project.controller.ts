@@ -138,14 +138,14 @@ export class ProjectController {
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
   @Patch('/update/:id_projectManager/:id_project')
   async update(
-    @Param('id_project') id_project: number,
-    @Param('id_projectManager') id_projectManager: number,
+    @Param('id_project') idProject: number,
+    @Param('id_projectManager') idProjectManager: number,
     @Body() updateProjectDto: UpdateProjectDto
   ) {
-    return this.projectService.update(id_project, updateProjectDto, id_projectManager);
+    return this.projectService.update(idProject, updateProjectDto, idProjectManager);
   }
 
-  @Delete('/delete/:id')
+  @Delete('/delete/:id_projectManager/:id_project')
   @ApiOkResponse({ description: 'Usuário deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({
@@ -157,7 +157,10 @@ export class ProjectController {
     summary: 'Deleta um projeto',
     description: 'Deleta um projeto com base no id',
   })
-  async remove(@Param('id') id: number) {
-    return this.projectService.remove(id);
+  async remove(
+      @Param('id_project') idProject: number,
+      @Param('id_projectManager') idProjectManager: number
+    ) {
+    return this.projectService.remove(idProject, idProjectManager);
   }
 }
