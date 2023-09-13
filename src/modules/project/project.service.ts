@@ -2,7 +2,7 @@ import { PrismaService } from './../../database/PrismaService';
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -116,23 +116,22 @@ export class ProjectService {
     return projectsNearestKey;
   }
 
-  async update(id: number, updateProjectDto: UpdateProjectDto) {
-    const idInUse = await this.prisma.project.findUnique({
+  async update(id_project: number, updateProjectDto: UpdateProjectDto, id_projectManager: number) {
+    const projectToUpdate = await this.prisma.project.findUnique({
       where: {
-        id_project: id,
+        id_project,
       },
     });
 
-    if (!idInUse) {
-      throw new ConflictException('projectname indisponível');
-    }
+    if (!projectToUpdate) throw new ConflictException('Id project inválido');
+    if ( projectToUpdate.id_projectManager !== id_projectManager ) throw new ConflictException('Usuário sem permição de exclusão');
 
     return await this.prisma.project.update({
       data: {
         ...updateProjectDto,
       },
       where: {
-        id_project: id,
+        id_project
       },
     });
   }

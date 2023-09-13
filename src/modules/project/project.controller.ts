@@ -136,12 +136,13 @@ export class ProjectController {
     description: 'Atualiza um projeto com base no id',
   })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
-  @Patch('/update/:id')
+  @Patch('/update/:id_projectManager/:id_project')
   async update(
-    @Param('id') id: number,
+    @Param('id_project') id_project: number,
+    @Param('id_projectManager') id_projectManager: number,
     @Body() updateProjectDto: UpdateProjectDto
   ) {
-    return this.projectService.update(id, updateProjectDto);
+    return this.projectService.update(id_project, updateProjectDto, id_projectManager);
   }
 
   @Delete('/delete/:id')
