@@ -38,8 +38,7 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hash: string = await bcrypt.hash(createUserDto.password, salt);
 
-    const name =
-      `${createUserDto.firstName} ${createUserDto.lastName}`.toLowerCase();
+    const name = `${createUserDto.firstName} ${createUserDto.lastName}`;
     delete createUserDto.firstName;
     delete createUserDto.lastName;
 
@@ -114,7 +113,7 @@ export class UserService {
     const usersNearestKey = await this.prisma.user.findMany({
       where: {
         OR: [
-          { name: { contains: key.toLowerCase() } },
+          { name: { contains: key, mode: 'insensitive' } },
           { username: { contains: key } },
         ],
       },
