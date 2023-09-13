@@ -86,7 +86,7 @@ export class UserService {
     })
 
     usersNearestKey.forEach(e => delete e.password)
-
+    
     return usersNearestKey;
   }
 
