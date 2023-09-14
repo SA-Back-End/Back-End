@@ -7,13 +7,13 @@ import {
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project, StatusProject } from '@prisma/client';
-import { from } from 'rxjs';
+import IProjectRemoveResponse from './helpers/interfaces/IProjectDeleteResponse';
 
 @Injectable()
 export class ProjectService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async create(createProjectDto: CreateProjectDto) {
+  async create(createProjectDto: CreateProjectDto): Promise<Project> {
     return this.prisma.project.create({
       data: {
         ...createProjectDto,
@@ -33,7 +33,7 @@ export class ProjectService {
     });
   }
 
-  async findAll(page: number) {
+  async findAll(page: number): Promise<Project[]> {
     if (page == 0) {
       return this.prisma.project.findMany({
         include: {
@@ -82,7 +82,7 @@ export class ProjectService {
     }
   }
 
-  async findOne(project_name: string) {
+  async findOne(project_name: string): Promise<Project | NotFoundException> {
     const projectExists = await this.prisma.project.findFirst({
       where: {
         project_name: project_name,
@@ -107,16 +107,16 @@ export class ProjectService {
     return projectExists;
   }
 
-  async findManyByTitle(key: string){
-    
+  async findManyByTitle(key: string): Promise<Project[]> {
+
     const projectsNearestKey = await this.prisma.project.findMany({
-      where: { project_name: { contains: key, mode:'insensitive' } }
+      where: { project_name: { contains: key, mode: 'insensitive' } }
     })
 
     return projectsNearestKey;
   }
 
-  async update(id_project: number, updateProjectDto: UpdateProjectDto, id_projectManager: number) {
+  async update(id_project: number, updateProjectDto: UpdateProjectDto, idProjectManager: number): Promise<Project | ConflictException> {
     const projectToUpdate = await this.prisma.project.findUnique({
       where: {
         id_project,
@@ -124,7 +124,7 @@ export class ProjectService {
     });
 
     if (!projectToUpdate) throw new ConflictException('Id project inválido');
-    if ( projectToUpdate.id_projectManager !== id_projectManager ) throw new ConflictException('Usuário sem permição de exclusão');
+    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para fazer alterações!`);
 
     return await this.prisma.project.update({
       data: {
@@ -136,21 +136,30 @@ export class ProjectService {
     });
   }
 
-  async remove(id_project: number, idProjectManager: number) {
-    const projectExists = await this.prisma.project.findUnique({
+  async remove(id_project: number, idProjectManager: number): Promise< IProjectRemoveResponse | ConflictException > {
+
+    const projectToUpdate = await this.prisma.project.findUnique({
       where: {
         id_project,
       },
     });
 
-    if (!projectExists) {
-      throw new NotFoundException('Projeto não existe');
+    if (!projectToUpdate) throw new NotFoundException('Projeto não existe');
+    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para excluir o projeto!`);
+
+    const hadSucceded = await this.prisma.project.delete({
+      where: {
+        id_project,
+      },
+    });
+
+    if (hadSucceded) {
+      return {
+        error: false,
+        message: 'Projeto deletado com sucesso!',
+        status: 200,
+      }
     }
-
-    return await this.prisma.project.delete({
-      where: {
-        id_project,
-      },
-    });
+    throw new ConflictException('Erro ao deletar projeto');
   }
 }
