@@ -23,7 +23,6 @@ import { Public } from 'src/auth/decorators/public.decorator';
 export class PostController {
   constructor(private readonly postService: PostService) { }
 
-  @Public()
   @Post('create')
   @ApiCreatedResponse({ description: 'Postagem criada com sucesso', type: CreatePostDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -62,7 +61,7 @@ export class PostController {
     return this.postService.findOne(id);
   }
 
-  @Public()
+
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: UpdatePostDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
@@ -76,7 +75,6 @@ export class PostController {
     return this.postService.update(id, updatePostDto);
   }
 
-  @Public()
   @Delete('/delete/:id')
   @ApiOkResponse({ description: 'Usuário deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })

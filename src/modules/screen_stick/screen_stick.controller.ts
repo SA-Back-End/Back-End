@@ -34,7 +34,8 @@ export class ScreenStickController {
   async create(@Body() createScreenStickDto: CreateScreenStickDto) {
     return this.screenStickService.create(createScreenStickDto);
   }
-
+  
+  @Public()
   @Get('findAll/:page')
   @ApiOkResponse({description: 'Curtida encontrada', type: CreateScreenStickDto, status: 200})
   @ApiBadRequestResponse({description: 'Requisição Inválida', status: 400})
@@ -48,6 +49,7 @@ export class ScreenStickController {
     return this.screenStickService.findAll(page);
   }
 
+  @Public()
   @ApiOkResponse({description: 'Curtida encontrada', type: CreateScreenStickDto, status: 200})
   @ApiBadRequestResponse({description: 'Requisição Inválida', status: 400})
   @ApiUnauthorizedResponse({description: 'Acesso não autorizado', status: 401})
@@ -74,7 +76,6 @@ export class ScreenStickController {
     return this.screenStickService.update(id_stick, updateScreenStickDto);
   }
 
-  @Public()
   @Delete('/delete/:id_stick')
   @ApiOkResponse({description: 'Curtida deletada com sucesso', status: 200})
   @ApiBadRequestResponse({description: 'Requisição inválida', status: 400})

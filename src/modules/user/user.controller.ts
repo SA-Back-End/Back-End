@@ -77,7 +77,6 @@ export class UserController {
     return this.userService.findByUserNameAndName(key);
   }
 
-  @Public()
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: UpdateUserDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
@@ -91,7 +90,6 @@ export class UserController {
     return this.userService.update(username, updateUserDto);
   }
 
-  @Public()
   @Delete('/delete/:usernameAdmin/:usernameToDelete')
   @ApiOkResponse({ description: 'Usuário deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -108,7 +106,6 @@ export class UserController {
     return this.userService.remove(usernameAdmin, usernameToDelete);
   }
 
-  @Public()
   @Patch('/follow/:followerId/:followingId')
   @ApiOkResponse({ description: 'Usuário seguido com sucesso', type: CreateUserDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -122,7 +119,6 @@ export class UserController {
     @Param('followingId') followingId: number
   ) { return this.userService.follow(followerId, followingId) }
 
-  @Public()
   @Patch('/unfollow/:followerId/:followingId')
   @ApiOkResponse({ description: 'Usuário deixado de ser seguido com sucesso', type: CreateUserDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })

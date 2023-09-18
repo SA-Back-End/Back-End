@@ -34,7 +34,7 @@ import { get } from 'http';
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @Public()
+ 
   @Post('create')
   @ApiCreatedResponse({
     description: 'Postagem criada com sucesso',
@@ -71,6 +71,7 @@ export class ProjectController {
     return this.projectService.findStatusToId(idProjectManager, statusProject);
   }
 
+  @Public()
   @Get('/findAll/:page')
   @ApiOkResponse({
     description: 'Informações encontradas',
@@ -91,6 +92,7 @@ export class ProjectController {
     return this.projectService.findAll(page);
   }
 
+  @Public()
   @ApiOkResponse({
     description: 'Informações encontradas',
     type: CreateProjectDto,
@@ -110,6 +112,7 @@ export class ProjectController {
     return this.projectService.findOne(title);
   }
 
+  @Public()
   @ApiOkResponse({ description: 'Informações encontradas', type: CreateProjectDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })

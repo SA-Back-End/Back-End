@@ -31,7 +31,6 @@ import { Public } from 'src/auth/decorators/public.decorator';
 export class ProjectRoleController {
   constructor(private readonly projectRoleService: ProjectRoleService) {}
 
-  @Public()
   @Post('create')
   @ApiCreatedResponse({
     description: 'Cargo criado com sucesso',
@@ -52,6 +51,7 @@ export class ProjectRoleController {
     return this.projectRoleService.create(createProjectRoleDto);
   }
 
+  @Public()
   @Get('/findAll/:page')
   @ApiOkResponse({
     description: 'Informações encontradas',
@@ -72,6 +72,7 @@ export class ProjectRoleController {
     return this.projectRoleService.findAll(page);
   }
 
+  @Public()
   @ApiOkResponse({
     description: 'Informações encontradas',
     type: CreateProjectRoleDto,
