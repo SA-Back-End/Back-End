@@ -10,7 +10,7 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse , ApiNot
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
 
-  @Public()
+  
   @Post('create')
   @ApiCreatedResponse({ description: 'Certificado criado com sucesso', type: CreateCertificateDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -51,7 +51,7 @@ export class CertificatesController {
     return this.certificatesService.findOne(id_certificate);
   }
 
-  @Public()
+  
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: CreateCertificateDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
@@ -65,7 +65,7 @@ export class CertificatesController {
     return this.certificatesService.update(id_certificate, updateCertificateDto);
   }
 
-  @Public()
+  
   @Delete('/delete/:id_certificate')
   @ApiOkResponse({ description: 'Certificado deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })

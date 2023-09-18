@@ -10,7 +10,7 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotA
 export class FormationController {
   constructor(private readonly formationService: FormationService) {}
 
-  @Public()
+  
   @Post('create')
   @ApiCreatedResponse({ description: 'Formação criado com sucesso', type: CreateFormationDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -51,7 +51,7 @@ export class FormationController {
     return this.formationService.findOne(id_formation);
   }
 
-  @Public()
+  
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: CreateFormationDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
@@ -65,7 +65,7 @@ export class FormationController {
     return this.formationService.update(id_formation, UpdateFormationDto);
   }
 
-  @Public()
+ 
   @Delete('/delete/:id_formation')
   @ApiOkResponse({ description: 'Formação deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })

@@ -10,7 +10,7 @@ import { Public } from 'src/auth/decorators/public.decorator';
 export class InstitutionController {
   constructor(private readonly institutionService: InstitutionService) {}
 
-  @Public()
+
   @Post('create')
   @ApiCreatedResponse({ description: 'Instituição criada com sucesso', type: CreateInstitutionDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -51,7 +51,7 @@ export class InstitutionController {
     return this.institutionService.findOne(id_institution);
   }
 
-  @Public()
+  
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: UpdateInstitutionDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
@@ -65,7 +65,7 @@ export class InstitutionController {
     return this.institutionService.update(id_institution, updateInstitutionDto);
   }
 
-  @Public()
+  
   @Delete('/delete/:id_institution')
   @ApiOkResponse({ description: 'Instituição deletada com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })

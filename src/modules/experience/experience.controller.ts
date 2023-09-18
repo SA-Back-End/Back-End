@@ -10,7 +10,7 @@ import { ApiTags, ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}
 
-  @Public()
+  
   @Post('create')
   @ApiCreatedResponse({ description: 'Experiência criada com sucesso', type: CreateExperienceDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -51,7 +51,7 @@ export class ExperienceController {
     return this.experienceService.findOne(id_experience);
   }
 
-  @Public()
+  
   @ApiOkResponse({ description: 'Informações editadas com sucesso', type: CreateExperienceDto, status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
@@ -65,7 +65,7 @@ export class ExperienceController {
     return this.experienceService.update(id_experience, UpdateExperienceDto);
   }
 
-  @Public()
+  
   @Delete('/delete/:id_experience')
   @ApiOkResponse({ description: 'Experiência deletada com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
