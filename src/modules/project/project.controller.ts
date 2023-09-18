@@ -194,4 +194,23 @@ export class ProjectController {
   async findOpenProjects() {
     return this.projectService.findOpenProjects();
   }
+
+  @Get('/findProjectByStatus/:status')
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateProjectDto,
+    status: 200,
+  })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista de projetos com um status específico',
+    description: 'Lista de projetos com um dos status do enum colocados',
+  })
+  async findProjectByStatus(@Param('status') status: StatusProject) {
+    return this.projectService.findProjectByStatus(status);
+  }
 }
