@@ -65,17 +65,34 @@ export class ProjectRoleService {
   }
 
   async acceptUser(idRole: number, idUser: number) {
+    const roleExists = await this.prisma.project_role.findFirst({
+      where: {
+        id_role: idRole,
+      }
+    });
+
+    const userExists = await this.prisma.user.findUnique({
+      where: {
+        id_user: idUser
+      }
+    })
+
+    if (!roleExists) {
+      throw new NotFoundException('Cargo não existe');
+    } else if(!userExists) {
+      throw new NotFoundException('Usuário não existe');
+    }
+    
     return this.prisma.project_role.update({
       where: {
         id_role: idRole,
       },
       data: {
-        participation: { create: { id_user: idUser } },
+        participation: { create: { id_user: idUser } }, isOpen: false,
       },
+
     });
   }
-
-  async rejectUser() {}
 
   async fireUser(
     idProjectManager: number,
@@ -131,7 +148,7 @@ export class ProjectRoleService {
           project: { id_projectManager: idProjectManager },
         },
         data: {
-          participation: { deleteMany: [{ id_user: idUserToFire }] },
+          participation: { deleteMany: [{ id_user: idUserToFire }] }, isOpen: true
         },
       });
     }

@@ -163,11 +163,11 @@ export class ProjectService {
     throw new ConflictException('Erro ao deletar projeto');
   }
   async findOpenProjects(){
-    const isOpenProjects = await this.prisma.project_role.findMany({
+    const isOpenProjects = await this.prisma.project.findMany({
       where: {
-        isOpen: true
+        project_Role: { some: {isOpen: true}}
       },
-      include: { participation: true, screen_Curtidas: true }
+      include: { project_Role: true }
     })
 
     if (!isOpenProjects) {
