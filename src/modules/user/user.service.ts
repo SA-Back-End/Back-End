@@ -8,8 +8,8 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { stat } from 'fs';
 import { StatusUser } from '@prisma/client';
+import { State } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -351,5 +351,32 @@ export class UserService {
     }
     hasStatus.forEach(e => delete e.password);
     return hasStatus;
+  }
+
+  async findUserState(state: State) {
+    const findState = await this.prisma.user.findMany({
+      where: {
+        state: state
+      },
+      include: {
+        posts: true,
+        project: true,
+        sticky: true,
+        participation: true,
+        likes: true,
+        formation: true,
+        following: { select: { followerId: true } },
+        followers: { select: { followingId: true } },
+        experience: true,
+        certificate: true,
+      },
+    });
+
+    if(!findState) {
+      throw new ConflictException("Desculpe, não temos nenhum usuário neste estado no momento.")
+    };
+
+    findState.forEach(e => delete e.password);
+    return findState;
   }
 }
