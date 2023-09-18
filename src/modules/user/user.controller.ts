@@ -28,7 +28,7 @@ export class UserController {
   @ApiCreatedResponse({ description: 'Usuário criado com sucesso', type: CreateUserDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiNotAcceptableResponse({ description: 'Usuário ou senha muito pequenos', status: 406 })
-  @ApiConflictResponse({ description: 'Usuário já existente!', status: 409 })
+  @ApiConflictResponse({ description: 'Usuário já existente', status: 409 })
   @ApiOperation({
     summary: 'Cria um usuário',
     description: 'Cria uma usuário na plataforma',
@@ -148,5 +148,4 @@ export class UserController {
   async findInterested() {
     return this.userService.findInterested();
   }
-
 }
