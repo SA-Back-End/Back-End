@@ -20,10 +20,4 @@ export class CreatePostDto {
     @IsString()
     @IsNotEmpty()
     post_img: Buffer;
-
-
-    @ApiProperty({ type: String, description: 'Likes da postagem' })
-    @IsString()
-    @IsOptional()
-    likedBy: User['id_user']
 }

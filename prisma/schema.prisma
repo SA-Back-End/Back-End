@@ -30,6 +30,7 @@ model User {
   followers     Follows[]         @relation("follower")
   following     Follows[]         @relation("following")
   posts         Post[]            @relation("author")
+  comments      Comment[]         @relation("commentator")
   project       Project[]
   sticky        Screen_Curtidas[]
   formation     Formation[]
@@ -122,16 +123,27 @@ model Certificates {
 
 model Post {
   // Campos tabela
-  id        Int      @id @default(autoincrement())
+  id_post        Int      @id @default(autoincrement())
   userId    Int
   text      String
   post_img  Bytes    @db.ByteA
   likedBy   User[]
   post_date DateTime @default(now())
+  comments Comment[]
   //-------------
   //Config Prisma 
   user      User     @relation("author", fields: [userId], references: [id_user])
   //-------------
+}
+
+model Comment{
+  id_comment        Int      @id @default(autoincrement())
+  idPost    Int
+  userId    Int
+  message    String
+
+  post      Post @relation(fields: [idPost], references: [id_post])
+  user      User     @relation("commentator", fields: [userId], references: [id_user])
 }
 
 model Project {
