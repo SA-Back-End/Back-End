@@ -17,7 +17,7 @@ export class ProjectService {
     return this.prisma.project.create({
       data: {
         ...createProjectDto,
-      },
+      }
     });
   }
 
@@ -161,5 +161,19 @@ export class ProjectService {
       }
     }
     throw new ConflictException('Erro ao deletar projeto');
+  }
+  async findOpenProjects(){
+    const isOpenProjects = await this.prisma.project_role.findMany({
+      where: {
+        isOpen: true
+      },
+      include: { participation: true, screen_Curtidas: true }
+    })
+
+    if (!isOpenProjects) {
+      throw new NotFoundException('Desculpe, não temos projetos no momento.')
+    }
+
+    return isOpenProjects
   }
 }
