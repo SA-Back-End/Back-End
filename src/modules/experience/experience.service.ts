@@ -17,27 +17,53 @@ export class ExperienceService {
   }
 
   async findAll(page: number) {
-    return await this.prisma.experience.findMany({
-      include:{id_institution:true, user:true}
-    });
+    if (page == 0) {
+      return this.prisma.experience.findMany({
+      });
+    } else if (page == 1) {
+      return this.prisma.experience.findMany({
+        take: 20,
+      });
+    } else {
+      return this.prisma.experience.findMany({
+        take: 20,
+        skip: (page - 1) * 20,
+      });
+    }
   }
 
   async findOne(id_experience: number) {
-    return await this.prisma.experience.findFirst();
+    const experienceExists = await this.prisma.experience.findUnique({
+      where: {
+        id_experience: id_experience
+      }
+    })
+
+    if (!experienceExists) {
+      throw new NotFoundException('Experiência não existe')
+    }
+
+    return experienceExists
   }
 
-  async update(
-    id_experience: number,
-    updateExperienceDto: UpdateExperienceDto
-  ) {
+  async update(id_experience: number, updateExperienceDto: UpdateExperienceDto) {
+    const experienceExists = await this.prisma.experience.findUnique({
+      where: {
+        id_experience: id_experience
+      }
+    })
+
+    if (!experienceExists) {
+      throw new NotFoundException('Experiência não existe')
+    }
+    
     return await this.prisma.experience.update({
       data: {
         ...updateExperienceDto,
       },
-
       where: {
         id_experience,
-      },
+      }
     });
   }
 

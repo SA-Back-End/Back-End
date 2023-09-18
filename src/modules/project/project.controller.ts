@@ -110,6 +110,18 @@ export class ProjectController {
     return this.projectService.findOne(title);
   }
 
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateProjectDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista projetos especificamente com a chave inserida',
+    description: 'Lista projetos especificamente com base no título',
+  })
+  @Get('/findManyByTitle/:title')
+  async findManyByTitle(@Param('title') title: string) {
+    return this.projectService.findManyByTitle(title);
+  }
+
   @ApiOkResponse({
     description: 'Informações editadas com sucesso',
     type: UpdateProjectDto,
@@ -125,15 +137,16 @@ export class ProjectController {
     description: 'Atualiza um projeto com base no id',
   })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
-  @Patch('/update/:id')
+  @Patch('/update/:id_projectManager/:id_project')
   async update(
-    @Param('id') id: number,
+    @Param('id_project') idProject: number,
+    @Param('id_projectManager') idProjectManager: number,
     @Body() updateProjectDto: UpdateProjectDto
   ) {
-    return this.projectService.update(id, updateProjectDto);
+    return this.projectService.update(idProject, updateProjectDto, idProjectManager);
   }
 
-  @Delete('/delete/:id')
+  @Delete('/delete/:id_projectManager/:id_project')
   @ApiOkResponse({ description: 'Usuário deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({
@@ -145,8 +158,11 @@ export class ProjectController {
     summary: 'Deleta um projeto',
     description: 'Deleta um projeto com base no id',
   })
-  async remove(@Param('id') id: number) {
-    return this.projectService.remove(id);
+  async remove(
+      @Param('id_project') idProject: number,
+      @Param('id_projectManager') idProjectManager: number
+    ) {
+    return this.projectService.remove(idProject, idProjectManager);
   }
 
   @Public()
