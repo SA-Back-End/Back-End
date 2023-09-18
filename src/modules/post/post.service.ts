@@ -45,7 +45,7 @@ export class PostService {
     })
 
     if (!postExists) {
-      throw new NotFoundException('Postagem não existe')
+      throw new NotFoundException('Postagem não existente')
     }
 
     return postExists;
@@ -59,7 +59,7 @@ export class PostService {
     })
 
     if (idInUse) {
-      throw new ConflictException('postname indisponível')
+      throw new ConflictException('Postagem não existente')
     }
 
     return await this.prisma.post.update({
@@ -82,7 +82,7 @@ export class PostService {
     })
 
     if (!postExists) {
-      throw new NotFoundException('Postagem não existe')
+      throw new NotFoundException('Postagem não existente')
     }
 
     return await this.prisma.post.delete({

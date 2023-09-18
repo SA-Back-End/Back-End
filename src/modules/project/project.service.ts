@@ -101,7 +101,7 @@ export class ProjectService {
     });
 
     if (!projectExists) {
-      throw new NotFoundException('Projeto não existe');
+      throw new NotFoundException('Projeto não existente');
     }
 
     return projectExists;
@@ -123,7 +123,7 @@ export class ProjectService {
       },
     });
 
-    if (!projectToUpdate) throw new ConflictException('Id project inválido');
+    if (!projectToUpdate) throw new ConflictException('Projeto não existente');
     if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para fazer alterações!`);
 
     return await this.prisma.project.update({
@@ -144,7 +144,7 @@ export class ProjectService {
       },
     });
 
-    if (!projectToUpdate) throw new NotFoundException('Projeto não existe');
+    if (!projectToUpdate) throw new NotFoundException('Projeto não existente');
     if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para excluir o projeto!`);
 
     const hadSucceded = await this.prisma.project.delete({
@@ -156,7 +156,7 @@ export class ProjectService {
     if (hadSucceded) {
       return {
         error: false,
-        message: 'Projeto deletado com sucesso!',
+        message: 'Projeto deletado com sucesso',
         status: 200,
       }
     }

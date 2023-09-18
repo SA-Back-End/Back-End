@@ -41,7 +41,7 @@ export class InstitutionService {
       }
     })
     if (!institutionExists) {
-      throw new NotFoundException('Instituição não existe.')
+      throw new NotFoundException('Instituição não existente')
     }
     return institutionExists;
   }
@@ -53,7 +53,7 @@ export class InstitutionService {
       }
     })
     if (!idInUse) {
-      throw new ConflictException('This institution does not exist')
+      throw new ConflictException('Instituição não existente')
     }
     
     return await this.prisma.institution.update({

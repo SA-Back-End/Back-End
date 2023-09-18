@@ -44,7 +44,7 @@ export class FormationService {
     });
 
     if (!formationExists) {
-      throw new NotFoundException('Formação não existe');
+      throw new NotFoundException('Formação não existente');
     }
 
     return formationExists;
@@ -58,7 +58,7 @@ export class FormationService {
     });
 
     if (!idInUse) {
-      throw new ConflictException('formation não existe');
+      throw new ConflictException('Formação não existente');
     }
 
     return await this.prisma.formation.update({
@@ -79,7 +79,7 @@ export class FormationService {
     });
 
     if (!formationExists) {
-      throw new NotFoundException('Formação não existe');
+      throw new NotFoundException('Formação não existente');
     }
 
     return await this.prisma.formation.delete({

@@ -58,7 +58,7 @@ export class ProjectRoleService {
     });
 
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     }
 
     return roleExists;
@@ -78,9 +78,9 @@ export class ProjectRoleService {
     })
 
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     } else if(!userExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     }
     
     return this.prisma.project_role.update({
@@ -105,7 +105,7 @@ export class ProjectRoleService {
       },
     });
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     }
 
     const userToFireExists = await this.prisma.project_role.findFirst({
@@ -116,7 +116,7 @@ export class ProjectRoleService {
     });
     if (!userToFireExists) {
       throw new NotFoundException(
-        'Usuário para Demitir não participa do Projeto'
+        'Usuário não existente'
       );
     }
 
@@ -161,7 +161,7 @@ export class ProjectRoleService {
       },
     });
     if (!idInUse) {
-      throw new ConflictException('Cargo não existe');
+      throw new ConflictException('Cargo não existente');
     }
     return await this.prisma.project_role.update({
       data: {
@@ -180,7 +180,7 @@ export class ProjectRoleService {
       },
     });
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     }
     return await this.prisma.project_role.delete({
       where: {

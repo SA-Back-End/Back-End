@@ -145,7 +145,7 @@ export class UserService {
     });
 
     if (!userExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     }
 
     delete userExists.password;
@@ -162,7 +162,7 @@ export class UserService {
     });
 
     if (!userExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     }
 
     return userExists;
@@ -176,7 +176,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new ConflictException('Usuário do parâmetro não existe!');
+      throw new ConflictException('Usuário não existente');
     }
 
     // CRIAR FUNÇÃO QUE RECEBE POR PARAMETRO TODOS OS ITENS DO UPDATE, E FAZ BONITINHO MENOS CÓDIGO
@@ -230,7 +230,7 @@ export class UserService {
     });
 
     if (!userExists || !userDeleteExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     }
     console.log(usernameAdmin, usernameToDelete);
 

@@ -43,7 +43,7 @@ export class CertificatesService {
     })
 
     if (!certificatesExists) {
-      throw new NotFoundException('Certificado não existe')
+      throw new NotFoundException('Certificado não existente')
     }
 
     return certificatesExists;
@@ -57,7 +57,7 @@ export class CertificatesService {
     })
 
     if (!idInUse) {
-      throw new ConflictException('This certificate does not exist')
+      throw new ConflictException('Certificado não existente')
     }
 
     return await this.prisma.certificates.update({
@@ -78,7 +78,7 @@ export class CertificatesService {
     })
 
     if (!certificatesExists) {
-      throw new NotFoundException('Certificado não existe')
+      throw new NotFoundException('Certificado não existente')
     }
 
     return await this.prisma.certificates.delete({

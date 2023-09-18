@@ -12,9 +12,9 @@ export class FormationController {
 
   @Public()
   @Post('create')
-  @ApiCreatedResponse({ description: 'Formação criado com sucesso', type: CreateFormationDto, status: 201 })
+  @ApiCreatedResponse({ description: 'Formação criada com sucesso', type: CreateFormationDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiNotAcceptableResponse({ description: 'Nome do Formação ou senha muito pequenos', status: 406 })
+  @ApiNotAcceptableResponse({ description: 'Nome da Formação ou senha muito pequenos', status: 406 })
   @ApiConflictResponse({ description: 'Formação já existente!', status: 409 })
   @ApiOperation({
     summary: 'Cria uma formação',
@@ -67,7 +67,7 @@ export class FormationController {
 
   @Public()
   @Delete('/delete/:id_formation')
-  @ApiOkResponse({ description: 'Formação deletado com sucesso', status: 200 })
+  @ApiOkResponse({ description: 'Formação deletada com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
   @ApiNotFoundResponse({ description: 'Formação não existente', status: 404 })

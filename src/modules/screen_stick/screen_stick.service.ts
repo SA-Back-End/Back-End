@@ -42,7 +42,7 @@ export class ScreenStickService {
     })
 
     if (!stickExists) {
-      throw new NotFoundException('Stick não existe')
+      throw new NotFoundException('Curtida não existente')
     }
 
     return stickExists;
@@ -56,7 +56,7 @@ export class ScreenStickService {
     })
 
     if (!idInUse) {
-      throw new ConflictException('This screen_curtida does not exist')
+      throw new ConflictException('Curtida não existente')
     }
 
     return await this.prisma.screen_Curtidas.update({
@@ -77,7 +77,7 @@ export class ScreenStickService {
     })
 
     if (!screenCurtidaExists) {
-      throw new NotFoundException('Curtida não existe')
+      throw new NotFoundException('Curtida não existente')
     }
 
     return await this.prisma.screen_Curtidas.delete({
