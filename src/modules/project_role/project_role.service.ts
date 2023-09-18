@@ -77,15 +77,64 @@ export class ProjectRoleService {
 
   async rejectUser() {}
 
-  async fireUser(idRole: number, idUser: number) {
-    return this.prisma.project_role.update({
+  async fireUser(
+    idProjectManager: number,
+    idRole: number,
+    idUserToFire: number
+  ) {
+    const roleExists = await this.prisma.project_role.findFirst({
       where: {
         id_role: idRole,
       },
-      data: {
-        participation: { deleteMany: [{ id_user: idUser }] },
+    });
+    if (!roleExists) {
+      throw new NotFoundException('Cargo não existe');
+    }
+
+    const userToFireExists = await this.prisma.project_role.findFirst({
+      where: {
+        id_role: idRole,
+        participation: { some: { user: { id_user: idUserToFire } } },
       },
     });
+    if (!userToFireExists) {
+      throw new NotFoundException(
+        'Usuário para Demitir não participa do Projeto'
+      );
+    }
+
+    if (idProjectManager === idUserToFire) {
+      return await this.prisma.project_role.update({
+        where: {
+          id_role: idRole,
+        },
+        data: {
+          participation: { deleteMany: [{ id_user: idUserToFire }] },
+        },
+      });
+    } else {
+      const userManagerExists = await this.prisma.project_role.findFirst({
+        where: {
+          id_role: idRole,
+          project: { id_projectManager: idProjectManager },
+        },
+      });
+
+      if (!userManagerExists) {
+        throw new NotFoundException(
+          'Usuário não tem Permissão para Demitir nesse Cargo'
+        );
+      }
+      return await this.prisma.project_role.update({
+        where: {
+          id_role: idRole,
+          project: { id_projectManager: idProjectManager },
+        },
+        data: {
+          participation: { deleteMany: [{ id_user: idUserToFire }] },
+        },
+      });
+    }
   }
 
   async update(id_role: number, updateProjectRoleDto: UpdateProjectRoleDto) {

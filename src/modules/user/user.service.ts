@@ -3,7 +3,7 @@ import {
   ConflictException,
   Delete,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,17 +11,16 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-
     const { email, username } = createUserDto;
 
     const userExists = await this.prisma.user.findFirst({
       where: {
         username,
       },
-    })
+    });
 
     if (userExists) {
       throw new ConflictException('Usuário já cadastrado');
@@ -31,7 +30,7 @@ export class UserService {
       where: {
         email,
       },
-    })
+    });
 
     if (emailExists) {
       throw new ConflictException('Email já cadastrado');
@@ -40,7 +39,7 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hash: string = await bcrypt.hash(createUserDto.password, salt);
 
-    const name = `${createUserDto.firstName} ${createUserDto.lastName}`.toLowerCase();
+    const name = `${createUserDto.firstName} ${createUserDto.lastName}`;
     delete createUserDto.firstName;
     delete createUserDto.lastName;
 
@@ -50,33 +49,64 @@ export class UserService {
         password: hash,
         name,
       },
-    })
+    });
   }
 
   async findAll(page: number) {
     if (page == 0) {
       const res = await this.prisma.user.findMany({
-        include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
+        include: {
+          posts: true,
+          project: true,
+          sticky: true,
+          participation: true,
+          likes: true,
+          formation: true,
+          following: { select: { followerId: true } },
+          followers: { select: { followingId: true } },
+          experience: true,
+          certificate: true,
+        },
       });
-      res.forEach(e => delete e.password)
-      return res
-
+      res.forEach(e => delete e.password);
+      return res;
     } else if (page == 1) {
       const res = await this.prisma.user.findMany({
-        include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
-        , take: 20,
+        include: {
+          posts: true,
+          project: true,
+          sticky: true,
+          participation: true,
+          likes: true,
+          formation: true,
+          following: { select: { followerId: true } },
+          followers: { select: { followingId: true } },
+          experience: true,
+          certificate: true,
+        },
+        take: 20,
       });
-      res.forEach(e => delete e.password)
-      return res
+      res.forEach(e => delete e.password);
+      return res;
     } else {
       const res = await this.prisma.user.findMany({
-        include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
-        ,
+        include: {
+          posts: true,
+          project: true,
+          sticky: true,
+          participation: true,
+          likes: true,
+          formation: true,
+          following: { select: { followerId: true } },
+          followers: { select: { followingId: true } },
+          experience: true,
+          certificate: true,
+        },
         take: 20,
         skip: (page - 1) * 20,
       });
-      res.forEach(e => delete e.password)
-      return res
+      res.forEach(e => delete e.password);
+      return res;
     }
   }
 
@@ -84,30 +114,41 @@ export class UserService {
     const usersNearestKey = await this.prisma.user.findMany({
       where: {
         OR: [
-          { name: { contains: key.toLowerCase() } },
-          { username: { contains: key } }
-        ]
-      }
-    })
+          { name: { contains: key, mode: 'insensitive' } },
+          { username: { contains: key } },
+        ],
+      },
+    });
 
-    usersNearestKey.forEach(e => delete e.password)
-    
+    usersNearestKey.forEach(e => delete e.password);
+
     return usersNearestKey;
   }
 
   async findOne(username: string) {
     const userExists = await this.prisma.user.findUnique({
       where: {
-        username
+        username,
       },
-      include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
+      include: {
+        posts: true,
+        project: true,
+        sticky: true,
+        participation: true,
+        likes: true,
+        formation: true,
+        following: { select: { followerId: true } },
+        followers: { select: { followingId: true } },
+        experience: true,
+        certificate: true,
+      },
     });
 
     if (!userExists) {
-      throw new NotFoundException('Usuário não existe')
+      throw new NotFoundException('Usuário não existe');
     }
 
-    delete userExists.password
+    delete userExists.password;
 
     return userExists;
   }
@@ -115,13 +156,13 @@ export class UserService {
   async findUserLogin(username: string) {
     const userExists = await this.prisma.user.findUnique({
       where: {
-        username
+        username,
       },
-      select: { id_user: true, username: true, password: true, }
-    })
+      select: { id_user: true, username: true, password: true },
+    });
 
     if (!userExists) {
-      throw new NotFoundException('Usuário não existe')
+      throw new NotFoundException('Usuário não existe');
     }
 
     return userExists;
@@ -130,24 +171,24 @@ export class UserService {
   async update(username: string, updateUserDto: UpdateUserDto) {
     const user = await this.prisma.user.findUnique({
       where: {
-        username
-      }
-    })
+        username,
+      },
+    });
 
     if (!user) {
-      throw new ConflictException('Usuário do parâmetro não existe!')
+      throw new ConflictException('Usuário do parâmetro não existe!');
     }
 
     // CRIAR FUNÇÃO QUE RECEBE POR PARAMETRO TODOS OS ITENS DO UPDATE, E FAZ BONITINHO MENOS CÓDIGO
     if (updateUserDto.username) {
       const usernameInUse = await this.prisma.user.findUnique({
         where: {
-          username: updateUserDto.username
-        }
-      })
+          username: updateUserDto.username,
+        },
+      });
 
       if (usernameInUse) {
-        throw new ConflictException('Nome de usuário indisponível!')
+        throw new ConflictException('Nome de usuário indisponível!');
       }
     }
 
@@ -155,60 +196,58 @@ export class UserService {
     if (updateUserDto.email) {
       const emailInUse = await this.prisma.user.findUnique({
         where: {
-          email: updateUserDto.email
-        }
-      })
+          email: updateUserDto.email,
+        },
+      });
 
       if (emailInUse) {
-        throw new ConflictException('Email indisponível!')
+        throw new ConflictException('Email indisponível!');
       }
     }
 
     return await this.prisma.user.update({
-
       data: {
         ...updateUserDto,
       },
 
       where: {
-        username
+        username,
       },
-
-    })
+    });
   }
 
   async remove(usernameAdmin: string, usernameToDelete: string) {
     const userExists = await this.prisma.user.findFirst({
       where: {
-        username: usernameAdmin
-      }
-    })
+        username: usernameAdmin,
+      },
+    });
 
     const userDeleteExists = await this.prisma.user.findFirst({
       where: {
-        username: usernameToDelete
-      }
-    })
+        username: usernameToDelete,
+      },
+    });
 
     if (!userExists || !userDeleteExists) {
-      throw new NotFoundException('Usuário não existe')
+      throw new NotFoundException('Usuário não existe');
     }
-    console.log(usernameAdmin, usernameToDelete)
+    console.log(usernameAdmin, usernameToDelete);
 
     if (usernameAdmin == usernameToDelete) {
       return await this.prisma.user.delete({
         where: {
-          username: usernameToDelete
-        }
-      })
+          username: usernameToDelete,
+        },
+      });
     } else if (userExists.isAdmin == true) {
       return await this.prisma.user.delete({
         where: {
-          username: usernameToDelete
-        }
-      })
+          username: usernameToDelete,
+        },
+      });
     } else {
-      throw new ConflictException('Ação não autorizada')
+      throw new ConflictException('Ação não autorizada');
     }
   }
 
@@ -216,16 +255,16 @@ export class UserService {
     const alreadyFollowing = await this.prisma.user.findFirst({
       where: {
         id_user: followerId,
-        followers: { some: { followingId: followingId } }
+        followers: { some: { followingId: followingId } },
       },
-    })
+    });
 
     if (followerId == followingId) {
-      throw new ConflictException('Você não pode seguir você mesmo')
+      throw new ConflictException('Você não pode seguir você mesmo');
     }
 
     if (alreadyFollowing) {
-      throw new ConflictException('Você já segue este usuário')
+      throw new ConflictException('Você já segue este usuário');
     }
 
     return this.prisma.user.update({
@@ -233,21 +272,21 @@ export class UserService {
         id_user: followerId,
       },
       data: {
-        followers: { create: { followingId: followingId } }
-      }
-    })
+        followers: { create: { followingId: followingId } },
+      },
+    });
   }
 
   async unfollow(followerId: number, followingId: number) {
     const doesNotFollow = await this.prisma.user.findFirst({
       where: {
         id_user: followerId,
-        followers: { some: { followingId: followingId } }
+        followers: { some: { followingId: followingId } },
       },
-    })
+    });
 
     if (!doesNotFollow) {
-      throw new ConflictException('Você não segue este usuário')
+      throw new ConflictException('Você não segue este usuário');
     }
 
     return this.prisma.user.update({
@@ -255,26 +294,34 @@ export class UserService {
         id_user: followingId,
       },
       data: {
-        following: { deleteMany: [{ followerId: followerId }] }
-      }
-    })
+        following: { deleteMany: [{ followerId: followerId }] },
+      },
+    });
   }
 
   async findInterested() {
     const isSearching = await this.prisma.user.findMany({
       where: {
-        isSearchingForProjects: true
+        isSearchingForProjects: true,
       },
-      include: { posts: true, project: true, sticky: true, participation: true, likes: true, formation: true, following: { select: { followerId: true } }, followers: { select: { followingId: true } }, experience: true, certificate: true }
-    })
+      include: {
+        posts: true,
+        project: true,
+        sticky: true,
+        participation: true,
+        likes: true,
+        formation: true,
+        following: { select: { followerId: true } },
+        followers: { select: { followingId: true } },
+        experience: true,
+        certificate: true,
+      },
+    });
 
     if (!isSearching) {
-      throw new NotFoundException('Desculpe, não temos candidatos no momento.')
+      throw new NotFoundException('Desculpe, não temos candidatos no momento.');
     }
 
-    return isSearching
+    return isSearching;
   }
-
-
 }
-
