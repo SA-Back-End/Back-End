@@ -16,6 +16,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { State, StatusUser } from '@prisma/client';
 
 @Controller('user')
 @ApiBearerAuth()
@@ -147,6 +148,30 @@ export class UserController {
   })
   async findInterested() {
     return this.userService.findInterested();
+  }
+
+  @Get('/findUserBasedOnStatus/:status')
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista usuários com o status procurado',
+    description: 'Lista usuários com o status procurado pelo usuário, pego do enum',
+  })
+  async findUserBasedOnStatus(@Param('status') status: StatusUser) {
+    return this.userService.findUserBasedOnStatus(status);
+  }
+
+  @Get('/findUserState/:state')
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista usuários no estado procurado',
+    description: 'Lista usuários baseado no estado onde moram de acordo com o banco',
+  })
+  async findUserState(@Param('state') state: State) {
+    return this.userService.findUserState(state);
   }
 
 }

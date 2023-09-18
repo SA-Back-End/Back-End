@@ -137,7 +137,6 @@ export class ProjectService {
   }
 
   async remove(id_project: number, idProjectManager: number): Promise< IProjectRemoveResponse | ConflictException > {
-
     const projectToUpdate = await this.prisma.project.findUnique({
       where: {
         id_project,
@@ -162,18 +161,41 @@ export class ProjectService {
     }
     throw new ConflictException('Erro ao deletar projeto');
   }
+
   async findOpenProjects(){
     const isOpenProjects = await this.prisma.project.findMany({
       where: {
         project_Role: { some: {isOpen: true}}
       },
-      include: { project_Role: true }
-    })
+      include: { project_Role: true },
+    });
 
     if (!isOpenProjects) {
-      throw new NotFoundException('Desculpe, não temos projetos no momento.')
+      throw new NotFoundException('Desculpe, não temos projetos no momento.');
     }
 
-    return isOpenProjects
+    return isOpenProjects;
   }
+
+  async findProjectByStatus(status: StatusProject) {
+    const findStatus = await this.prisma.project.findMany({
+      where: {
+        status: status,
+      },
+      include: {userAdmin: {
+        select: {
+          id_user: true,
+          username: true,
+        },
+      }, 
+      project_Role: true},
+    });
+    if(!findStatus) {
+      throw new NotFoundException("Desculpe, não temos projeto no momento.");
+    }
+
+    return findStatus;
+  }
+    
 }
+
