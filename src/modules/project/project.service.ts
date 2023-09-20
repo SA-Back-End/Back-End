@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { Project, StatusProject } from '@prisma/client';
+import { Project, StatusProject, StudyArea } from '@prisma/client';
 import IProjectRemoveResponse from './helpers/interfaces/IProjectDeleteResponse';
 
 @Injectable()
@@ -195,6 +195,18 @@ export class ProjectService {
     }
 
     return findStatus;
+  }
+
+  async findProjectByStudyArea(studyArea: StudyArea[]) {
+    const findStudyArea = await this.prisma.project.findMany({
+      where: {
+        studyArea: { hasEvery: studyArea}
+      }
+    });
+    if(findStudyArea[0] === undefined) {
+      throw new NotFoundException("Desculpe, não temos projeto no momento.");
+    }
+    return findStudyArea
   }
     
 }
