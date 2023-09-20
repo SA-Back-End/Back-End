@@ -8,7 +8,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { StatusUser } from '@prisma/client';
+import { HardSkills, SoftSkills, StatusUser, StudyArea } from '@prisma/client';
 import { State } from '@prisma/client';
 
 @Injectable()
@@ -347,7 +347,7 @@ export class UserService {
       },
     });
     if(!hasStatus) {
-      throw new ConflictException("Desculpe, não temos algupem com esse Status neste momento.");
+      throw new NotFoundException("Desculpe, não temos algupem com esse Status neste momento.");
     }
     hasStatus.forEach(e => delete e.password);
     return hasStatus;
@@ -373,10 +373,47 @@ export class UserService {
     });
 
     if(!findState) {
-      throw new ConflictException("Desculpe, não temos nenhum usuário neste estado no momento.")
+      throw new NotFoundException("Desculpe, não temos nenhum usuário neste estado no momento.")
     };
 
     findState.forEach(e => delete e.password);
     return findState;
+  }
+
+  async findUserBySoftSkill(skills: SoftSkills[]) {
+    const findSoftSkill = await this.prisma.user.findMany({
+      where: {
+        softSkills: { hasEvery: skills }
+      }
+    })
+    if(findSoftSkill[0] === undefined) {
+      throw new NotFoundException("Desculpe, não temos nenhum candidato que atende seus requisitos")
+    }
+    return findSoftSkill
+  }
+
+  async findUserByHardSkill(skills: HardSkills[]) {
+    const findHardSkill = await this.prisma.user.findMany({
+      where: {
+        hardSkills: { hasEvery: skills }
+      }
+    })
+    if(findHardSkill[0] === undefined) {
+      throw new NotFoundException("Desculpe, não temos nenhum candidato que atende seus requisitos")
+    }    
+    return findHardSkill
+  }
+
+  async findUserByStudyArea(studyArea: StudyArea[]) {
+    const findStudyArea = await this.prisma.user.findMany({
+      where: {
+        studyArea: { hasEvery: studyArea }
+      }
+    })
+
+    if(findStudyArea[0] === undefined) {
+      throw new NotFoundException("Desculpe, não temos nenhum candidato que atende seus requisitos")
+    }
+    return findStudyArea
   }
 }

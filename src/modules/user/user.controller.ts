@@ -16,7 +16,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { State, StatusUser } from '@prisma/client';
+import { HardSkills, SoftSkills, State, StatusUser, StudyArea } from '@prisma/client';
 
 @Controller('user')
 @ApiBearerAuth()
@@ -174,4 +174,40 @@ export class UserController {
     return this.userService.findUserState(state);
   }
 
+  @Public()
+  @Post('/findUserBySoftSkill')
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista usuários com a softSkill procurada',
+    description: 'Lista usuários com todas as softSkills procuradas em um array.',
+  })
+  async findUserBySoftSkill(@Body() skills: SoftSkills[]) {
+    return this.userService.findUserBySoftSkill(skills);
+  }
+
+  @Post('/findUserByHardSkill')
+  @ApiOkResponse({ description: 'Informações encontradas', type: CreateUserDto, status: 200 })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiOperation({
+    summary: 'Lista usuários com a hardSkill procurada',
+    description: 'Lista usuários com todas as hasdSkills procuradas em um array.',
+  })
+  async findUserByHardSkill(@Body() skills: HardSkills[]) {
+    return this.userService.findUserByHardSkill(skills);
+  }
+
+  @Post('/findUserByStudyArea')
+  @ApiOkResponse({description: 'Informações encontradas', type: CreateUserDto, status: 200,})
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({description: 'Acesso não autorizado', status: 401,})
+  @ApiOperation({
+    summary: 'Lista de usuários com as áreas de estudo especificadas',
+    description: 'Lista de usuários com todas as studyAreas presentes no array mandado',
+  })
+  async findUserByStudyArea(@Body() studyArea: StudyArea[]) {
+    return this.userService.findUserByStudyArea(studyArea);
+  }
 }
