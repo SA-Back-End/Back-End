@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ScreenStickService } from './screen_stick.service';
 import { CreateScreenStickDto } from './dto/create-screen_stick.dto';
 import { UpdateScreenStickDto } from './dto/update-screen_stick.dto';
@@ -31,8 +31,8 @@ export class ScreenStickController {
     summary: 'Cria uma curtida',
     description: 'Cria uma curtida na plataforma',
   })
-  async create(@Body() createScreenStickDto: CreateScreenStickDto) {
-    return this.screenStickService.create(createScreenStickDto);
+  async create(@Body() createScreenStickDto: CreateScreenStickDto, @Query('idRequisitionMaker') idRequisitionMaker: number) {
+    return this.screenStickService.create(createScreenStickDto, idRequisitionMaker);
   }
 
   @Get('findAll/:page')

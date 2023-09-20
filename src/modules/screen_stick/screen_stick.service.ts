@@ -7,12 +7,52 @@ import { UpdateScreenStickDto } from './dto/update-screen_stick.dto';
 export class ScreenStickService {
   constructor(private prisma: PrismaService) { }
 
-  async create(createScreenStickDto: CreateScreenStickDto) {
-    return this.prisma.screen_Curtidas.create({
-      data: {
-        ...createScreenStickDto
-      }
+  async create(createScreenStickDto: CreateScreenStickDto,idRequisitionMaker:number) {
+    const candidateExists= await this.prisma.user.findFirst({where:{id_user:createScreenStickDto.id_candidate}})
+     if(!candidateExists) {
+      throw new NotFoundException('Usuário não existe');}
+
+    const roleExists= await this.prisma.project_role.findFirst({where:{id_role:createScreenStickDto.id_role}})
+    if (!roleExists) {
+      throw new NotFoundException('Cargo não existe');
+    } 
+
+    const requisitionMakerExists= await this.prisma.user.findFirst({where:{id_user:idRequisitionMaker}})
+    if(!requisitionMakerExists){
+      throw new ConflictException('Dono da Requisição não existe')
+    }
+
+    const likeCandidateExists=await this.prisma.screen_Curtidas.findFirst({
+      where:{...createScreenStickDto, likeAuthor:'Candidate'}
     })
+    const likeOwnerExists=await this.prisma.screen_Curtidas.findFirst({
+      where:{...createScreenStickDto, likeAuthor:'Owner'}
+    })
+
+    const projectOwner= await this.prisma.project_role.findFirst({
+      where:{id_role:createScreenStickDto.id_role ,project:{id_projectManager: idRequisitionMaker}}
+    })
+
+    if(projectOwner && !likeOwnerExists){
+      return this.prisma.screen_Curtidas.create({
+        data: {
+          ...createScreenStickDto,
+          likeAuthor: 'Owner'
+        }
+      })
+    }
+    else if(!projectOwner && !likeCandidateExists){
+      return this.prisma.screen_Curtidas.create({
+        data: {
+          ...createScreenStickDto,
+          likeAuthor: 'Candidate'
+        }
+      })
+    }
+    else{
+      throw new ConflictException('Like já tinha sido criado')
+    }
+
   }
 
   async findAll(page: number) {

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query
 } from '@nestjs/common';
 import { ProjectRoleService } from './project_role.service';
 import { CreateProjectRoleDto } from './dto/create-project_role.dto';
@@ -91,14 +92,15 @@ export class ProjectRoleController {
     return this.projectRoleService.findOne(id_role);
   }
 
-  @Patch('/acceptUser/:idRole/:idUser')
+  @Patch('/acceptUser/:idRole/:idUser/')
   @ApiParam({ name: 'idRole' })
   @ApiParam({ name: 'idUser' })
-  async acceptUser(
+  async acceptParticipation(
     @Param('idRole') idRole: number,
-    @Param('idUser') idUser: number
+    @Param('idUser') idUser: number,
+    @Query('idRequisitionMaker') idRequisitionMaker: number
   ) {
-    return this.projectRoleService.acceptUser(idRole, idUser);
+    return this.projectRoleService.acceptParticipation(idRole, idUser, idRequisitionMaker);
   }
 
   @Patch('/fireUser/:idProjectManager/:idRole/:idUser')

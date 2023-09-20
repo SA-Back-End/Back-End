@@ -64,38 +64,53 @@ export class ProjectRoleService {
     return roleExists;
   }
 
-  async acceptUser(idRole: number, idUser: number) {
+  async acceptParticipation(idRole: number, idUserToAccept: number, idRequisitionMaker: number) {
     const roleExists = await this.prisma.project_role.findFirst({
       where: {
         id_role: idRole,
       }
     });
 
-    const userExists = await this.prisma.user.findUnique({
+    const userToAcceptExists = await this.prisma.user.findUnique({
       where: {
-        id_user: idUser
+        id_user: idUserToAccept
+      }
+    })
+
+    const requisitionMakerExists = await this.prisma.user.findUnique({
+      where: {
+        id_user: idRequisitionMaker
       }
     })
 
     if (!roleExists) {
       throw new NotFoundException('Cargo não existe');
-    } else if(!userExists) {
+    } else if(!userToAcceptExists) {
       throw new NotFoundException('Usuário não existe');
-    }
-    
-    return this.prisma.project_role.update({
-      where: {
-        id_role: idRole,
-      },
-      data: {
-        participation: { create: { id_user: idUser } }, isOpen: false,
-      },
+    } else if(!requisitionMakerExists) {
+      throw new NotFoundException('Dono da requisição não existe');
+    } 
 
-    });
+    const like = await this.prisma.screen_Curtidas.findMany({
+      where:{id_role: idRole, id_candidate: idUserToAccept}
+    })
+
+    if(like.length < 2) {
+      throw new ConflictException("Aguardando confirmação da outra parte.")
+    } else if (like.length == 2){
+      return this.prisma.project_role.update({
+        where: {
+          id_role: idRole,
+        },
+        data: {
+          participation: { create: { id_user: idUserToAccept } }, isOpen: false,
+        },
+      });
+    }
   }
 
   async fireUser(
-    idProjectManager: number,
+    idRequisitionMaker: number,
     idRole: number,
     idUserToFire: number
   ) {
@@ -120,7 +135,7 @@ export class ProjectRoleService {
       );
     }
 
-    if (idProjectManager === idUserToFire) {
+    if (idRequisitionMaker === idUserToFire) {
       return await this.prisma.project_role.update({
         where: {
           id_role: idRole,
@@ -133,7 +148,7 @@ export class ProjectRoleService {
       const userManagerExists = await this.prisma.project_role.findFirst({
         where: {
           id_role: idRole,
-          project: { id_projectManager: idProjectManager },
+          project: { id_projectManager: idRequisitionMaker },
         },
       });
 
@@ -145,7 +160,7 @@ export class ProjectRoleService {
       return await this.prisma.project_role.update({
         where: {
           id_role: idRole,
-          project: { id_projectManager: idProjectManager },
+          project: { id_projectManager: idRequisitionMaker },
         },
         data: {
           participation: { deleteMany: [{ id_user: idUserToFire }] }, isOpen: true

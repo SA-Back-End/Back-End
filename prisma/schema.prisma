@@ -123,27 +123,27 @@ model Certificates {
 
 model Post {
   // Campos tabela
-  id_post        Int      @id @default(autoincrement())
+  id_post   Int       @id @default(autoincrement())
   userId    Int
   text      String
-  post_img  Bytes    @db.ByteA
+  post_img  Bytes     @db.ByteA
   likedBy   User[]
-  post_date DateTime @default(now())
-  comments Comment[]
+  post_date DateTime  @default(now())
+  comments  Comment[]
   //-------------
   //Config Prisma 
-  user      User     @relation("author", fields: [userId], references: [id_user])
+  user      User      @relation("author", fields: [userId], references: [id_user])
   //-------------
 }
 
-model Comment{
-  id_comment        Int      @id @default(autoincrement())
-  idPost    Int
-  userId    Int
+model Comment {
+  id_comment Int    @id @default(autoincrement())
+  idPost     Int
+  userId     Int
   message    String
 
-  post      Post @relation(fields: [idPost], references: [id_post])
-  user      User     @relation("commentator", fields: [userId], references: [id_user])
+  post Post @relation(fields: [idPost], references: [id_post])
+  user User @relation("commentator", fields: [userId], references: [id_user])
 }
 
 model Project {
@@ -194,19 +194,25 @@ model Participation {
 
 model Screen_Curtidas {
   // Campos tabela
-  id_stick       Int      @id @default(autoincrement())
-  id_user        Int
+  id_stick       Int        @id @default(autoincrement())
+  id_candidate   Int 
   id_role        Int
-  match_dateTime DateTime @default(now())
+  match_dateTime DateTime   @default(now())
+  likeAuthor     LikeAuthor
   //-------------
 
   //Config Prisma 
-  user         User         @relation(fields: [id_user], references: [id_user])
+  user         User         @relation(fields: [id_candidate], references: [id_user])
   project_role Project_role @relation(fields: [id_role], references: [id_role])
   //-------------
 }
 
 //------ENUMS-------
+enum LikeAuthor {
+  Candidate
+  Owner
+}
+
 enum HardSkills {
   Programacao_de_computadores
   Design_grafico
