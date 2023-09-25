@@ -44,7 +44,7 @@ export class ProjectRoleController {
     description: 'Nome de cargo muito pequeno',
     status: 406,
   })
-  @ApiConflictResponse({ description: 'Cargo já existente!', status: 409 })
+  @ApiConflictResponse({ description: 'Cargo já existente', status: 409 })
   @ApiOperation({
     summary: 'Deleta um cargo do projeto',
     description: 'Deleta um cargo do projeto com base no id',

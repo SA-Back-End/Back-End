@@ -15,7 +15,7 @@ export class CertificatesController {
   @ApiCreatedResponse({ description: 'Certificado criado com sucesso', type: CreateCertificateDto, status: 201 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiNotAcceptableResponse({ description: 'Nome do certificado ou senha muito pequenos', status: 406 })
-  @ApiConflictResponse({ description: 'Certificado já existente!', status: 409 })
+  @ApiConflictResponse({ description: 'Certificado já existente', status: 409 })
   @ApiOperation({
     summary: 'Cria um certificado',
     description: 'Cria um certificado na plataforma',

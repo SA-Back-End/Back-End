@@ -45,7 +45,7 @@ export class ProjectController {
     description: 'Nome de projeto muito pequeno',
     status: 406,
   })
-  @ApiConflictResponse({ description: 'Projeto já existente!', status: 409 })
+  @ApiConflictResponse({ description: 'Projeto já existente', status: 409 })
   @ApiOperation({
     summary: 'Cria um projeto',
     description: 'Cria um projeto na plataforma',

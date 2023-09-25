@@ -101,7 +101,7 @@ export class ProjectService {
     });
 
     if (!projectExists) {
-      throw new NotFoundException('Projeto não existe');
+      throw new NotFoundException('Projeto não existente');
     }
 
     return projectExists;
@@ -124,7 +124,7 @@ export class ProjectService {
     });
 
     if (!projectToUpdate) throw new ConflictException('Id project inválido');
-    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para fazer alterações!`);
+    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para fazer alterações`);
 
     return await this.prisma.project.update({
       data: {
@@ -143,8 +143,8 @@ export class ProjectService {
       },
     });
 
-    if (!projectToUpdate) throw new NotFoundException('Projeto não existe');
-    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para excluir o projeto!`);
+    if (!projectToUpdate) throw new NotFoundException('Projeto não existente');
+    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para excluir o projeto`);
 
     const hadSucceded = await this.prisma.project.delete({
       where: {
@@ -171,7 +171,7 @@ export class ProjectService {
     });
 
     if (!isOpenProjects) {
-      throw new NotFoundException('Desculpe, não temos projetos no momento.');
+      throw new NotFoundException('Desculpe, não temos projetos no momento');
     }
 
     return isOpenProjects;
@@ -191,7 +191,7 @@ export class ProjectService {
       project_Role: true},
     });
     if(!findStatus) {
-      throw new NotFoundException("Desculpe, não temos projeto no momento.");
+      throw new NotFoundException("Desculpe, não temos projeto no momento");
     }
 
     return findStatus;
@@ -204,7 +204,7 @@ export class ProjectService {
       }
     });
     if(findStudyArea[0] === undefined) {
-      throw new NotFoundException("Desculpe, não temos projeto no momento.");
+      throw new NotFoundException("Desculpe, não temos projeto no momento");
     }
     return findStudyArea
   }

@@ -58,7 +58,7 @@ export class ProjectRoleService {
     });
 
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     }
 
     return roleExists;
@@ -84,11 +84,11 @@ export class ProjectRoleService {
     })
 
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     } else if(!userToAcceptExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     } else if(!requisitionMakerExists) {
-      throw new NotFoundException('Dono da requisição não existe');
+      throw new NotFoundException('Dono da requisição não existente');
     } 
 
     const like = await this.prisma.screen_Curtidas.findMany({
@@ -96,7 +96,7 @@ export class ProjectRoleService {
     })
 
     if(like.length < 2) {
-      throw new ConflictException("Aguardando confirmação da outra parte.")
+      throw new ConflictException("Aguardando confirmação da outra parte")
     } else if (like.length == 2){
       return this.prisma.project_role.update({
         where: {
@@ -120,7 +120,7 @@ export class ProjectRoleService {
       },
     });
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     }
 
     const userToFireExists = await this.prisma.project_role.findFirst({
@@ -176,7 +176,7 @@ export class ProjectRoleService {
       },
     });
     if (!idInUse) {
-      throw new ConflictException('Cargo não existe');
+      throw new ConflictException('Cargo não existente');
     }
     return await this.prisma.project_role.update({
       data: {

@@ -10,16 +10,16 @@ export class ScreenStickService {
   async create(createScreenStickDto: CreateScreenStickDto,idRequisitionMaker:number) {
     const candidateExists= await this.prisma.user.findFirst({where:{id_user:createScreenStickDto.id_candidate}})
      if(!candidateExists) {
-      throw new NotFoundException('Usuário não existe');}
+      throw new NotFoundException('Usuário não existente');}
 
     const roleExists= await this.prisma.project_role.findFirst({where:{id_role:createScreenStickDto.id_role}})
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     } 
 
     const requisitionMakerExists= await this.prisma.user.findFirst({where:{id_user:idRequisitionMaker}})
     if(!requisitionMakerExists){
-      throw new ConflictException('Dono da Requisição não existe')
+      throw new ConflictException('Dono da Requisição não existente')
     }
 
     const likeCandidateExists=await this.prisma.screen_Curtidas.findFirst({
@@ -82,7 +82,7 @@ export class ScreenStickService {
     })
 
     if (!stickExists) {
-      throw new NotFoundException('Stick não existe')
+      throw new NotFoundException('Stick não existente')
     }
 
     return stickExists;
@@ -96,7 +96,7 @@ export class ScreenStickService {
     })
 
     if (!idInUse) {
-      throw new ConflictException('This screen_curtida does not exist')
+      throw new ConflictException('Like não existente')
     }
 
     return await this.prisma.screen_Curtidas.update({
@@ -117,7 +117,7 @@ export class ScreenStickService {
     })
 
     if (!screenCurtidaExists) {
-      throw new NotFoundException('Curtida não existe')
+      throw new NotFoundException('Curtida não existente')
     }
 
     return await this.prisma.screen_Curtidas.delete({

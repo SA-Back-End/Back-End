@@ -147,7 +147,7 @@ export class UserService {
     });
 
     if (!userExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     }
 
     delete userExists.password;
@@ -164,7 +164,7 @@ export class UserService {
     });
 
     if (!userExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     }
 
     return userExists;
@@ -178,7 +178,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new ConflictException('Usuário do parâmetro não existe!');
+      throw new ConflictException('Usuário do parâmetro não existente');
     }
 
     // CRIAR FUNÇÃO QUE RECEBE POR PARAMETRO TODOS OS ITENS DO UPDATE, E FAZ BONITINHO MENOS CÓDIGO
@@ -190,7 +190,7 @@ export class UserService {
       });
 
       if (usernameInUse) {
-        throw new ConflictException('Nome de usuário indisponível!');
+        throw new ConflictException('Nome de usuário indisponível');
       }
     }
 
@@ -203,7 +203,7 @@ export class UserService {
       });
 
       if (emailInUse) {
-        throw new ConflictException('Email indisponível!');
+        throw new ConflictException('Email indisponível');
       }
     }
 
@@ -232,7 +232,7 @@ export class UserService {
     });
 
     if (!userExists || !userDeleteExists) {
-      throw new NotFoundException('Usuário não existe');
+      throw new NotFoundException('Usuário não existente');
     }
     console.log(usernameAdmin, usernameToDelete);
 
@@ -321,7 +321,7 @@ export class UserService {
     });
 
     if (!isSearching) {
-      throw new NotFoundException('Desculpe, não temos candidatos no momento.');
+      throw new NotFoundException('Desculpe, não temos candidatos no momento');
     }
     isSearching.forEach(e => delete e.password);
 
@@ -347,7 +347,7 @@ export class UserService {
       },
     });
     if(!hasStatus) {
-      throw new NotFoundException("Desculpe, não temos algupem com esse Status neste momento.");
+      throw new NotFoundException("Desculpe, não temos algupem com esse Status neste momento");
     }
     hasStatus.forEach(e => delete e.password);
     return hasStatus;
@@ -373,7 +373,7 @@ export class UserService {
     });
 
     if(!findState) {
-      throw new NotFoundException("Desculpe, não temos nenhum usuário neste estado no momento.")
+      throw new NotFoundException("Desculpe, não temos nenhum usuário neste estado no momento")
     };
 
     findState.forEach(e => delete e.password);

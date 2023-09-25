@@ -66,7 +66,7 @@ export class PostService {
     });
 
     if (!postExists) {
-      throw new NotFoundException('Postagem não existe');
+      throw new NotFoundException('Postagem não existente');
     }
 
     return postExists;
@@ -80,7 +80,7 @@ export class PostService {
     });
 
     if (idInUse) {
-      throw new ConflictException('postname indisponível');
+      throw new ConflictException('Postagem não existente');
     }
 
     return await this.prisma.post.update({
@@ -103,7 +103,7 @@ export class PostService {
     });
 
     if (!postExists) {
-      throw new NotFoundException('Postagem não existe');
+      throw new NotFoundException('Postagem não existente');
     }
 
     return await this.prisma.post.delete({
@@ -121,7 +121,7 @@ export class PostService {
     });
 
     if (!postToLike) {
-      throw new ConflictException('Post não Existe');
+      throw new ConflictException('Postagem não existente');
     }
 
     const user = await this.prisma.user.findUnique({
@@ -129,7 +129,7 @@ export class PostService {
     });
 
     if (!user) {
-      throw new ConflictException('Usuário não Existe');
+      throw new ConflictException('Usuário não existente');
     }
 
     return this.prisma.post.update({
@@ -146,7 +146,7 @@ export class PostService {
     });
 
     if (!postToLike) {
-      throw new ConflictException('Post não Existe');
+      throw new ConflictException('Postagem não existente');
     }
 
     const user = await this.prisma.user.findUnique({
@@ -154,7 +154,7 @@ export class PostService {
     });
 
     if (!user) {
-      throw new ConflictException('Usuário não Existe');
+      throw new ConflictException('Usuário não existente');
     }
 
     return this.prisma.post.update({
@@ -171,7 +171,7 @@ export class PostService {
     });
 
     if (!postToComment) {
-      throw new ConflictException('Post não Existe');
+      throw new ConflictException('Postagem não existente');
     }
 
     const user = await this.prisma.user.findUnique({
@@ -179,7 +179,7 @@ export class PostService {
     });
 
     if (!user) {
-      throw new ConflictException('Usuário não Existe');
+      throw new ConflictException('Usuário não existente');
     }
 
     return this.prisma.post.update({
@@ -198,7 +198,7 @@ export class PostService {
     });
 
     if (!user) {
-      throw new ConflictException('Usuário não Existe');
+      throw new ConflictException('Usuário não existente');
     }
 
     const postToComment = await this.prisma.post.findUnique({
@@ -208,7 +208,7 @@ export class PostService {
     });
 
     if (!postToComment) {
-      throw new ConflictException('Post não Existe');
+      throw new ConflictException('Postagem não existente');
     }
 
     const commentExists = await this.prisma.comment.findUnique({
@@ -216,7 +216,7 @@ export class PostService {
     });
 
     if (!commentExists) {
-      throw new ConflictException('Comentário não Existe');
+      throw new ConflictException('Comentário não existente');
     }
 
     if (commentExists.userId == idUser || postToComment.userId == idUser) {
