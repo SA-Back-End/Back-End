@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { StatusProject, StudyArea } from '@prisma/client';
+import { StatusProject, StudyArea, WorkType } from '@prisma/client';
 //import { HardSkills } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
@@ -33,4 +33,8 @@ export class CreateProjectDto {
     @IsString()
     @IsNotEmpty()
     donate: string;
+
+    @ApiProperty({ type: String, description: 'Se o projeto é online, híbrido ou presencial', example: 'Presencial' })
+    @IsNotEmpty()
+    workType: WorkType;
 }

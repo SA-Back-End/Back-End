@@ -156,6 +156,7 @@ model Project {
   description       String
   donate            String
   project_Role      Project_role[]
+  workType          WorkType
   //-------------
 
   //Config Prisma  
@@ -575,4 +576,10 @@ enum State {
   SP
   SE
   TO
+}
+
+enum WorkType {
+  Hibrido
+  Remoto
+  Presencial
 }

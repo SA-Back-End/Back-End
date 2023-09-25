@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { Project, StatusProject, StudyArea } from '@prisma/client';
+import { Project, StatusProject, StudyArea, WorkType } from '@prisma/client';
 import IProjectRemoveResponse from './helpers/interfaces/IProjectDeleteResponse';
 
 @Injectable()
@@ -206,7 +206,27 @@ export class ProjectService {
     if(findStudyArea[0] === undefined) {
       throw new NotFoundException("Desculpe, não temos projeto no momento.");
     }
-    return findStudyArea
+    return findStudyArea;
+  }
+
+  async findProjectByWorkType(workType: WorkType) {
+    const findWorkType = await this.prisma.project.findMany({
+      where: {
+        workType: workType,
+      }, include: {userAdmin: {
+        select: {
+          id_user: true,
+          username: true,
+        },
+      }, 
+      project_Role: true},
+    })
+    
+    if(!findWorkType) {
+      throw new NotFoundException("Desculpe, não temos projeto no momento.");
+    }
+
+    return findWorkType;
   }
     
 }
