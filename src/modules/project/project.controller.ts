@@ -25,7 +25,7 @@ import {
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { StatusProject, StudyArea } from '@prisma/client';
+import { StatusProject, StudyArea, WorkType } from '@prisma/client';
 
 @ApiBearerAuth()
 @ApiTags('Project')
@@ -231,5 +231,24 @@ export class ProjectController {
   })
   async findProjectByStudyArea(@Body() studyArea: StudyArea[]) {
     return this.projectService.findProjectByStudyArea(studyArea);
+  }
+
+  @Get('/findProjectByWorkType/:workType')
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateProjectDto,
+    status: 200,
+  })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista de projetos com as áreas de estudo especificadas',
+    description: 'Lista de projetos com todas as studyAreas presentes no array mandado',
+  })
+  async findProjectByWorkType(@Param('workType') workType: WorkType) {
+    return this.projectService.findProjectByWorkType(workType)
   }
 }
