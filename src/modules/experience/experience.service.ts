@@ -40,7 +40,7 @@ export class ExperienceService {
     })
 
     if (!experienceExists) {
-      throw new NotFoundException('Experiência não existe')
+      throw new NotFoundException('Experiência não existente')
     }
 
     return experienceExists
@@ -54,7 +54,7 @@ export class ExperienceService {
     })
 
     if (!experienceExists) {
-      throw new NotFoundException('Experiência não existe')
+      throw new NotFoundException('Experiência não existente')
     }
     
     return await this.prisma.experience.update({
@@ -75,7 +75,7 @@ export class ExperienceService {
     });
 
     if (!experienceExists) {
-      throw new NotFoundException('Experiência não existe');
+      throw new NotFoundException('Experiência não existente');
     }
 
     return await this.prisma.experience.delete({

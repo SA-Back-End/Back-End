@@ -58,34 +58,115 @@ export class ProjectRoleService {
     });
 
     if (!roleExists) {
-      throw new NotFoundException('Cargo não existe');
+      throw new NotFoundException('Cargo não existente');
     }
 
     return roleExists;
   }
 
-  async acceptUser(idRole: number, idUser: number) {
-    return this.prisma.project_role.update({
+  async acceptParticipation(idRole: number, idUserToAccept: number, idRequisitionMaker: number) {
+    const roleExists = await this.prisma.project_role.findFirst({
       where: {
         id_role: idRole,
-      },
-      data: {
-        participation: { create: { id_user: idUser } },
-      },
+      }
     });
+
+    const userToAcceptExists = await this.prisma.user.findUnique({
+      where: {
+        id_user: idUserToAccept
+      }
+    })
+
+    const requisitionMakerExists = await this.prisma.user.findUnique({
+      where: {
+        id_user: idRequisitionMaker
+      }
+    })
+
+    if (!roleExists) {
+      throw new NotFoundException('Cargo não existente');
+    } else if(!userToAcceptExists) {
+      throw new NotFoundException('Usuário não existente');
+    } else if(!requisitionMakerExists) {
+      throw new NotFoundException('Dono da requisição não existente');
+    } 
+
+    const like = await this.prisma.screen_Curtidas.findMany({
+      where:{id_role: idRole, id_candidate: idUserToAccept}
+    })
+
+    if(like.length < 2) {
+      throw new ConflictException("Aguardando confirmação da outra parte")
+    } else if (like.length == 2){
+      return this.prisma.project_role.update({
+        where: {
+          id_role: idRole,
+        },
+        data: {
+          participation: { create: { id_user: idUserToAccept } }, isOpen: false,
+        },
+      });
+    }
   }
 
-  async rejectUser() {}
-
-  async fireUser(idRole: number, idUser: number) {
-    return this.prisma.project_role.update({
+  async fireUser(
+    idRequisitionMaker: number,
+    idRole: number,
+    idUserToFire: number
+  ) {
+    const roleExists = await this.prisma.project_role.findFirst({
       where: {
         id_role: idRole,
       },
-      data: {
-        participation: { deleteMany: [{ id_user: idUser }] },
+    });
+    if (!roleExists) {
+      throw new NotFoundException('Cargo não existente');
+    }
+
+    const userToFireExists = await this.prisma.project_role.findFirst({
+      where: {
+        id_role: idRole,
+        participation: { some: { user: { id_user: idUserToFire } } },
       },
     });
+    if (!userToFireExists) {
+      throw new NotFoundException(
+        'Usuário para Demitir não participa do Projeto'
+      );
+    }
+
+    if (idRequisitionMaker === idUserToFire) {
+      return await this.prisma.project_role.update({
+        where: {
+          id_role: idRole,
+        },
+        data: {
+          participation: { deleteMany: [{ id_user: idUserToFire }] },
+        },
+      });
+    } else {
+      const userManagerExists = await this.prisma.project_role.findFirst({
+        where: {
+          id_role: idRole,
+          project: { id_projectManager: idRequisitionMaker },
+        },
+      });
+
+      if (!userManagerExists) {
+        throw new NotFoundException(
+          'Usuário não tem Permissão para Demitir nesse Cargo'
+        );
+      }
+      return await this.prisma.project_role.update({
+        where: {
+          id_role: idRole,
+          project: { id_projectManager: idRequisitionMaker },
+        },
+        data: {
+          participation: { deleteMany: [{ id_user: idUserToFire }] }, isOpen: true
+        },
+      });
+    }
   }
 
   async update(id_role: number, updateProjectRoleDto: UpdateProjectRoleDto) {
@@ -95,7 +176,7 @@ export class ProjectRoleService {
       },
     });
     if (!idInUse) {
-      throw new ConflictException('Cargo não existe');
+      throw new ConflictException('Cargo não existente');
     }
     return await this.prisma.project_role.update({
       data: {

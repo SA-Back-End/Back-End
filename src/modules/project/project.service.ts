@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { Project, StatusProject } from '@prisma/client';
+import { Project, StatusProject, StudyArea, WorkType } from '@prisma/client';
 import IProjectRemoveResponse from './helpers/interfaces/IProjectDeleteResponse';
 
 @Injectable()
@@ -101,7 +101,7 @@ export class ProjectService {
     });
 
     if (!projectExists) {
-      throw new NotFoundException('Projeto não existe');
+      throw new NotFoundException('Projeto não existente');
     }
 
     return projectExists;
@@ -124,7 +124,7 @@ export class ProjectService {
     });
 
     if (!projectToUpdate) throw new ConflictException('Id project inválido');
-    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para fazer alterações!`);
+    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para fazer alterações`);
 
     return await this.prisma.project.update({
       data: {
@@ -137,15 +137,14 @@ export class ProjectService {
   }
 
   async remove(id_project: number, idProjectManager: number): Promise< IProjectRemoveResponse | ConflictException > {
-
     const projectToUpdate = await this.prisma.project.findUnique({
       where: {
         id_project,
       },
     });
 
-    if (!projectToUpdate) throw new NotFoundException('Projeto não existe');
-    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para excluir o projeto!`);
+    if (!projectToUpdate) throw new NotFoundException('Projeto não existente');
+    if (projectToUpdate.id_projectManager !== idProjectManager) throw new ConflictException(`Usuário sem permição para excluir o projeto`);
 
     const hadSucceded = await this.prisma.project.delete({
       where: {
@@ -162,18 +161,73 @@ export class ProjectService {
     }
     throw new ConflictException('Erro ao deletar projeto');
   }
+
   async findOpenProjects(){
-    const isOpenProjects = await this.prisma.project_role.findMany({
+    const isOpenProjects = await this.prisma.project.findMany({
       where: {
-        isOpen: true
+        project_Role: { some: {isOpen: true}}
       },
-      include: { participation: true, screen_Curtidas: true }
-    })
+      include: { project_Role: true },
+    });
 
     if (!isOpenProjects) {
-      throw new NotFoundException('Desculpe, não temos projetos no momento.')
+      throw new NotFoundException('Desculpe, não temos projetos no momento');
     }
 
-    return isOpenProjects
+    return isOpenProjects;
   }
+
+  async findProjectByStatus(status: StatusProject) {
+    const findStatus = await this.prisma.project.findMany({
+      where: {
+        status: status,
+      },
+      include: {userAdmin: {
+        select: {
+          id_user: true,
+          username: true,
+        },
+      }, 
+      project_Role: true},
+    });
+    if(!findStatus) {
+      throw new NotFoundException("Desculpe, não temos projeto no momento");
+    }
+
+    return findStatus;
+  }
+
+  async findProjectByStudyArea(studyArea: StudyArea[]) {
+    const findStudyArea = await this.prisma.project.findMany({
+      where: {
+        studyArea: { hasEvery: studyArea}
+      }
+    });
+    if(findStudyArea[0] === undefined) {
+      throw new NotFoundException("Desculpe, não temos projeto no momento");
+    }
+    return findStudyArea;
+  }
+
+  async findProjectByWorkType(workType: WorkType) {
+    const findWorkType = await this.prisma.project.findMany({
+      where: {
+        workType: workType,
+      }, include: {userAdmin: {
+        select: {
+          id_user: true,
+          username: true,
+        },
+      }, 
+      project_Role: true},
+    })
+    
+    if(!findWorkType) {
+      throw new NotFoundException("Desculpe, não temos projeto no momento.");
+    }
+
+    return findWorkType;
+  }
+    
 }
+

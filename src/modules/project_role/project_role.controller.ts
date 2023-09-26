@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query
 } from '@nestjs/common';
 import { ProjectRoleService } from './project_role.service';
 import { CreateProjectRoleDto } from './dto/create-project_role.dto';
@@ -42,7 +43,7 @@ export class ProjectRoleController {
     description: 'Nome de cargo muito pequeno',
     status: 406,
   })
-  @ApiConflictResponse({ description: 'Cargo já existente!', status: 409 })
+  @ApiConflictResponse({ description: 'Cargo já existente', status: 409 })
   @ApiOperation({
     summary: 'Deleta um cargo do projeto',
     description: 'Deleta um cargo do projeto com base no id',
@@ -92,24 +93,26 @@ export class ProjectRoleController {
     return this.projectRoleService.findOne(id_role);
   }
 
-  @Patch('/acceptUser/:idRole/:idUser')
+  @Patch('/acceptUser/:idRole/:idUser/')
   @ApiParam({ name: 'idRole' })
   @ApiParam({ name: 'idUser' })
-  async acceptUser(
+  async acceptParticipation(
     @Param('idRole') idRole: number,
-    @Param('idUser') idUser: number
+    @Param('idUser') idUser: number,
+    @Query('idRequisitionMaker') idRequisitionMaker: number
   ) {
-    return this.projectRoleService.acceptUser(idRole, idUser);
+    return this.projectRoleService.acceptParticipation(idRole, idUser, idRequisitionMaker);
   }
 
-  @Patch('/fireUser/:idRole/:idUser')
+  @Patch('/fireUser/:idProjectManager/:idRole/:idUser')
   @ApiParam({ name: 'idRole' })
   @ApiParam({ name: 'idUser' })
   async fireUser(
+    @Param('idProjectManager') idProjectManager: number,
     @Param('idRole') idRole: number,
     @Param('idUser') idUser: number
   ) {
-    return this.projectRoleService.fireUser(idRole, idUser);
+    return this.projectRoleService.fireUser(idProjectManager, idRole, idUser);
   }
 
   @ApiOkResponse({

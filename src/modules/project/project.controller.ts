@@ -25,8 +25,7 @@ import {
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { StatusProject } from '@prisma/client';
-import { get } from 'http';
+import { StatusProject, StudyArea, WorkType } from '@prisma/client';
 
 @ApiBearerAuth()
 @ApiTags('Project')
@@ -46,7 +45,7 @@ export class ProjectController {
     description: 'Nome de projeto muito pequeno',
     status: 406,
   })
-  @ApiConflictResponse({ description: 'Projeto já existente!', status: 409 })
+  @ApiConflictResponse({ description: 'Projeto já existente', status: 409 })
   @ApiOperation({
     summary: 'Cria um projeto',
     description: 'Cria um projeto na plataforma',
@@ -112,10 +111,16 @@ export class ProjectController {
     return this.projectService.findOne(title);
   }
 
-  @Public()
-  @ApiOkResponse({ description: 'Informações encontradas', type: CreateProjectDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateProjectDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @ApiOperation({
     summary: 'Lista projetos especificamente com a chave inserida',
     description: 'Lista projetos especificamente com base no título',
@@ -146,7 +151,11 @@ export class ProjectController {
     @Param('id_projectManager') idProjectManager: number,
     @Body() updateProjectDto: UpdateProjectDto
   ) {
-    return this.projectService.update(idProject, updateProjectDto, idProjectManager);
+    return this.projectService.update(
+      idProject,
+      updateProjectDto,
+      idProjectManager
+    );
   }
 
   @Delete('/delete/:id_projectManager/:id_project')
@@ -162,22 +171,86 @@ export class ProjectController {
     description: 'Deleta um projeto com base no id',
   })
   async remove(
-      @Param('id_project') idProject: number,
-      @Param('id_projectManager') idProjectManager: number
-    ) {
+    @Param('id_project') idProject: number,
+    @Param('id_projectManager') idProjectManager: number
+  ) {
     return this.projectService.remove(idProject, idProjectManager);
   }
 
   @Public()
   @Get('/findOpenProjects')
-  @ApiOkResponse({ description: 'Informações encontradas', type: CreateProjectDto , status: 200 })
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateProjectDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @ApiOperation({
     summary: 'Lista de projetos em aberto',
     description: 'Lista de projetos com a opção isOpen assinalada como true',
   })
-  async findOpenProjects(){
+  async findOpenProjects() {
     return this.projectService.findOpenProjects();
+  }
+
+  @Get('/findProjectByStatus/:status')
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateProjectDto,
+    status: 200,
+  })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista de projetos com um status específico',
+    description: 'Lista de projetos com um dos status do enum colocados',
+  })
+  async findProjectByStatus(@Param('status') status: StatusProject) {
+    return this.projectService.findProjectByStatus(status);
+  }
+
+  @Post('/findProjectByStudyArea')
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateProjectDto,
+    status: 200,
+  })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista de projetos com as áreas de estudo especificadas',
+    description: 'Lista de projetos com todas as studyAreas presentes no array mandado',
+  })
+  async findProjectByStudyArea(@Body() studyArea: StudyArea[]) {
+    return this.projectService.findProjectByStudyArea(studyArea);
+  }
+
+  @Get('/findProjectByWorkType/:workType')
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateProjectDto,
+    status: 200,
+  })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista de projetos com as áreas de estudo especificadas',
+    description: 'Lista de projetos com todas as studyAreas presentes no array mandado',
+  })
+  async findProjectByWorkType(@Param('workType') workType: WorkType) {
+    return this.projectService.findProjectByWorkType(workType)
   }
 }
