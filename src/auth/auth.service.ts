@@ -8,17 +8,17 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService,
-  ) { }
+    private jwtService: JwtService
+  ) {}
 
-  async signIn(username: string, pass: string) {
-    const user = await this.userService.findUserLogin(username);
+  async signIn(login: string, pass: string) {
+    const user = await this.userService.findUserLogin(login);
 
     const isMatch = await bcrypt.compare(pass, user.password);
 
     if (isMatch) {
-      const payload = { id: user.id_user, username: user.username, };
-      return await this.jwtService.signAsync(payload)
+      const payload = { id: user.id_user, username: user.username };
+      return await this.jwtService.signAsync(payload);
     } else {
       throw new UnauthorizedException('Senha incorreta');
     }

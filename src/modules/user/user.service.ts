@@ -155,10 +155,10 @@ export class UserService {
     return userExists;
   }
 
-  async findUserLogin(username: string) {
-    const userExists = await this.prisma.user.findUnique({
+  async findUserLogin(login: string) {
+    const userExists = await this.prisma.user.findFirst({
       where: {
-        username,
+        OR: [{ username: login }, { email: login }],
       },
       select: { id_user: true, username: true, password: true },
     });
@@ -346,8 +346,10 @@ export class UserService {
         certificate: true,
       },
     });
-    if(!hasStatus) {
-      throw new NotFoundException("Desculpe, não temos algupem com esse Status neste momento");
+    if (!hasStatus) {
+      throw new NotFoundException(
+        'Desculpe, não temos algupem com esse Status neste momento'
+      );
     }
     hasStatus.forEach(e => delete e.password);
     return hasStatus;
@@ -356,7 +358,7 @@ export class UserService {
   async findUserState(state: State) {
     const findState = await this.prisma.user.findMany({
       where: {
-        state: state
+        state: state,
       },
       include: {
         posts: true,
@@ -372,9 +374,11 @@ export class UserService {
       },
     });
 
-    if(!findState) {
-      throw new NotFoundException("Desculpe, não temos nenhum usuário neste estado no momento")
-    };
+    if (!findState) {
+      throw new NotFoundException(
+        'Desculpe, não temos nenhum usuário neste estado no momento'
+      );
+    }
 
     findState.forEach(e => delete e.password);
     return findState;
@@ -383,37 +387,43 @@ export class UserService {
   async findUserBySoftSkill(skills: SoftSkills[]) {
     const findSoftSkill = await this.prisma.user.findMany({
       where: {
-        softSkills: { hasEvery: skills }
-      }
-    })
-    if(findSoftSkill[0] === undefined) {
-      throw new NotFoundException("Desculpe, não temos nenhum candidato que atende seus requisitos")
+        softSkills: { hasEvery: skills },
+      },
+    });
+    if (findSoftSkill[0] === undefined) {
+      throw new NotFoundException(
+        'Desculpe, não temos nenhum candidato que atende seus requisitos'
+      );
     }
-    return findSoftSkill
+    return findSoftSkill;
   }
 
   async findUserByHardSkill(skills: HardSkills[]) {
     const findHardSkill = await this.prisma.user.findMany({
       where: {
-        hardSkills: { hasEvery: skills }
-      }
-    })
-    if(findHardSkill[0] === undefined) {
-      throw new NotFoundException("Desculpe, não temos nenhum candidato que atende seus requisitos")
-    }    
-    return findHardSkill
+        hardSkills: { hasEvery: skills },
+      },
+    });
+    if (findHardSkill[0] === undefined) {
+      throw new NotFoundException(
+        'Desculpe, não temos nenhum candidato que atende seus requisitos'
+      );
+    }
+    return findHardSkill;
   }
 
   async findUserByStudyArea(studyArea: StudyArea[]) {
     const findStudyArea = await this.prisma.user.findMany({
       where: {
-        studyArea: { hasEvery: studyArea }
-      }
-    })
+        studyArea: { hasEvery: studyArea },
+      },
+    });
 
-    if(findStudyArea[0] === undefined) {
-      throw new NotFoundException("Desculpe, não temos nenhum candidato que atende seus requisitos")
+    if (findStudyArea[0] === undefined) {
+      throw new NotFoundException(
+        'Desculpe, não temos nenhum candidato que atende seus requisitos'
+      );
     }
-    return findStudyArea
+    return findStudyArea;
   }
 }

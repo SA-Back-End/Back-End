@@ -16,7 +16,7 @@ import { LogUserDto } from './dto/log-user-dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -26,9 +26,9 @@ export class AuthController {
     description: 'Recebe a Bearer Token para autenticação do usuário na API',
   })
   signIn(@Body() logUserDto: LogUserDto) {
-    return this.authService.signIn(logUserDto.username, logUserDto.password);
+    return this.authService.signIn(logUserDto.login, logUserDto.password);
   }
-  
+
   @Get('profile')
   @ApiOperation({
     summary: 'Mostra as informações do usuário',
@@ -38,7 +38,7 @@ export class AuthController {
     const user = {
       id: req.user.id,
       username: req.user.username,
-    }
+    };
     return user;
   }
 }
