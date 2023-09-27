@@ -126,7 +126,7 @@ model Post {
   id_post   Int       @id @default(autoincrement())
   userId    Int
   text      String
-  post_img  Bytes     @db.ByteA
+  post_img  Bytes[]     @db.ByteA 
   likedBy   User[]
   post_date DateTime  @default(now())
   comments  Comment[]

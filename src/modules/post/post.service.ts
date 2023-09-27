@@ -13,6 +13,10 @@ export class PostService {
   constructor(private prisma: PrismaService) {}
 
   async create(createPostDto: CreatePostDto) {
+    if (createPostDto.post_img.length > 3) {
+      throw new ConflictException('Máximo de Imagens Excedido');
+    }
+
     return this.prisma.post.create({
       data: {
         userId: createPostDto.userId,
