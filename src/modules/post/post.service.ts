@@ -32,7 +32,9 @@ export class PostService {
         include: {
           user: { select: { username: true } },
           comments: true,
-          likedBy: { select: { username: true } },
+          likedBy: {
+            select: { like_date: true, liker: { select: { username: true } } },
+          },
         },
       });
     } else if (page == 1) {
@@ -40,7 +42,9 @@ export class PostService {
         include: {
           user: { select: { username: true } },
           comments: true,
-          likedBy: { select: { username: true } },
+          likedBy: {
+            select: { like_date: true, liker: { select: { username: true } } },
+          },
         },
         take: 20,
       });
@@ -49,7 +53,9 @@ export class PostService {
         include: {
           user: { select: { username: true } },
           comments: true,
-          likedBy: { select: { username: true } },
+          likedBy: {
+            select: { like_date: true, liker: { select: { username: true } } },
+          },
         },
         take: 20,
         skip: (page - 1) * 20,
@@ -65,7 +71,7 @@ export class PostService {
       include: {
         user: { select: { username: true } },
         comments: true,
-        likedBy: { select: { username: true } },
+        likedBy: { select: { liker: { select: { username: true } } } },
       },
     });
 
@@ -167,7 +173,12 @@ export class PostService {
 
     return this.prisma.post.update({
       where: { id_post: idPost },
-      data: { likedBy: { connect: { id_user: idUser } } },
+      data: { likedBy: { create: { likerId: idUser } } },
+      include: {
+        likedBy: {
+          select: { like_date: true, liker: { select: { username: true } } },
+        },
+      },
     });
   }
 
@@ -192,7 +203,14 @@ export class PostService {
 
     return this.prisma.post.update({
       where: { id_post: idPost },
-      data: { likedBy: { disconnect: { id_user: idUser } } },
+      data: {
+        likedBy: { deleteMany: { likerId: idUser } },
+      },
+      include: {
+        likedBy: {
+          select: { like_date: true, liker: { select: { username: true } } },
+        },
+      },
     });
   }
 
@@ -222,6 +240,7 @@ export class PostService {
           create: { message: comment.message, userId: comment.idUser },
         },
       },
+      select: { comments: true },
     });
   }
 

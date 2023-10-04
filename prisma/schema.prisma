@@ -37,21 +37,36 @@ model User {
   certificate   Certificates[]
   experience    Experience[]
   participation Participation[]
-  likes         Post[]
+  likes         Likes[]
   //-------------
 }
 
 model Follows {
   // Campos tabela
+  follow_date DateTime @default(now())
   follower    User @relation("follower", fields: [followerId], references: [id_user])
   followerId  Int
   following   User @relation("following", fields: [followingId], references: [id_user])
   followingId Int
   //-------------
-  //-------------
 
   //Config Prisma 
   @@id([followerId, followingId])
+  //-------------
+}
+
+model Likes {
+  // Campos tabela
+  like_date DateTime @default(now())
+  liker    User @relation(fields: [likerId], references: [id_user])
+  likerId  Int
+  post   Post @relation(fields: [postId], references: [id_post])
+  postId Int
+  //-------------
+
+  //Config Prisma 
+  @@id([likerId, postId])
+  //-------------
 }
 
 model Formation {
@@ -127,7 +142,7 @@ model Post {
   userId    Int
   text      String
   post_img  Bytes[]     @db.ByteA 
-  likedBy   User[]
+  likedBy  Likes[]
   post_date DateTime  @default(now())
   comments  Comment[]
   //-------------
