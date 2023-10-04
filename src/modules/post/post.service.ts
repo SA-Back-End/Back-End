@@ -83,15 +83,44 @@ export class PostService {
       },
     });
 
-    if (idInUse) {
+    if (!idInUse) {
       throw new ConflictException('Postagem não existente');
     }
 
+    if (updatePostDto.post_img) {
+      const imgs = [...idInUse.post_img, ...updatePostDto.post_img];
+
+      if (imgs.length > 3) {
+        if (updatePostDto.post_img.length > 3) {
+          throw new ConflictException('Máximo de Imagens Excedido');
+        }
+        return await this.prisma.post.update({
+          data: {
+            userId: updatePostDto.userId,
+            text: updatePostDto.text,
+            post_img: updatePostDto.post_img,
+          },
+          where: {
+            id_post: id,
+          },
+        });
+      }
+
+      return await this.prisma.post.update({
+        data: {
+          userId: updatePostDto.userId,
+          text: updatePostDto.text,
+          post_img: imgs,
+        },
+        where: {
+          id_post: id,
+        },
+      });
+    }
     return await this.prisma.post.update({
       data: {
         userId: updatePostDto.userId,
         text: updatePostDto.text,
-        post_img: updatePostDto.post_img,
       },
       where: {
         id_post: id,
