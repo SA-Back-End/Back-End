@@ -19,6 +19,7 @@ model User {
   description            String?
   birthDate              DateTime
   state                  State
+  contact_url            String?
   profilePicture         Bytes?     @db.ByteA
   isSearchingForProjects Boolean    @default(true)
   //-------------

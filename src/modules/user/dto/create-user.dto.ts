@@ -13,6 +13,7 @@ import {
   ValidateNested,
   IsDate,
   IsDateString,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -105,6 +106,15 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   state: State;
+
+  @ApiProperty({
+    type: String,
+    description: 'URL de algum contato',
+    example: 'https://br.linkedin.com/in/joaozin',
+  })
+  @IsUrl()
+  @IsOptional()
+  contact_url: string;
 
   @ApiProperty({
     type: String,
