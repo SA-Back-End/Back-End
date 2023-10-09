@@ -426,4 +426,84 @@ export class UserService {
     }
     return findStudyArea;
   }
+
+  async findNotification(username: string) {
+    const followers = await this.prisma.follows.findMany({
+      where: {
+        following: { username },
+      },
+      select: {
+        follow_date: true,
+        following: { select: { username: true } },
+      },
+      orderBy: { follow_date: 'desc' },
+    });
+
+    const follows = followers.map(e => {
+      return {
+        date: e.follow_date,
+        user: e.following.username,
+        type: 'follow',
+      };
+    });
+
+    const postsLikes = await this.prisma.likes.findMany({
+      where: { post: { user: { username } } },
+      select: {
+        liker: { select: { username: true } },
+        like_date: true,
+      },
+
+      orderBy: { like_date: 'desc' },
+    });
+
+    const likes = postsLikes.map(e => {
+      return { date: e.like_date, user: e.liker.username, type: 'like' };
+    });
+
+    const postComments = await this.prisma.comment.findMany({
+      where: { post: { user: { username } } },
+      select: {
+        user: { select: { username: true } },
+        commentDate: true,
+      },
+      orderBy: { commentDate: 'desc' },
+    });
+
+    const comments = postComments.map(e => {
+      return { date: e.commentDate, user: e.user.username, type: 'comment' };
+    });
+
+    const match = await this.prisma.screen_Curtidas.findMany({
+      where: {
+        OR: [
+          { project_role: { project: { userAdmin: { username } } } },
+          { user: { username } },
+        ],
+      },
+      select: {
+        match_dateTime: true,
+        user: { select: { username: true } },
+        project_role: {
+          select: {
+            user_role: true,
+            project: { select: { project_name: true } },
+          },
+        },
+      },
+      orderBy: { match_dateTime: 'desc' },
+    });
+
+    const matchs = match.map(e => {
+      return {
+        date: e.match_dateTime,
+        user: e.user.username,
+        project: e.project_role.project.project_name,
+        type: 'match',
+      };
+    });
+
+    const notifications = [...follows, ...likes, ...comments, ...matchs];
+    return notifications;
+  }
 }

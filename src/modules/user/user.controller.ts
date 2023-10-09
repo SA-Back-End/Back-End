@@ -331,4 +331,23 @@ export class UserController {
   async findUserByStudyArea(@Body() studyArea: StudyArea[]) {
     return this.userService.findUserByStudyArea(studyArea);
   }
+
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateUserDto,
+    status: 200,
+  })
+  @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiOperation({
+    summary: 'Lista as notificações de um usuário específico',
+    description: 'Lista as notificações de um usuário específico por data',
+  })
+  @Get('/notifications/:username')
+  async Notifications(@Param('username') username: string) {
+    return this.userService.findNotification(username);
+  }
 }

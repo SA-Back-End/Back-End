@@ -154,6 +154,7 @@ model Post {
 
 model Comment {
   id_comment Int    @id @default(autoincrement())
+  commentDate DateTime @default(now())
   idPost     Int
   userId     Int
   message    String
