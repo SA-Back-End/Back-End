@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Headers,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -31,12 +33,17 @@ import {
   StatusUser,
   StudyArea,
 } from '@prisma/client';
+import { JwtUtilsService } from 'src/jwt_utils/jwtUtils.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 @ApiBearerAuth()
 @ApiTags('User')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly JwtUtils: JwtUtilsService
+  ) {}
 
   @Public()
   @Post('create')
@@ -144,7 +151,7 @@ export class UserController {
     return this.userService.update(username, updateUserDto);
   }
 
-  @Delete('/delete/:usernameAdmin/:usernameToDelete')
+  @Delete('/delete/:usernameToDelete')
   @ApiOkResponse({ description: 'Usuário deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({
@@ -156,15 +163,16 @@ export class UserController {
     summary: 'Deleta um usuário',
     description: 'Deleta um usuário com base no username',
   })
+  @UseGuards(AuthGuard)
   async remove(
-    @Param('usernameAdmin') usernameAdmin: string,
+    @Headers('Authorization') auth,
     @Param('usernameToDelete') usernameToDelete: string
   ) {
-    console.log(usernameAdmin, usernameToDelete);
-    return this.userService.remove(usernameAdmin, usernameToDelete);
+    const user = this.JwtUtils.id(auth);
+    return this.userService.remove(user.username, usernameToDelete);
   }
 
-  @Patch('/follow/:followerId/:followingId')
+  @Patch('/follow/:followerId')
   @ApiOkResponse({
     description: 'Usuário seguido com sucesso',
     type: CreateUserDto,
@@ -181,13 +189,14 @@ export class UserController {
       'Seguir um usuário baseado em seu id, followingId é quem segue, followerId é quem é seguido',
   })
   async follow(
-    @Param('followerId') followerId: number,
-    @Param('followingId') followingId: number
+    @Headers('Authorization') auth,
+    @Param('followerId') followerId: number
   ) {
-    return this.userService.follow(followerId, followingId);
+    const user = this.JwtUtils.id(auth);
+    return this.userService.follow(followerId, user.id);
   }
 
-  @Patch('/unfollow/:followerId/:followingId')
+  @Patch('/unfollow/:followerId')
   @ApiOkResponse({
     description: 'Usuário deixado de ser seguido com sucesso',
     type: CreateUserDto,
@@ -204,10 +213,11 @@ export class UserController {
       'Deixar de seguir um usuário baseado em seu id, followingId é quem segue, followerId é quem é seguido',
   })
   async unfollow(
-    @Param('followerId') followerId: number,
-    @Param('followingId') followingId: number
+    @Headers('Authorization') auth,
+    @Param('followerId') followerId: number
   ) {
-    return this.userService.unfollow(followerId, followingId);
+    const user = this.JwtUtils.id(auth);
+    return this.userService.unfollow(followerId, user.id);
   }
 
   @Public()

@@ -254,6 +254,9 @@ export class UserService {
   }
 
   async follow(followerId: number, followingId: number) {
+    if (followerId == followingId) {
+      throw new ConflictException('Você não pode seguir você mesmo');
+    }
     const alreadyFollowing = await this.prisma.user.findFirst({
       where: {
         id_user: followerId,
@@ -261,25 +264,30 @@ export class UserService {
       },
     });
 
-    if (followerId == followingId) {
-      throw new ConflictException('Você não pode seguir você mesmo');
-    }
-
     if (alreadyFollowing) {
       throw new ConflictException('Você já segue este usuário');
     }
 
-    return this.prisma.user.update({
+    await this.prisma.user.update({
       where: {
         id_user: followerId,
       },
       data: {
-        followers: { create: { followingId: followingId } },
+        followers: {
+          create: { followingId },
+        },
       },
     });
+
+    return {
+      menssage: `Você agora está seguindo o user ${alreadyFollowing.username}`,
+    };
   }
 
   async unfollow(followerId: number, followingId: number) {
+    if (followerId == followingId) {
+      throw new ConflictException('Você não pode deixar de seguir você mesmo');
+    }
     const doesNotFollow = await this.prisma.user.findFirst({
       where: {
         id_user: followerId,
@@ -291,14 +299,21 @@ export class UserService {
       throw new ConflictException('Você não segue este usuário');
     }
 
-    return this.prisma.user.update({
+    const unfollow = await this.prisma.user.update({
       where: {
-        id_user: followingId,
+        id_user: followerId,
       },
       data: {
-        following: { deleteMany: [{ followerId: followerId }] },
+        followers: {
+          delete: { followerId_followingId: { followerId, followingId } },
+        },
       },
     });
+    if (unfollow) {
+      return {
+        menssage: `Você parou de seguir o user ${doesNotFollow.username}`,
+      };
+    }
   }
 
   async findInterested() {
@@ -504,6 +519,9 @@ export class UserService {
     });
 
     const notifications = [...follows, ...likes, ...comments, ...matchs];
+    notifications.sort((a, b) => {
+      return a.date.getTime() - b.date.getTime();
+    });
     return notifications;
   }
 }
