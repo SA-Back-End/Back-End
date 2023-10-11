@@ -8,6 +8,8 @@ export class ScreenStickService {
   constructor(private prisma: PrismaService) { }
 
   async create(createScreenStickDto: CreateScreenStickDto,idRequisitionMaker:number) {
+    const { id_candidate, id_role } = createScreenStickDto;
+    
     const candidateExists= await this.prisma.user.findFirst({where:{id_user:createScreenStickDto.id_candidate}})
      if(!candidateExists) {
       throw new NotFoundException('Usuário não existente');}
@@ -23,10 +25,10 @@ export class ScreenStickService {
     }
 
     const likeCandidateExists=await this.prisma.screen_Curtidas.findFirst({
-      where:{...createScreenStickDto, likeAuthor:'Candidate'}
+      where:{id_candidate, id_role, likeAuthor:'Candidate'}
     })
     const likeOwnerExists=await this.prisma.screen_Curtidas.findFirst({
-      where:{...createScreenStickDto, likeAuthor:'Owner'}
+      where:{id_candidate, id_role, likeAuthor:'Owner'}
     })
 
     const projectOwner= await this.prisma.project_role.findFirst({
