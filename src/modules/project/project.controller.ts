@@ -7,6 +7,7 @@ import {
   Patch,
   Param,
   Delete,
+  Headers,
 } from '@nestjs/common';
 
 import {
@@ -26,14 +27,19 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { StatusProject, StudyArea, WorkType } from '@prisma/client';
+import { UseGuards } from '@nestjs/common/decorators';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { JwtUtilsService } from 'src/jwt_utils/jwtUtils.service';
 
 @ApiBearerAuth()
 @ApiTags('Project')
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly JwtUtils: JwtUtilsService
+  ) {}
 
- 
   @Post('create')
   @ApiCreatedResponse({
     description: 'Postagem criada com sucesso',
@@ -55,8 +61,7 @@ export class ProjectController {
   }
 
   @Public()
-  @Get('/findStatusToUser/:idProjectManager/:statusProject')
-  @ApiParam({ name: 'idProjectManager' })
+  @Get('/findStatusToUser/:statusProject')
   @ApiParam({ name: 'statusProject' })
   @ApiOperation({
     summary: 'Encontra o status do projeto',
@@ -64,10 +69,11 @@ export class ProjectController {
       'Encontra o status do projeto na plataforma com base no id do gerente do projeto e o status do projeto',
   })
   async findStatusToId(
-    @Param('idProjectManager') idProjectManager: number,
+    @Headers('Authorization') auth,
     @Param('statusProject') statusProject: StatusProject
   ) {
-    return this.projectService.findStatusToId(idProjectManager, statusProject);
+    const user = this.JwtUtils.id(auth);
+    return this.projectService.findStatusToId(user.id, statusProject);
   }
 
   @Public()
@@ -145,20 +151,18 @@ export class ProjectController {
     description: 'Atualiza um projeto com base no id',
   })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
-  @Patch('/update/:id_projectManager/:id_project')
+  @UseGuards(AuthGuard)
+  @Patch('/update/:id_project')
   async update(
     @Param('id_project') idProject: number,
-    @Param('id_projectManager') idProjectManager: number,
+    @Headers('Authorization') auth,
     @Body() updateProjectDto: UpdateProjectDto
   ) {
-    return this.projectService.update(
-      idProject,
-      updateProjectDto,
-      idProjectManager
-    );
+    const user = this.JwtUtils.id(auth);
+    return this.projectService.update(idProject, updateProjectDto, user.id);
   }
 
-  @Delete('/delete/:id_projectManager/:id_project')
+  @Delete('/delete/:id_project')
   @ApiOkResponse({ description: 'Usuário deletado com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({
@@ -170,11 +174,13 @@ export class ProjectController {
     summary: 'Deleta um projeto',
     description: 'Deleta um projeto com base no id',
   })
+  @UseGuards(AuthGuard)
   async remove(
     @Param('id_project') idProject: number,
-    @Param('id_projectManager') idProjectManager: number
+    @Headers('Authorization') auth
   ) {
-    return this.projectService.remove(idProject, idProjectManager);
+    const user = this.JwtUtils.id(auth);
+    return this.projectService.remove(idProject, user.id);
   }
 
   @Public()
@@ -193,8 +199,10 @@ export class ProjectController {
     summary: 'Lista de projetos em aberto',
     description: 'Lista de projetos com a opção isOpen assinalada como true',
   })
-  async findOpenProjects() {
-    return this.projectService.findOpenProjects();
+  @UseGuards(AuthGuard)
+  async findOpenProjects(@Headers('Authorization') auth) {
+    const user = this.JwtUtils.id(auth);
+    return this.projectService.findOpenProjects(user.id);
   }
 
   @Get('/findProjectByStatus/:status')
@@ -229,7 +237,8 @@ export class ProjectController {
   })
   @ApiOperation({
     summary: 'Lista de projetos com as áreas de estudo especificadas',
-    description: 'Lista de projetos com todas as studyAreas presentes no array mandado',
+    description:
+      'Lista de projetos com todas as studyAreas presentes no array mandado',
   })
   async findProjectByStudyArea(@Body() studyArea: StudyArea[]) {
     return this.projectService.findProjectByStudyArea(studyArea);
@@ -248,9 +257,10 @@ export class ProjectController {
   })
   @ApiOperation({
     summary: 'Lista de projetos com as áreas de estudo especificadas',
-    description: 'Lista de projetos com todas as studyAreas presentes no array mandado',
+    description:
+      'Lista de projetos com todas as studyAreas presentes no array mandado',
   })
   async findProjectByWorkType(@Param('workType') workType: WorkType) {
-    return this.projectService.findProjectByWorkType(workType)
+    return this.projectService.findProjectByWorkType(workType);
   }
 }

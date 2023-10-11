@@ -6,7 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  Query
+  Headers,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectRoleService } from './project_role.service';
 import { CreateProjectRoleDto } from './dto/create-project_role.dto';
@@ -25,12 +26,17 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { JwtUtilsService } from 'src/jwt_utils/jwtUtils.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('Project_Role')
 @Controller('project-role')
 export class ProjectRoleController {
-  constructor(private readonly projectRoleService: ProjectRoleService) {}
+  constructor(
+    private readonly projectRoleService: ProjectRoleService,
+    private readonly JwtUtils: JwtUtilsService
+  ) {}
 
   @Post('create')
   @ApiCreatedResponse({
@@ -96,23 +102,40 @@ export class ProjectRoleController {
   @Patch('/acceptUser/:idRole/:idUser/')
   @ApiParam({ name: 'idRole' })
   @ApiParam({ name: 'idUser' })
+  @ApiOperation({
+    summary:
+      'Aceita um usuário em um cargo do projeto ou aceita o convite de participar de um projeto',
+    description:
+      'Aceita um usuário de um cargo do projeto com base no id do cargo e id do usuário a ser aceito',
+  })
+  @UseGuards(AuthGuard)
   async acceptParticipation(
     @Param('idRole') idRole: number,
     @Param('idUser') idUser: number,
-    @Query('idRequisitionMaker') idRequisitionMaker: number
+    @Headers('Authorization') auth
   ) {
-    return this.projectRoleService.acceptParticipation(idRole, idUser, idRequisitionMaker);
+    const user = this.JwtUtils.id(auth);
+
+    return this.projectRoleService.acceptParticipation(idRole, idUser, user.id);
   }
 
-  @Patch('/fireUser/:idProjectManager/:idRole/:idUser')
+  @Patch('/fireUser/:idRole/:idUser')
   @ApiParam({ name: 'idRole' })
   @ApiParam({ name: 'idUser' })
+  @ApiOperation({
+    summary: 'Demite um usuário de um cargo do projeto ou se demite do projeto',
+    description:
+      'Demite um usuário de um cargo do projeto com base no id do cargo e id do usuário a ser demitido',
+  })
+  @UseGuards(AuthGuard)
   async fireUser(
-    @Param('idProjectManager') idProjectManager: number,
+    @Headers('Authorization') auth,
     @Param('idRole') idRole: number,
     @Param('idUser') idUser: number
   ) {
-    return this.projectRoleService.fireUser(idProjectManager, idRole, idUser);
+    const user = this.JwtUtils.id(auth);
+
+    return this.projectRoleService.fireUser(user.id, idRole, idUser);
   }
 
   @ApiOkResponse({

@@ -6,7 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
+  Headers,
+  UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -26,11 +27,14 @@ import {
 } from '@nestjs/swagger';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { JwtUtilsService } from 'src/jwt_utils/jwtUtils.service';
 
 @ApiBearerAuth()
 @ApiTags('Post')
 @Controller('post')
 export class PostController {
+  private readonly JwtUtils: JwtUtilsService;
   constructor(private readonly postService: PostService) {}
 
   @Post('create')
@@ -89,8 +93,11 @@ export class PostController {
     return this.postService.findOne(id);
   }
 
-
-  @ApiOkResponse({ description: 'Informações editadas com sucesso', type: UpdatePostDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações editadas com sucesso',
+    type: UpdatePostDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
   @ApiUnauthorizedResponse({
     description: 'Acesso não autorizado',
@@ -133,13 +140,16 @@ export class PostController {
     status: 401,
   })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
-  @Patch('/like/:idPost/:idUser')
+  @Patch('/like/:idPost')
   @ApiOperation({
     summary: 'Curtir um post',
     description: 'Curte um post com base no id',
   })
-  async like(@Param('idPost') idPost: number, @Param('idUser') idUser: number) {
-    return this.postService.likePost(idPost, idUser);
+  @UseGuards(AuthGuard)
+  async like(@Param('idPost') idPost: number, @Headers('Authorization') auth) {
+    const user = this.JwtUtils.id(auth);
+
+    return this.postService.likePost(idPost, user.id);
   }
 
   @ApiOkResponse({
@@ -153,16 +163,19 @@ export class PostController {
     status: 401,
   })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
-  @Patch('/deslike/:idPost/:idUser')
+  @Patch('/deslike/:idPost')
   @ApiOperation({
     summary: 'Deixar de Curtir um post',
     description: 'Deixar de Curtir um post com base no id',
   })
+  @UseGuards(AuthGuard)
   async deslike(
     @Param('idPost') idPost: number,
-    @Param('idUser') idUser: number
+    @Headers('Authorization') auth
   ) {
-    return this.postService.deslikePost(idPost, idUser);
+    const user = this.JwtUtils.id(auth);
+
+    return this.postService.deslikePost(idPost, user.id);
   }
 
   @ApiOkResponse({
@@ -204,11 +217,13 @@ export class PostController {
     summary: 'Deletar um Comentário',
     description: 'delete em um comentário com base no id',
   })
+  @UseGuards(AuthGuard)
   async commentDelete(
-    @Query('idUser') idUser: number,
+    @Headers('Authorization') auth,
     @Param('idPost') idPost: number,
     @Param('idComment') idComment: number
   ) {
-    return this.postService.commentDelete(idPost, idComment, idUser);
+    const user = this.JwtUtils.id(auth);
+    return this.postService.commentDelete(idPost, idComment, user.id);
   }
 }
