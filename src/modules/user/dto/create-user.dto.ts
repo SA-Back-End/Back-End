@@ -68,7 +68,7 @@ export class CreateUserDto {
     example: 'Lorem ipsun, lorem lorem',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @ApiProperty({
