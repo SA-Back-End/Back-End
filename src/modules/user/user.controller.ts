@@ -356,8 +356,9 @@ export class UserController {
     summary: 'Lista as notificações de um usuário específico',
     description: 'Lista as notificações de um usuário específico por data',
   })
-  @Get('/notifications/:username')
-  async Notifications(@Param('username') username: string) {
-    return this.userService.findNotification(username);
+  @Get('/notifications')
+  async Notifications(@Headers('Authorization') auth) {
+    const user = this.JwtUtils.id(auth);
+    return this.userService.findNotification(user.username);
   }
 }
