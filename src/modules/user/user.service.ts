@@ -134,7 +134,7 @@ export class UserService {
       },
       include: {
         posts: true,
-        project: true,
+        project: { include: { project_Role: true } },
         sticky: true,
         participation: true,
         likes: true,
