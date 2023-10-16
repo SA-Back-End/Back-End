@@ -20,7 +20,7 @@ model User {
   birthDate              DateTime
   state                  State
   contact_url            String?
-  profilePicture         Bytes?     @db.ByteA
+  profilePictureUrl         String?     
   isSearchingForProjects Boolean    @default(true)
   //-------------
 
@@ -142,7 +142,7 @@ model Post {
   id_post   Int       @id @default(autoincrement())
   userId    Int
   text      String
-  post_img  Bytes[]     @db.ByteA 
+  post_img_url  String[]     
   likedBy  Likes[]
   post_date DateTime  @default(now())
   comments  Comment[]

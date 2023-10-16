@@ -31,11 +31,12 @@ export class CreatePostDto {
 
   @ApiProperty({
     type: [String],
-    format: 'byte',
     description: 'Imagem da postagem',
-    example: ['U3dhZ2dlciByb2Nrcw=='],
+    example: [
+      'https://www.google.com/url?sa=i&url=https%3A%2F%2Fstock.adobe.com%2Fbr%2Fimages%2Faccount-avatar-user-login-or-member-outline-user-authorization-profile-icon-avatar-icon-user-icon-user-profile-icon-or-account-icon-vector%2F259394679&psig=AOvVaw35n9E1RsT7jWk8EKxKKNyk&ust=1697564732162000&source=images&cd=vfe&opi=89978449&ved=0CA8QjRxqFwoTCOjZysiP-4EDFQAAAAAdAAAAABAD',
+    ],
   })
   @IsArray()
   @IsNotEmpty()
-  post_img: Buffer[];
+  post_img_url: string[];
 }

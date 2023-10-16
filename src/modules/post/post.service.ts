@@ -13,7 +13,7 @@ export class PostService {
   constructor(private prisma: PrismaService) {}
 
   async create(createPostDto: CreatePostDto) {
-    if (createPostDto.post_img.length > 3) {
+    if (createPostDto.post_img_url.length > 3) {
       throw new ConflictException('Máximo de Imagens Excedido');
     }
 
@@ -21,7 +21,7 @@ export class PostService {
       data: {
         userId: createPostDto.userId,
         text: createPostDto.text,
-        post_img: createPostDto.post_img,
+        post_img_url: createPostDto.post_img_url,
       },
     });
   }
@@ -93,18 +93,18 @@ export class PostService {
       throw new ConflictException('Postagem não existente');
     }
 
-    if (updatePostDto.post_img) {
-      const imgs = [...idInUse.post_img, ...updatePostDto.post_img];
+    if (updatePostDto.post_img_url) {
+      const imgs = [...idInUse.post_img_url, ...updatePostDto.post_img_url];
 
       if (imgs.length > 3) {
-        if (updatePostDto.post_img.length > 3) {
+        if (updatePostDto.post_img_url.length > 3) {
           throw new ConflictException('Máximo de Imagens Excedido');
         }
         return await this.prisma.post.update({
           data: {
             userId: updatePostDto.userId,
             text: updatePostDto.text,
-            post_img: updatePostDto.post_img,
+            post_img_url: updatePostDto.post_img_url,
           },
           where: {
             id_post: id,
@@ -116,7 +116,7 @@ export class PostService {
         data: {
           userId: updatePostDto.userId,
           text: updatePostDto.text,
-          post_img: imgs,
+          post_img_url: imgs,
         },
         where: {
           id_post: id,
