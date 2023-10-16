@@ -9,6 +9,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserService } from 'src/modules/user/user.service';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { LogUserDto } from './dto/log-user-dto';
@@ -17,7 +18,10 @@ import { LogUserDto } from './dto/log-user-dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -35,11 +39,11 @@ export class AuthController {
     summary: 'Mostra as informações do usuário',
     description: 'Mostra as informações do usuário logado na API',
   })
-  getProfile(@Request() req) {
+  async getProfile(@Request() req) {
     const user = {
       id: req.user.id,
       username: req.user.username,
     };
-    return user;
+    return await this.userService.findOne(user.username);
   }
 }
