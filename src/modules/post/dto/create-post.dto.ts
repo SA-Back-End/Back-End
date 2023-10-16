@@ -12,15 +12,6 @@ import {
 
 export class CreatePostDto {
   @ApiProperty({
-    type: Number,
-    description: 'Id do autor da postagem',
-    example: 45,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  userId: number;
-
-  @ApiProperty({
     type: String,
     description: 'Texto da postagem',
     example: 'lorem ipsun ipsun lorem',

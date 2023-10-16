@@ -12,14 +12,14 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 export class PostService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(userId: number, createPostDto: CreatePostDto) {
     if (createPostDto.post_img_url.length > 3) {
       throw new ConflictException('Máximo de Imagens Excedido');
     }
 
     return this.prisma.post.create({
       data: {
-        userId: createPostDto.userId,
+        userId: userId,
         text: createPostDto.text,
         post_img_url: createPostDto.post_img_url,
       },
@@ -82,7 +82,7 @@ export class PostService {
     return postExists;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto, userId: number) {
     const idInUse = await this.prisma.post.findUnique({
       where: {
         id_post: id,
@@ -102,7 +102,7 @@ export class PostService {
         }
         return await this.prisma.post.update({
           data: {
-            userId: updatePostDto.userId,
+            userId: userId,
             text: updatePostDto.text,
             post_img_url: updatePostDto.post_img_url,
           },
@@ -114,7 +114,7 @@ export class PostService {
 
       return await this.prisma.post.update({
         data: {
-          userId: updatePostDto.userId,
+          userId: userId,
           text: updatePostDto.text,
           post_img_url: imgs,
         },
@@ -125,7 +125,7 @@ export class PostService {
     }
     return await this.prisma.post.update({
       data: {
-        userId: updatePostDto.userId,
+        userId: userId,
         text: updatePostDto.text,
       },
       where: {

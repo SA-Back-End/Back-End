@@ -13,9 +13,13 @@ import IProjectRemoveResponse from './helpers/interfaces/IProjectDeleteResponse'
 export class ProjectService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createProjectDto: CreateProjectDto): Promise<Project> {
+  async create(
+    userId: number,
+    createProjectDto: CreateProjectDto
+  ): Promise<Project> {
     return this.prisma.project.create({
       data: {
+        id_projectManager: userId,
         ...createProjectDto,
       },
     });

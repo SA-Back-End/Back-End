@@ -12,15 +12,6 @@ import {
 
 export class CreateProjectDto {
   @ApiProperty({
-    type: Number,
-    description: 'ID do usuário dono do projeto',
-    example: 33,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  id_projectManager: number;
-
-  @ApiProperty({
     type: String,
     description: 'Status do projeto',
     example: 'Cancelado',

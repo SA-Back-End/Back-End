@@ -34,8 +34,10 @@ import { JwtUtilsService } from 'src/jwt_utils/jwtUtils.service';
 @ApiTags('Post')
 @Controller('post')
 export class PostController {
-  private readonly JwtUtils: JwtUtilsService;
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly JwtUtils: JwtUtilsService
+  ) {}
 
   @Post('create')
   @ApiCreatedResponse({
@@ -48,8 +50,12 @@ export class PostController {
     summary: 'Cria um post',
     description: 'Cria um post na plataforma',
   })
-  async create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  async create(
+    @Body() createPostDto: CreatePostDto,
+    @Headers('Authorization') auth
+  ) {
+    const user = this.JwtUtils.id(auth);
+    return this.postService.create(user.id, createPostDto);
   }
 
   @Public()
@@ -93,9 +99,10 @@ export class PostController {
     return this.postService.findOne(id);
   }
 
+  @Patch('/update/:id')
   @ApiOkResponse({
     description: 'Informações editadas com sucesso',
-    type: UpdatePostDto,
+    type: CreatePostDto,
     status: 200,
   })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -104,13 +111,17 @@ export class PostController {
     status: 401,
   })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
-  @Patch('/update/:id')
   @ApiOperation({
     summary: 'Atualiza um post',
     description: 'Atualiza um post com base no id',
   })
-  async update(@Param('id') id: number, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(id, updatePostDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updatePostDto: UpdatePostDto,
+    @Headers('Authorization') auth
+  ) {
+    const user = this.JwtUtils.id(auth);
+    return this.postService.update(id, updatePostDto, user.id);
   }
 
   @Delete('/delete/:id')
@@ -131,7 +142,7 @@ export class PostController {
 
   @ApiOkResponse({
     description: 'Informações editadas com sucesso',
-    type: UpdatePostDto,
+    type: CreatePostDto,
     status: 200,
   })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })

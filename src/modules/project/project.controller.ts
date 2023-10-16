@@ -9,7 +9,6 @@ import {
   Delete,
   Headers,
 } from '@nestjs/common';
-
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -56,8 +55,12 @@ export class ProjectController {
     summary: 'Cria um projeto',
     description: 'Cria um projeto na plataforma',
   })
-  async create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectService.create(createProjectDto);
+  async create(
+    @Headers('Authorization') auth,
+    @Body() createProjectDto: CreateProjectDto
+  ) {
+    const user = this.JwtUtils.id(auth);
+    return this.projectService.create(user.id, createProjectDto);
   }
 
   @Public()
@@ -136,9 +139,10 @@ export class ProjectController {
     return this.projectService.findManyByTitle(title);
   }
 
+  @Patch('/update/:id_project')
   @ApiOkResponse({
     description: 'Informações editadas com sucesso',
-    type: UpdateProjectDto,
+    type: CreateProjectDto,
     status: 200,
   })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
@@ -151,8 +155,6 @@ export class ProjectController {
     description: 'Atualiza um projeto com base no id',
   })
   @ApiNotFoundResponse({ description: 'Postagem não existente', status: 404 })
-  @UseGuards(AuthGuard)
-  @Patch('/update/:id_project')
   async update(
     @Param('id_project') idProject: number,
     @Headers('Authorization') auth,
