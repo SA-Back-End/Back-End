@@ -8,7 +8,14 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
 import { UserService } from 'src/modules/user/user.service';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
@@ -37,7 +44,17 @@ export class AuthController {
   @Get('profile')
   @ApiOperation({
     summary: 'Mostra as informações do usuário',
-    description: 'Mostra as informações do usuário logado na API',
+    description:
+      'Mostra as informações do usuário logado na API - Enviar o Token pelo Headers',
+  })
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateUserDto,
+    status: 200,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado - Provavelmente Token Expirado',
+    status: 401,
   })
   async getProfile(@Request() req) {
     const user = {
