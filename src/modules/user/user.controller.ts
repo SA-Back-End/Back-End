@@ -104,8 +104,23 @@ export class UserController {
     description: 'Lista um usuário específico com base no username',
   })
   @Get('/findOne/:username')
-  async findOne(@Param('username') username: string) {
-    return this.userService.findOne(username);
+  async findOne(
+    @Param('username') username: string,
+    @Headers('Authorization') auth
+  ) {
+    if (auth) {
+      const user = await this.JwtUtils.id(auth);
+      if (user.username == username) {
+        const data = await this.userService.findOne(username);
+        return { ...data, isMe: true };
+      } else {
+        const data = await this.userService.findOne(username);
+        return { ...data, isMe: false };
+      }
+    } else {
+      const data = await this.userService.findOne(username);
+      return { ...data, isMe: false };
+    }
   }
 
   @Public()
