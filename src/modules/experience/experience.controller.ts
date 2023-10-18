@@ -1,20 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ExperienceService } from './experience.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiTags, ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiUnauthorizedResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiNotAcceptableResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiUnauthorizedResponse,
+  ApiOperation,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 @Controller('experience')
 @ApiTags('Experience')
+@ApiBearerAuth()
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}
 
-  
   @Post('create')
-  @ApiCreatedResponse({ description: 'Experiência criada com sucesso', type: CreateExperienceDto, status: 201 })
+  @ApiCreatedResponse({
+    description: 'Experiência criada com sucesso',
+    type: CreateExperienceDto,
+    status: 201,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiNotAcceptableResponse({ description: 'Nome da Experiência ou senha muito pequenas', status: 406 })
+  @ApiNotAcceptableResponse({
+    description: 'Nome da Experiência ou senha muito pequenas',
+    status: 406,
+  })
   @ApiConflictResponse({ description: 'Experiência já existente', status: 409 })
   @ApiOperation({
     summary: 'Cria uma experiência',
@@ -26,9 +53,16 @@ export class ExperienceController {
 
   @Public()
   @Get('/findAll/:page')
-  @ApiOkResponse({ description: 'Informações encontradas', type: CreateExperienceDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateExperienceDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @ApiParam({ name: 'page', schema: { default: 1 } })
   @ApiOperation({
     summary: 'Lista todas as experiência',
@@ -37,11 +71,18 @@ export class ExperienceController {
   async findAll(@Param('page') page: number) {
     return this.experienceService.findAll(page);
   }
-  
+
   @Public()
-  @ApiOkResponse({ description: 'Informações encontradas', type: CreateExperienceDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateExperienceDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @Get('/findOne/:id_experience')
   @ApiOperation({
     summary: 'Lista uma experiência específica',
@@ -51,26 +92,46 @@ export class ExperienceController {
     return this.experienceService.findOne(id_experience);
   }
 
-  
-  @ApiOkResponse({ description: 'Informações editadas com sucesso', type: CreateExperienceDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações editadas com sucesso',
+    type: CreateExperienceDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
-  @ApiNotFoundResponse({ description: 'Experiência não existente', status: 404 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiNotFoundResponse({
+    description: 'Experiência não existente',
+    status: 404,
+  })
   @Patch('/update/:id_experience')
   @ApiOperation({
     summary: 'Atualiza uma experiência',
     description: 'Atualiza uma experiência com base no id',
   })
-  async update(@Param('id_experience') id_experience: number, @Body() UpdateExperienceDto: UpdateExperienceDto) {
+  async update(
+    @Param('id_experience') id_experience: number,
+    @Body() UpdateExperienceDto: UpdateExperienceDto
+  ) {
     return this.experienceService.update(id_experience, UpdateExperienceDto);
   }
 
-  
   @Delete('/delete/:id_experience')
-  @ApiOkResponse({ description: 'Experiência deletada com sucesso', status: 200 })
+  @ApiOkResponse({
+    description: 'Experiência deletada com sucesso',
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
-  @ApiNotFoundResponse({ description: 'Experiência não existente', status: 404 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
+  @ApiNotFoundResponse({
+    description: 'Experiência não existente',
+    status: 404,
+  })
   @ApiOperation({
     summary: 'Deleta uma experiência',
     description: 'Deleta uma experiência com base no id',

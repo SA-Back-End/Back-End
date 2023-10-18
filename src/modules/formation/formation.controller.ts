@@ -1,20 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FormationService } from './formation.service';
 import { CreateFormationDto } from './dto/create-formation.dto';
 import { UpdateFormationDto } from './dto/update-formation.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiNotAcceptableResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 @Controller('formation')
 @ApiTags('Formation')
+@ApiBearerAuth()
 export class FormationController {
   constructor(private readonly formationService: FormationService) {}
 
-  
   @Post('create')
-  @ApiCreatedResponse({ description: 'Formação criada com sucesso', type: CreateFormationDto, status: 201 })
+  @ApiCreatedResponse({
+    description: 'Formação criada com sucesso',
+    type: CreateFormationDto,
+    status: 201,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiNotAcceptableResponse({ description: 'Nome da Formação ou senha muito pequenos', status: 406 })
+  @ApiNotAcceptableResponse({
+    description: 'Nome da Formação ou senha muito pequenos',
+    status: 406,
+  })
   @ApiConflictResponse({ description: 'Formação já existente', status: 409 })
   @ApiOperation({
     summary: 'Cria uma formação',
@@ -26,9 +53,16 @@ export class FormationController {
 
   @Public()
   @Get('/findAll/:page')
-  @ApiOkResponse({ description: 'Informações encontradas', type: CreateFormationDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateFormationDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @ApiParam({ name: 'page', schema: { default: 1 } })
   @ApiOperation({
     summary: 'Lista todas as formações',
@@ -37,11 +71,18 @@ export class FormationController {
   async findAll(@Param('page') page: number) {
     return this.formationService.findAll(page);
   }
-  
+
   @Public()
-  @ApiOkResponse({ description: 'Informações encontradas', type: CreateFormationDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações encontradas',
+    type: CreateFormationDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @Get('/findOne/:id_formation')
   @ApiOperation({
     summary: 'Lista uma formação específica',
@@ -51,25 +92,36 @@ export class FormationController {
     return this.formationService.findOne(id_formation);
   }
 
-  
-  @ApiOkResponse({ description: 'Informações editadas com sucesso', type: CreateFormationDto, status: 200 })
+  @ApiOkResponse({
+    description: 'Informações editadas com sucesso',
+    type: CreateFormationDto,
+    status: 200,
+  })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @ApiNotFoundResponse({ description: 'Formação não existente', status: 404 })
   @Patch('/update/:id_formation')
   @ApiOperation({
     summary: 'Atualiza uma formação',
     description: 'Atualiza uma formação com base no id',
   })
-  async update(@Param('id_formation') id_formation: number, @Body() UpdateFormationDto: UpdateFormationDto) {
+  async update(
+    @Param('id_formation') id_formation: number,
+    @Body() UpdateFormationDto: UpdateFormationDto
+  ) {
     return this.formationService.update(id_formation, UpdateFormationDto);
   }
 
- 
   @Delete('/delete/:id_formation')
   @ApiOkResponse({ description: 'Formação deletada com sucesso', status: 200 })
   @ApiBadRequestResponse({ description: 'Requisição inválida', status: 400 })
-  @ApiUnauthorizedResponse({ description: 'Acesso não autorizado', status: 401 })
+  @ApiUnauthorizedResponse({
+    description: 'Acesso não autorizado',
+    status: 401,
+  })
   @ApiNotFoundResponse({ description: 'Formação não existente', status: 404 })
   @ApiOperation({
     summary: 'Deleta uma formação',
