@@ -29,6 +29,7 @@ import { StatusProject, StudyArea, WorkType } from '@prisma/client';
 import { UseGuards } from '@nestjs/common/decorators';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtUtilsService } from 'src/jwt_utils/jwtUtils.service';
+import { ProjectFiltersDto } from './dto/project-filters.dto';
 
 @ApiBearerAuth()
 @ApiTags('Project')
@@ -202,9 +203,10 @@ export class ProjectController {
     description: 'Lista de projetos com a opção isOpen assinalada como true',
   })
   @UseGuards(AuthGuard)
-  async findOpenProjects(@Headers('Authorization') auth) {
+  async findOpenProjects(@Headers('Authorization') auth, @Headers('Filters') projectFilters: string) {
+    const toFilter: ProjectFiltersDto[] = projectFilters ? JSON.parse(projectFilters) : null;
     const user = this.JwtUtils.id(auth);
-    return this.projectService.findOpenProjects(user.id);
+    return this.projectService.findOpenProjects(user.id, toFilter);
   }
 
   @Get('/findProjectByStatus/:status')

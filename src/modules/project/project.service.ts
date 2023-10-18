@@ -8,6 +8,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project, StatusProject, StudyArea, WorkType } from '@prisma/client';
 import IProjectRemoveResponse from './helpers/interfaces/IProjectDeleteResponse';
+import { ProjectFiltersDto } from './dto/project-filters.dto';
 
 @Injectable()
 export class ProjectService {
@@ -176,12 +177,14 @@ export class ProjectService {
     throw new ConflictException('Erro ao deletar projeto');
   }
 
-  async findOpenProjects(id: number) {
+  async findOpenProjects(id: number, projectFilters: ProjectFiltersDto[]) {
+    const whereStatement = this._transformIntoWhereStatement(projectFilters);
     const isOpenProjects = await this.prisma.project.findMany({
       where: {
         project_Role: {
           some: { isOpen: true },
         },
+        ...whereStatement,
       },
       include: {
         project_Role: {
@@ -196,6 +199,33 @@ export class ProjectService {
     }
 
     return isOpenProjects;
+  }
+
+  private _transformIntoWhereStatement(projectFilter: ProjectFiltersDto[]): any {
+    const filters = projectFilter.reduce((acc, filter) => {
+      const { type, value } = filter;
+      if (!acc[type]) {
+        acc[type] = [];
+      }
+      acc[type].push(value);
+      return acc;
+    }, {});
+    
+    const filterType = Object.keys(filters);
+
+    const whereStatement = {
+      ...filterType.reduce((acc, curr) => {
+        if (curr === "workType" || curr === "StatusProject" || curr === "StatusUser" || curr === "states" ) {
+          acc[curr] = { equals: filters[curr][0] }
+          return acc;
+        }
+
+        acc[curr] = { hasEvery: filters[curr] };
+        return acc;
+      }, {}),
+    };
+
+    return whereStatement;
   }
 
   async findProjectByStatus(status: StatusProject) {
