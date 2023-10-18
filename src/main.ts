@@ -12,20 +12,16 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-    }),
+    })
   );
 
   const config = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('API - Skills')
     .setDescription(
-      'Skills é um projeto da primeira turma de Back-End da Aprendizagem Industrial do SENAI que consiste na mistura do LinkedIn com o Tinder. Um ambiente onde projetos e usuários se encontram com base em características desejadas.'
-      )
-    .setContact(
-      "SA-Back-End",
-      "https://github.com/SA-Back-End",
-      ""
+      'Skills é um projeto da primeira turma de Back-End da Aprendizagem Industrial do SENAI que consiste em um sistema de match entre clientes e projetos. Um ambiente onde projetos e usuários se encontram com base em características desejadas.'
     )
+    .setContact('SA-Back-End', 'https://github.com/SA-Back-End', '')
     .setVersion('1.0')
 
     .addTag('Auth', 'Tudo sobre autenticação', {
@@ -68,7 +64,6 @@ async function bootstrap() {
       description: 'Saiba mais',
       url: 'https://github.com/SA-Back-End',
     })
-    
 
     .build();
 
