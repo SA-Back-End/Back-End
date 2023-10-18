@@ -35,6 +35,7 @@ import {
 } from '@prisma/client';
 import { JwtUtilsService } from 'src/jwt_utils/jwtUtils.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { UserFiltersDto } from './dto/user-filters.dto';
 
 @Controller('user')
 @ApiBearerAuth()
@@ -237,8 +238,11 @@ export class UserController {
     description:
       'Lista usuários com a opção isSearchingForProjects assinalada como true',
   })
-  async findInterested() {
-    return this.userService.findInterested();
+  async findInterested(@Headers('Filters') userFilters: string) {
+    const toFilter: UserFiltersDto[] = userFilters
+      ? JSON.parse(userFilters)
+      : null;
+    return this.userService.findInterested(toFilter);
   }
 
   @Get('/findUserBasedOnStatus/:status')

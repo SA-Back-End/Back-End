@@ -10,6 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { HardSkills, SoftSkills, StatusUser, StudyArea } from '@prisma/client';
 import { State } from '@prisma/client';
+import { UserFiltersDto } from './dto/user-filters.dto';
 
 @Injectable()
 export class UserService {
@@ -316,10 +317,13 @@ export class UserService {
     }
   }
 
-  async findInterested() {
+  async findInterested(filters: UserFiltersDto[]) {
+    const whereStatement = this._transformIntoWhereStatement(filters);
+
     const isSearching = await this.prisma.user.findMany({
       where: {
         isSearchingForProjects: true,
+        ...whereStatement,
       },
       include: {
         posts: true,
@@ -341,6 +345,38 @@ export class UserService {
     isSearching.forEach(e => delete e.password);
 
     return isSearching;
+  }
+
+  private _transformIntoWhereStatement(userFilter: UserFiltersDto[]): any {
+    const filters = userFilter.reduce((acc, filter) => {
+      const { type, value } = filter;
+      if (!acc[type]) {
+        acc[type] = [];
+      }
+      acc[type].push(value);
+      return acc;
+    }, {});
+
+    const filterType = Object.keys(filters);
+
+    const whereStatement = {
+      ...filterType.reduce((acc, curr) => {
+        if (
+          curr === 'workType' ||
+          curr === 'StatusProject' ||
+          curr === 'StatusUser' ||
+          curr === 'states'
+        ) {
+          acc[curr] = { equals: filters[curr][0] };
+          return acc;
+        }
+
+        acc[curr] = { hasEvery: filters[curr] };
+        return acc;
+      }, {}),
+    };
+
+    return whereStatement;
   }
 
   async findUserBasedOnStatus(status: StatusUser) {
