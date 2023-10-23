@@ -177,10 +177,11 @@ export class ProjectService {
     throw new ConflictException('Erro ao deletar projeto');
   }
 
-  async findOpenProjects(id: number, projectFilters: ProjectFiltersDto[]) {
+  async findOpenProjects(idRequester: number, projectFilters: ProjectFiltersDto[]) {
     const whereStatement = this._transformIntoWhereStatement(projectFilters);
     const isOpenProjects = await this.prisma.project.findMany({
       where: {
+        id_projectManager: { not: idRequester },
         project_Role: {
           some: { isOpen: true },
         },
@@ -188,7 +189,7 @@ export class ProjectService {
       },
       include: {
         project_Role: {
-          where: { screen_Curtidas: { none: { id_candidate: id } } },
+          where: { screen_Curtidas: { none: { id_candidate: idRequester } } },
         },
         userAdmin: { select: { username: true } },
       },
