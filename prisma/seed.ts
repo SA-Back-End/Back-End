@@ -1,7 +1,7 @@
 // prisma/seed.ts
 
 import { LikeAuthor, PrismaClient, State, StatusProject, StudyArea, WorkType} from '@prisma/client';
-
+import * as bcrypt from 'bcrypt';
 // initialize Prisma Client
 const prisma = new PrismaClient();
 //userIds 
@@ -23,7 +23,7 @@ async function main() {
         {
             id: 158,
             name: 'Lucas Silva',
-            password: 'SenhaLucas123',
+            password: '#SenhaLucas123',
             email: 'lucas_silva@gmail.com',
             username: 'lucassilva',
             birthDate: '1998-05-21T18:19:31.966Z',
@@ -32,7 +32,7 @@ async function main() {
         {
             id: 188,
             name: 'Maria Oliveira',
-            password: 'Maria1234',
+            password: '#Maria1234',
             email: 'maria_oliveira@gmail.com',
             username: 'mariaoliveira',
             birthDate: '1985-03-12T18:19:31.966Z',
@@ -41,7 +41,7 @@ async function main() {
         {
             id: 138,
             name: 'João Santos',
-            password: 'SenhaJoao123',
+            password: '#SenhaJoao123',
             email: 'joao_santos@gmail.com',
             username: 'joaosantos',
             birthDate: '1992-07-05T18:19:31.966Z',
@@ -50,7 +50,7 @@ async function main() {
         {
             id: 190,
             name: 'Ana Souza',
-            password: 'Ana1234',
+            password: '#Ana1234',
             email: 'ana_souza@gmail.com',
             username: 'anasouza',
             birthDate: '1990-11-15T18:19:31.966Z',
@@ -59,7 +59,7 @@ async function main() {
         {
             id: 244,
             name: 'Carlos Pereira',
-            password: 'Carlos1234',
+            password: '#Carlos1234',
             email: 'carlos_pereira@gmail.com',
             username: 'carlospereira',
             birthDate: '1987-01-23T18:19:31.966Z',
@@ -68,7 +68,7 @@ async function main() {
         {
             id: 128,
             name: 'Fernanda Lima',
-            password: 'Fernanda1234',
+            password: '#Fernanda1234',
             email: 'fernanda_lima@gmail.com',
             username: 'fernandalima',
             birthDate: '1995-08-31T18:19:31.966Z',
@@ -77,7 +77,7 @@ async function main() {
         {
             id: 118,
             name: 'Roberto Silva',
-            password: 'Roberto1234',
+            password: '#Roberto1234',
             email: 'roberto_silva@gmail.com',
             username: 'robertosilva',
             birthDate: '1999-12-20T18:19:31.966Z',
@@ -86,7 +86,7 @@ async function main() {
         {
             id: 111,
             name: 'Juliana Oliveira',
-            password: 'Juliana1234',
+            password: '#Juliana1234',
             email: 'juliana_oliveira@gmail.com',
             username: 'julianaoliveira',
             birthDate: '1988-04-08T18:19:31.966Z',
@@ -95,7 +95,7 @@ async function main() {
         {
             id: 101,
             name: 'Rafael Souza',
-            password: 'Rafael1234',
+            password: '#Rafael1234',
             email: 'rafael_souza@gmail.com',
             username: 'rafaelsouza',
             birthDate: '1991-09-14T18:19:31.966Z',
@@ -104,7 +104,7 @@ async function main() {
         {
             id: 260,
             name: 'Camila Lima',
-            password: 'Camila1234',
+            password: '#Camila1234',
             email: 'camila_lima@gmail.com',
             username: 'camilalima',
             birthDate: '1997-03-02T18:19:31.966Z',
@@ -113,7 +113,7 @@ async function main() {
         {
             id: 259,
             name: 'Fábio Pereira',
-            password: 'Fabio1234',
+            password: '#Fabio1234',
             email: 'fabio_pereira@gmail.com',
             username: 'fabiopereira',
             birthDate: '1986-01-10T18:19:31.966Z',
@@ -122,7 +122,7 @@ async function main() {
         {
             id: 253,
             name: 'Beatriz Santos',
-            password: 'Beatriz1234',
+            password: '#Beatriz1234',
             email: 'beatriz_santos@gmail.com',
             username: 'beatrizsantos',
             birthDate: '1982-07-19T18:19:31.966Z',
@@ -131,7 +131,7 @@ async function main() {
         {
             id: 252,
             name: 'Thiago Oliveira',
-            password: 'Thiago1234',
+            password: '#Thiago1234',
             email: 'thiago_oliveira@gmail.com',
             username: 'thiagooliveira',
             birthDate: '1993-05-27T18:19:31.966Z',
@@ -140,7 +140,7 @@ async function main() {
         {
             id: 251,
             name: 'Isabela Silva',
-            password: 'Isabela1234',
+            password: '#Isabela1234',
             email: 'isabela_silva@gmail.com',
             username: 'isabelasilva',
             birthDate: '1996-11-30T18:19:31.966Z',
@@ -149,7 +149,7 @@ async function main() {
         {
             id: 250,
             name: 'Mateus Souza',
-            password: 'Mateus1234',
+            password: '#Mateus1234',
             email: 'mateus_souza@gmail.com',
             username: 'mateussouza',
             birthDate: '1994-03-05T18:19:31.966Z',
@@ -158,7 +158,7 @@ async function main() {
         {
             id: 249,
             name: 'Patrícia Lima',
-            password: 'Patricia1234',
+            password: '#Patricia1234',
             email: 'patricia_lima@gmail.com',
             username: 'patricialima',
             birthDate: '1989-08-16T18:19:31.966Z',
@@ -167,7 +167,7 @@ async function main() {
         {
             id: 247,
             name: 'Bruno Pereira',
-            password: 'Bruno1234',
+            password: '#Bruno1234',
             email: 'bruno_pereira@gmail.com',
             username: 'brunopereira',
             birthDate: '1981-12-25T18:19:31.966Z',
@@ -176,7 +176,7 @@ async function main() {
         {
             id: 246,
             name: 'Fernanda Santos',
-            password: 'Fernanda1234',
+            password: '#Fernanda1234',
             email: 'fernanda_santos@gmail.com',
             username: 'fernandasantos',
             birthDate: '1995-09-11T18:19:31.966Z',
@@ -185,7 +185,7 @@ async function main() {
         {
             id: 245,
             name: 'Carlos Silva',
-            password: 'Carlos1234',
+            password: '#Carlos1234',
             email: 'carlos_silva@gmail.com',
             username: 'carlossilva',
             birthDate: '1985-05-30T18:19:31.966Z',
@@ -194,7 +194,9 @@ async function main() {
     ];
 
     for (const user of users) {
-        const insertedUser = await prisma.user.upsert({
+        const salt = await bcrypt.genSalt();
+        const hash: string = await bcrypt.hash(user.password, salt);
+        await prisma.user.upsert({
             where: { email: user.email },
             update: {},
             create: {
@@ -202,7 +204,7 @@ async function main() {
                 email: user.email,
                 birthDate: user.birthDate,
                 name: user.name,
-                password: user.password,
+                password: hash,
                 state: user.state as State,
                 username: user.username,
             },
@@ -253,7 +255,7 @@ async function main() {
     ]
     
     for (const follow of follows) {
-        const insertedFollow = await prisma.follows.upsert({
+        await prisma.follows.upsert({
             where: { followerId_followingId: { followerId: follow.followerId, followingId: follow.followingId } },
             update: {},
             create: {
@@ -417,7 +419,7 @@ async function main() {
     ];
 
     for (const project of projects) {
-        const insertedProject = await prisma.project.upsert({
+        await prisma.project.upsert({
             where: { project_name: project.project_name },
             update: {},
             create: {
@@ -505,7 +507,7 @@ async function main() {
         }
     ];
     for (const post of posts) {
-        const insertedPost = await prisma.post.upsert({
+        await prisma.post.upsert({
             where: { id_post: post.id_post },
             update: {},
             create: {
@@ -580,7 +582,7 @@ async function main() {
     ];
 
     for (const comment of comments) {
-        const insertedComment = await prisma.comment.upsert({
+        await prisma.comment.upsert({
             where: { id_comment: comment.id_comment },
             update: {},
             create: {
@@ -646,7 +648,7 @@ async function main() {
     ]
 
     for (const institution of institutions) {
-        const insertedInstitution = await prisma.institution.upsert({
+        await prisma.institution.upsert({
             where: { id_institution: institution.id_institution },
             update: {},
             create: {
@@ -753,7 +755,7 @@ async function main() {
     
 
     for (const experience of experiences) {
-        const insertedExperience = await prisma.experience.upsert({
+        await prisma.experience.upsert({
             where: { id_experience: experience.id },
             update: {},
             create: {
@@ -863,7 +865,7 @@ async function main() {
     ]
 
     for (const certificate of certificates) {
-        const insertedCertificate = await prisma.certificates.upsert({
+        await prisma.certificates.upsert({
             where: { id_certificate: certificate.id_certificate },
             update: {},
             create: {
@@ -983,7 +985,7 @@ async function main() {
     ]
 
     for (const formation of formations) {
-        const insertedInstitution = await prisma.formation.upsert({
+        await prisma.formation.upsert({
             where: { id_formation: formation.id_formation },
             update: {},
             create: {
@@ -1064,7 +1066,7 @@ async function main() {
     ]
 
     for (const screen_Curtida of screen_Curtidas) {
-      const insertedInstitution = await prisma.screen_Curtidas.upsert({
+      await prisma.screen_Curtidas.upsert({
           where: { id_stick: screen_Curtida.id_stick },
           update: {},
           create: {
