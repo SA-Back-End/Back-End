@@ -30,6 +30,11 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsNotEmpty()
     description: string;
 
+    @ApiProperty({ type: String, description: 'Nome do usuario' })
+    @IsString()
+    @IsNotEmpty()
+    name: string;
+
     @ApiProperty({ type: Boolean, description: 'Nível de acesso do usuário' })
     @IsBoolean()
     @IsOptional()
