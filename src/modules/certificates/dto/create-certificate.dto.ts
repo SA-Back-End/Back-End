@@ -10,7 +10,7 @@ import {
 
 export class CreateCertificateDto {
 
-  @ApiProperty({ type: String, description: 'Nome do certificado', example: 'Advogado de causas perdidas' })
+  @ApiProperty({ type: String, description: 'Nome do certificado', example: 'Advogado' })
   @IsString()
   @IsNotEmpty()
   certificate_name: string;
