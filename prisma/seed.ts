@@ -438,8 +438,9 @@ async function main() {
             update: {},
             create: {
                 id_role: project.project_role.id_role,
-                id_project: project.project_role.id_project,
-                user_role: project.project_role.user_role
+                id_project: project.id,
+                user_role: project.project_role.user_role,
+                
             }
         })
     }
