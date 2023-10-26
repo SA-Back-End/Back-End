@@ -85,7 +85,8 @@ export class CreateUserDto {
     description: 'Senha do usuário',
     example: 'senhaQ!1dojoao',
   })
-  @IsStrongPassword()
+  // @IsStrongPassword()
+  @IsString()
   @IsNotEmpty()
   password: string;
 
