@@ -36,6 +36,21 @@ $ npx prisma migrate dev --name "init"
 $ npx prisma db seed
 ```
 
+## ⚠ Be careful !
+> As we are running the MVP locally, some things need to change when running in others devices
+```bash
+$ .env => in this file, whe have our database URL. Basically, his default body is like this:
+
+DATABASE_URL="postgresql://postgres:senai@localhost:5432/skillsDatabase?schema=public"
+DATABASE_URL="{database}://{database user}:{database password}@{host}:{database port}/{database name}?{extra arguments, like the default schema of the database}"
+```
+
+## Links
+
+- <a>https://www.prisma.io/docs/reference/database-reference/connection-urls</a>
+- <a>https://www.prisma.io/docs/concepts/database-connectors/postgresql</a>
+
+
 ## Running the app
 
 ```bash
